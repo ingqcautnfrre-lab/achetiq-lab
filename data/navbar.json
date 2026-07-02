@@ -8,33 +8,33 @@
     { "label": "Inicio", "href": "/", "variant": "ghost" },
     {
       "label": "Sobre AChETIQ",
-      "href": "/pages/sobre-achetiq.html",
+      "href": "/pages/sobre-achetiq",
       "variant": "ghost",
       "submenu": [
-        { "label": "Asociación", "href": "/pages/sobre-achetiq.html#asociacion" },
-        { "label": "Galería", "href": "/pages/sobre-achetiq.html#galeria" }
+        { "label": "Asociación", "href": "/pages/sobre-achetiq#asociacion" },
+        { "label": "Galería", "href": "/pages/sobre-achetiq#galeria" }
       ]
     },
     {
       "label": "Gabinetes",
-      "href": "/pages/gabinetes.html",
+      "href": "/pages/gabinetes",
       "variant": "ghost",
       "submenu": [
-        { "label": "Cursos y Conferencias", "href": "/pages/gabinetes/cursos-y-conferencias.html" },
-        { "label": "Eventos", "href": "/pages/gabinetes/eventos.html" },
-        { "label": "Prensa y Difusión", "href": "/pages/gabinetes/prensa-y-difusion.html" },
-        { "label": "Solidario", "href": "/pages/gabinetes/solidario.html" }
+        { "label": "Cursos y Conferencias", "href": "/pages/gabinetes/cursos-y-conferencias" },
+        { "label": "Eventos", "href": "/pages/gabinetes/eventos" },
+        { "label": "Prensa y Difusión", "href": "/pages/gabinetes/prensa-y-difusion" },
+        { "label": "Solidario", "href": "/pages/gabinetes/solidario" }
       ]
     },
     {
       "label": "Recursos Académicos",
-      "href": "/pages/recursos.html",
+      "href": "/pages/recursos",
       "variant": "ghost",
       "submenu": [
-        { "label": "Apuntes por materia", "href": "/pages/recursos/apuntes.html" },
-        { "label": "Seguimiento de carrera", "href": "/pages/recursos/seguimiento.html" }
+        { "label": "Apuntes por materia", "href": "/pages/recursos/apuntes" },
+        { "label": "Seguimiento de carrera", "href": "/pages/recursos/seguimiento" }
       ]
     },
-    { "label": "Contacto", "href": "/pages/contacto.html", "variant": "primary" }
+    { "label": "Contacto", "href": "/pages/contacto", "variant": "primary" }
   ]
 }
