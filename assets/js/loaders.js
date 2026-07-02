@@ -431,7 +431,7 @@ function buildGabineteCard(g) {
   }
 
   const href = g.id
-    ? safeHref(window.AChETIQBase.resolve('pages/gabinetes/' + String(g.id) + '.html'))
+    ? safeHref(window.AChETIQBase.resolve('pages/gabinetes/' + String(g.id)))
     : null;
   if (href) {
     const footer = createElement('footer', { class: 'card-footer' });
@@ -464,7 +464,7 @@ function buildMateriaCard(m) {
   const anio = (Number.isInteger(m.anio) && m.anio >= 1 && m.anio <= 5)
     ? m.anio : null;
   const href = m.id
-    ? safeHref(window.AChETIQBase.resolve('pages/recursos/apuntes.html#' + String(m.id)))
+    ? safeHref(window.AChETIQBase.resolve('pages/recursos/apuntes#' + String(m.id)))
     : null;
 
   const attrs = {};

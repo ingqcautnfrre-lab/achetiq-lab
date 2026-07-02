@@ -51,7 +51,7 @@ function walkHtml(dir) {
 /** Ruta absoluta de archivo → URL canónica del sitio (BASE_URL + ruta web). */
 function siteUrlFor(absPath) {
   const rel = relative(ROOT, absPath).split(sep).join("/");
-  return rel === "index.html" ? `${baseUrl}/` : `${baseUrl}/${rel}`;
+  return rel === "index.html" ? `${baseUrl}/` : `${baseUrl}/${rel.replace(/\.html$/, "")}`;
 }
 
 /**
