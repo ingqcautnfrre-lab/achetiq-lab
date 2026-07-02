@@ -324,7 +324,7 @@
     var header = el('header', 'navbar-fallback');
     var inner  = el('div', 'navbar-fallback__inner');
     inner.appendChild(el('a', 'navbar-fallback__brand', 'AChETIQ',
-                         { href: BASE.resolve('index.html') }));
+                         { href: BASE.resolve('/') }));
     header.appendChild(inner);
     placeholder.appendChild(header);
   }
