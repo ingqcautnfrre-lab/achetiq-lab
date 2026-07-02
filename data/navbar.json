@@ -1,11 +1,11 @@
 {
   "brand": {
     "label": "AChETIQ",
-    "href": "/index.html",
+    "href": "/",
     "logo": "/assets/img/logo/achetiq-logo.svg"
   },
   "links": [
-    { "label": "Inicio", "href": "/index.html", "variant": "ghost" },
+    { "label": "Inicio", "href": "/", "variant": "ghost" },
     {
       "label": "Sobre AChETIQ",
       "href": "/pages/sobre-achetiq.html",
