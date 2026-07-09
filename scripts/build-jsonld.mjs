@@ -90,6 +90,23 @@ const organization = {
   sameAs,
 };
 
+/**
+ * WebSite del sitio — señal principal que usa Google para el «nombre del
+ * sitio» (el texto que aparece sobre el título en los resultados). Se fija
+ * en la marca corta «AChETIQ»; el nombre largo queda como alternateName y
+ * como <title> de cada página. Debe ser consistente con og:site_name.
+ */
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${baseUrl}/#website`,
+  name: "AChETIQ",
+  alternateName:
+    "Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química",
+  url: `${baseUrl}/`,
+  publisher: { "@id": `${baseUrl}/#organization` },
+};
+
 /* ── utilidades ─────────────────────────────────────────────────────── */
 
 /** Todos los .html bajo `dir`, recursivo y ordenado (salida determinista). */
@@ -196,7 +213,7 @@ let updated = 0;
 function process(file, { withBreadcrumb }) {
   scanned++;
   const before = readFileSync(file, "utf8");
-  const entities = [organization];
+  const entities = [organization, website];
   if (withBreadcrumb) {
     const crumb = buildBreadcrumb(before, siteUrlFor(file));
     if (crumb) entities.push(crumb);
