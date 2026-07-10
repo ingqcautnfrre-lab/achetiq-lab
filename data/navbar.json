@@ -7,7 +7,7 @@
   "links": [
     { "label": "Inicio", "href": "/", "variant": "ghost" },
     {
-      "label": "Sobre AChETIQ",
+      "label": "Sobre Nosotros",
       "href": "/pages/sobre-achetiq",
       "variant": "ghost",
       "submenu": [
@@ -31,8 +31,8 @@
       "href": "/pages/recursos",
       "variant": "ghost",
       "submenu": [
-        { "label": "Apuntes por materia", "href": "/pages/recursos/apuntes" },
-        { "label": "Seguimiento de carrera", "href": "/pages/recursos/seguimiento" }
+        { "label": "Apuntes Académicos", "href": "/pages/recursos/apuntes" },
+        { "label": "Seguimiento de Carrera", "href": "/pages/recursos/seguimiento" }
       ]
     },
     { "label": "Contacto", "href": "/pages/contacto", "variant": "primary" }
