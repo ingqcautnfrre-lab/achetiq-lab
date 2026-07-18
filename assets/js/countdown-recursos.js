@@ -91,7 +91,7 @@
    */
   function formatRemaining(t) {
     if (t.days === 0 && t.hours === 0 && t.minutes === 0) {
-      return "Menos de un minuto para la apertura de Recursos Académicos.";
+      return "Menos de un minuto para la apertura de Apuntes Académicos.";
     }
     var parts = [];
     if (t.days > 0) parts.push(pluralize(t.days, "día", "días"));
@@ -102,7 +102,7 @@
     var joined = parts.length > 1
       ? parts.slice(0, -1).join(", ") + " y " + parts[parts.length - 1]
       : parts[0];
-    return "Faltan " + joined + " para la apertura de Recursos Académicos.";
+    return "Faltan " + joined + " para la apertura de Apuntes Académicos.";
   }
 
   /**
