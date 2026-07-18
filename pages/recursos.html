@@ -46,7 +46,6 @@
   <meta name="twitter:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
   <link rel="modulepreload" href="../assets/js/loaders.js">
   <link rel="modulepreload" href="../assets/js/main.js">
-  <link rel="modulepreload" href="../assets/js/countdown-recursos.js">
 
   <!-- SEO:JSON-LD — generado por scripts/build-jsonld.mjs · no editar a mano -->
   <script type="application/ld+json">
@@ -144,8 +143,7 @@
 
     <!-- ════════════════════════════════════════════════════════
          [1] PAGE-HEADER — Wireframe §4 bloque [3]
-         Siempre visible: ancla la sección y mantiene contexto
-         aun durante la cuenta regresiva de apertura.
+         Ancla la sección y presenta los dos servicios del hub.
          ════════════════════════════════════════════════════════ -->
     <header class="page-header">
       <h1 class="page-header__title">Recursos académicos</h1>
@@ -155,187 +153,88 @@
     </header>
 
     <!-- ════════════════════════════════════════════════════════
-         [2] COUNTDOWN + ACCESO A SERVICIOS
-         Wireframe §4: la sección de Recursos se habilita el día
-         del lanzamiento (cuenta regresiva preparada en P3.0,
-         partial migrado a partials/countdown-recursos).
-         Estrategia: el page-header queda siempre visible y la
-         cuenta regresiva envuelve sólo el bloque de acceso a los
-         tres servicios — al expirar el contador, los tres
-         servicios quedan revelados sin recargar la página.
-
-         INTEGRACIÓN
-           El markup canónico del partial se inlinea aquí: el
-           proyecto es estático sin SSI y el partial fue
-           preparado precisamente para esta página. El JS y la
-           hoja de estilos se enlazan al pie y en el <head>
-           respectivamente.
-
-         FECHA OBJETIVO
-           data-target-date="2026-08-01T18:00:00-03:00"
-           (apertura confirmada: sábado 1 de agosto de 2026,
-            18:00 hora argentina).
-
-         CONTENIDO A REVELAR
-           Tras expirar la cuenta, el JS quita el atributo
-           [hidden] del nodo [data-countdown-revealed], que
-           contiene el grid de las tres tarjetas de servicio.
+         [2] ACCESO A SERVICIOS
+         Wireframe §4: índice editorial con los dos servicios,
+         siempre visible. La cuenta regresiva de apertura ya NO
+         vive en este hub: se movió a la página de Apuntes
+         Académicos (pages/recursos/apuntes.html), el servicio
+         que abre el 2026-08-01T18:00:00-03:00. El partial
+         canónico sigue en partials/countdown-recursos.html.
          ════════════════════════════════════════════════════════ -->
-    <section class="countdown" data-countdown data-target-date="2026-08-01T18:00:00-03:00"
-             aria-labelledby="recursos-acceso-title">
+    <section aria-labelledby="recursos-acceso-title">
+      <!-- Cabecera editorial del sistema (E01): titular display +
+           bajada en Hanken, en UNA columna alineada a la izquierda
+           (sin la composición a dos columnas del standfirst: el
+           bloque mantiene un único eje, sin ejes en conflicto con
+           las filas del índice). Sin eyebrow mono por sección
+           (deuda saldada, DESIGN.md §Cadencia). -->
+      <header class="section-title section-title--display">
+        <h2 id="recursos-acceso-title">Dos herramientas para tu cursada</h2>
+        <p class="section-title__lead">
+          Elegí un servicio para empezar: el repositorio de apuntes por materia o la planilla para seguir tu avance en la carrera.
+        </p>
+      </header>
 
-      <!-- ── Estado de espera (cuenta regresiva) ── -->
-      <div class="countdown__pending" data-countdown-pending>
-        <div class="countdown__panel">
+      <!-- ÍNDICE EDITORIAL DE SERVICIOS (E05) — sumario con filetes
+           hairline, no grilla de tarjetas (DESIGN.md §Índice
+           editorial). Cada servicio es una fila-enlace en bloque:
+           ícono de orientación + nombre en Fraunces + bajada +
+           flecha cobalto. La mauveína no aparece (reservada a la
+           acción). Estructura estática (no la inyecta el motor):
+           el partial fue preparado para esta página. -->
+      <ul class="recursos-index" data-scroll-reveal>
 
-          <div class="countdown__head">
-            <span class="countdown__badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+        <!-- Servicio 1 — Apuntes Académicos -->
+        <li class="recursos-index__item">
+          <a class="recursos-index__link" href="./recursos/apuntes">
+            <span class="recursos-index__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                   stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
               </svg>
-              <span>Apertura próxima</span>
             </span>
+            <span class="recursos-index__body">
+              <span class="recursos-index__name">Apuntes Académicos</span>
+              <span class="recursos-index__desc">
+                Repositorio académico organizado por año y materia, con apuntes, guías de ejercicios y bibliografía de referencia aportados por la comunidad estudiantil.
+              </span>
+            </span>
+            <svg class="recursos-index__arrow" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </li>
 
-            <h2 class="countdown__title">
-              El núcleo académico de AChETIQ está por abrir
-            </h2>
+        <!-- Servicio 2 — Seguimiento de Carrera -->
+        <li class="recursos-index__item">
+          <a class="recursos-index__link" href="./recursos/seguimiento">
+            <span class="recursos-index__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                   stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M3 3v18h18"></path>
+                <path d="m19 9-5 5-4-4-3 3"></path>
+              </svg>
+            </span>
+            <span class="recursos-index__body">
+              <span class="recursos-index__name">Seguimiento de Carrera</span>
+              <span class="recursos-index__desc">
+                Planilla para registrar el estado de cada materia, calcular el avance y verificar correlativas del Plan 2023. Los datos quedan en tu dispositivo.
+              </span>
+            </span>
+            <svg class="recursos-index__arrow" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </li>
 
-            <p class="countdown__lead">
-              Estamos terminando de reunir el repositorio académico de la asociación:
-              apuntes y guías de ejercicios de las 41 materias del Plan 2023,
-              bibliografía de referencia, el Diseño Curricular y herramientas para
-              seguir tu avance en la carrera. Una sola sección, ordenada por materia
-              y pensada para acompañarte en cada cursada. La cuenta regresiva marca
-              lo que falta para su apertura.
-            </p>
-          </div>
-
-          <div class="countdown__clock" role="timer"
-               aria-label="Tiempo restante para la apertura de Recursos Académicos">
-            <div class="countdown__unit">
-              <div class="countdown__box">
-                <span class="countdown__digits" data-unit="days">00</span>
-              </div>
-              <span class="countdown__label">Días</span>
-            </div>
-
-            <span class="countdown__sep" aria-hidden="true">:</span>
-
-            <div class="countdown__unit">
-              <div class="countdown__box">
-                <span class="countdown__digits" data-unit="hours">00</span>
-              </div>
-              <span class="countdown__label">Horas</span>
-            </div>
-
-            <span class="countdown__sep" aria-hidden="true">:</span>
-
-            <div class="countdown__unit">
-              <div class="countdown__box">
-                <span class="countdown__digits" data-unit="minutes">00</span>
-              </div>
-              <span class="countdown__label">Minutos</span>
-            </div>
-
-            <span class="countdown__sep" aria-hidden="true">:</span>
-
-            <div class="countdown__unit">
-              <div class="countdown__box">
-                <span class="countdown__digits" data-unit="seconds">00</span>
-              </div>
-              <span class="countdown__label">Segundos</span>
-            </div>
-          </div>
-
-          <p class="countdown__note">
-            La sección se habilitará automáticamente al finalizar la cuenta.
-          </p>
-
-        </div>
-      </div>
-
-      <!-- ── Contenido revelado al expirar la cuenta ── -->
-      <div class="countdown__content" data-countdown-revealed hidden>
-
-        <section aria-labelledby="recursos-acceso-title">
-          <!-- Cabecera editorial del sistema (E01): titular display +
-               bajada en Hanken, en UNA columna alineada a la izquierda
-               (sin la composición a dos columnas del standfirst: el
-               bloque mantiene un único eje, sin ejes en conflicto con
-               las filas del índice). Sin eyebrow mono por sección
-               (deuda saldada, DESIGN.md §Cadencia). -->
-          <header class="section-title section-title--display">
-            <h2 id="recursos-acceso-title">Dos herramientas para tu cursada</h2>
-            <p class="section-title__lead">
-              Elegí un servicio para empezar: el repositorio de apuntes por materia o la planilla para seguir tu avance en la carrera.
-            </p>
-          </header>
-
-          <!-- ÍNDICE EDITORIAL DE SERVICIOS (E05) — sumario con filetes
-               hairline, no grilla de tarjetas (DESIGN.md §Índice
-               editorial). Cada servicio es una fila-enlace en bloque:
-               ícono de orientación + nombre en Fraunces + bajada +
-               flecha cobalto. La mauveína no aparece (reservada a la
-               acción). Estructura estática (no la inyecta el motor):
-               el partial fue preparado para esta página. -->
-          <ul class="recursos-index" data-scroll-reveal>
-
-            <!-- Servicio 1 — Apuntes Académicos -->
-            <li class="recursos-index__item">
-              <a class="recursos-index__link" href="./recursos/apuntes">
-                <span class="recursos-index__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
-                       stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                  </svg>
-                </span>
-                <span class="recursos-index__body">
-                  <span class="recursos-index__name">Apuntes Académicos</span>
-                  <span class="recursos-index__desc">
-                    Repositorio académico organizado por año y materia, con apuntes, guías de ejercicios y bibliografía de referencia aportados por la comunidad estudiantil.
-                  </span>
-                </span>
-                <svg class="recursos-index__arrow" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M5 12h14"></path>
-                  <path d="m12 5 7 7-7 7"></path>
-                </svg>
-              </a>
-            </li>
-
-            <!-- Servicio 2 — Seguimiento de Carrera -->
-            <li class="recursos-index__item">
-              <a class="recursos-index__link" href="./recursos/seguimiento">
-                <span class="recursos-index__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
-                       stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                    <path d="M3 3v18h18"></path>
-                    <path d="m19 9-5 5-4-4-3 3"></path>
-                  </svg>
-                </span>
-                <span class="recursos-index__body">
-                  <span class="recursos-index__name">Seguimiento de Carrera</span>
-                  <span class="recursos-index__desc">
-                    Planilla para registrar el estado de cada materia, calcular el avance y verificar correlativas del Plan 2023. Los datos quedan en tu dispositivo.
-                  </span>
-                </span>
-                <svg class="recursos-index__arrow" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round" aria-hidden="true" focusable="false">
-                  <path d="M5 12h14"></path>
-                  <path d="m12 5 7 7-7 7"></path>
-                </svg>
-              </a>
-            </li>
-
-          </ul>
-        </section>
-
-      </div>
-
+      </ul>
     </section>
 
   </main>
@@ -364,7 +263,6 @@
   <script src="../assets/js/navbar.js" defer></script>
   <script src="../assets/js/footer.js" defer></script>
   <script src="../assets/js/scroll-reveal.js" defer></script>
-  <script type="module" src="../assets/js/countdown-recursos.js"></script>
   <script type="module" src="../assets/js/main.js"></script>
 
 </body>

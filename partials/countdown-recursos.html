@@ -3,8 +3,8 @@
 AChETIQ — Partial: Cuenta regresiva de Recursos Académicos
 Bloque BEM: .countdown
 ------------------------------------------------------------
-Habilita la sección de Recursos Académicos de forma automática
-20 días después del lanzamiento. Hasta entonces muestra una
+Habilita la sección de Apuntes Académicos de forma automática
+en la fecha objetivo configurada. Hasta entonces muestra una
 cuenta regresiva; al expirar revela el contenido real.
 
 INTEGRACIÓN (stack vanilla)
@@ -21,7 +21,7 @@ INTEGRACIÓN (stack vanilla)
 PARÁMETRO  ·  FUENTE DE VERDAD: la página que inlinea el partial
   data-target-date  (obligatorio) Fecha/hora de apertura en ISO 8601
                     sobre el contenedor [data-countdown]. Editar en
-                    la página contenedora (hoy: pages/recursos.html);
+                    la página contenedora (hoy: pages/recursos/apuntes.html);
                     el valor aquí abajo es sólo el placeholder de
                     plantilla y NO se lee en tiempo de ejecución.
                     Día actual del lanzamiento: 2026-08-01T18:00:00-03:00.
@@ -49,16 +49,15 @@ CONTENIDO A REVELAR
         </span>
 
         <h2 class="countdown__title">
-          El núcleo académico de AChETIQ está por abrir
+          El repositorio de apuntes está por abrir
         </h2>
 
         <p class="countdown__lead">
           Estamos terminando de reunir el repositorio académico de la asociación:
           apuntes y guías de ejercicios de las 41 materias del Plan 2023,
-          bibliografía de referencia, el Diseño Curricular y herramientas para
-          seguir tu avance en la carrera. Una sola sección, ordenada por materia
-          y pensada para acompañarte en cada cursada. La cuenta regresiva marca
-          lo que falta para su apertura.
+          bibliografía de referencia y el Diseño Curricular, organizados por
+          año y materia para acompañarte en cada cursada. La cuenta regresiva
+          marca lo que falta para su apertura.
         </p>
       </div>
 
@@ -69,7 +68,7 @@ CONTENIDO A REVELAR
            sr-only polite que anuncia el restante en lenguaje natural y
            sólo al cambiar el minuto. No reañadir aria-live aquí. -->
       <div class="countdown__clock" role="timer"
-           aria-label="Tiempo restante para la apertura de Recursos Académicos">
+           aria-label="Tiempo restante para la apertura de Apuntes Académicos">
         <div class="countdown__unit">
           <div class="countdown__box">
             <span class="countdown__digits" data-unit="days">00</span>

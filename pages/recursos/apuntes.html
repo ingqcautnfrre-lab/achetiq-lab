@@ -48,6 +48,7 @@
   <link rel="modulepreload" href="../../assets/js/loaders.js">
   <link rel="modulepreload" href="../../assets/js/main.js">
   <link rel="modulepreload" href="../../assets/js/apuntes.js">
+  <link rel="modulepreload" href="../../assets/js/countdown-recursos.js">
 
   <!-- SEO:JSON-LD — generado por scripts/build-jsonld.mjs · no editar a mano -->
   <script type="application/ld+json">
@@ -161,82 +162,184 @@
     </header>
 
     <!-- ════════════════════════════════════════════════════════
-         [2] FILTROS POR AÑO — Wireframe §4 bloque [5]
-         componente: .pill-nav (FASE_1 §7.2)
-         comportamiento: seleccionar un año OCULTA las cards de
-         los demás años (no filtra in-place). «Todos» muestra
-         todo. Estado por defecto: «Todos» activo.
-         El wiring vive en assets/js/apuntes.js (override del
-         loader `recursos`).
-         ════════════════════════════════════════════════════════ -->
-    <div class="apuntes-filter">
-      <p class="apuntes-filter__label" id="apuntes-filter-label">Filtrar por año</p>
-      <nav class="pill-nav" data-anio-filter aria-labelledby="apuntes-filter-label">
-        <button class="pill-nav__pill is-active" type="button"
-                data-anio="all" aria-pressed="true">Todos</button>
-        <button class="pill-nav__pill" type="button"
-                data-anio="1" aria-pressed="false">1º año</button>
-        <button class="pill-nav__pill" type="button"
-                data-anio="2" aria-pressed="false">2º año</button>
-        <button class="pill-nav__pill" type="button"
-                data-anio="3" aria-pressed="false">3º año</button>
-        <button class="pill-nav__pill" type="button"
-                data-anio="4" aria-pressed="false">4º año</button>
-        <button class="pill-nav__pill" type="button"
-                data-anio="5" aria-pressed="false">5º año</button>
-      </nav>
-    </div>
+         COUNTDOWN DE APERTURA — envuelve los bloques [2]–[4]
+         La sección de Apuntes Académicos abre el sábado
+         2026-08-01 a las 18:00 (hora argentina, -03). Hasta
+         entonces la cuenta regresiva reemplaza el contenido
+         (filtros, grid de materias y CTA de aporte); al expirar,
+         countdown-recursos.js quita el [hidden] del nodo
+         [data-countdown-revealed] sin recargar la página.
+         El page-header queda siempre visible.
 
-    <!-- ════════════════════════════════════════════════════════
-         [3] GRID DE MATERIAS — Wireframe §4 bloque [6]
-         data-loader="recursos" → override en assets/js/apuntes.js:
-           · ordena por anio asc, orden natural dentro del año;
-           · pinta cada materia como .card-materia con cover
-             coloreado por var(--color-materia-anio-N), año en
-             caption y nombre como h3;
-           · modelo «carpeta de Drive por materia»: cada materia
-             de data/recursos.json lleva `drive_url`.
-               – con drive_url → tarjeta <a> externa
-                 (target="_blank", rel="noopener noreferrer",
-                 aria-label de enlace externo) que abre la
-                 carpeta de Google Drive de la materia;
-               – sin drive_url ("") → tarjeta <article> no
-                 interactiva en variante --placeholder con la
-                 línea «Carpeta no disponible».
-           · para sumar una carpeta, basta con cargar su URL en
-             el campo drive_url de la materia en recursos.json;
-             no hay subpáginas ni data/apuntes.json.
-         ════════════════════════════════════════════════════════ -->
-    <section aria-labelledby="materias-title">
-      <header class="section-title sr-only">
-        <h2 id="materias-title">Materias del Plan 2023</h2>
-      </header>
-      <div data-loader="recursos"></div>
-    </section>
+         Migrado desde pages/recursos.html: el hub de Recursos
+         ya no lleva contador. Markup canónico en
+         partials/countdown-recursos.html (inlineado acá:
+         proyecto estático, sin SSI).
 
-    <!-- ════════════════════════════════════════════════════════
-         [4] CTA — APORTAR MATERIAL — Wireframe §4 bloque [7]
-         Mecanismo de aporte: el correo institucional con sufijo
-         `+apuntes` y el asunto canónico «Envío de material
-         académico». Ambos datos quedan literales en el HTML
-         para que funcionen también con JS deshabilitado.
+         FECHA OBJETIVO
+           data-target-date="2026-08-01T18:00:00-03:00"
+           (apertura confirmada: sábado 1 de agosto de 2026,
+            18:00 hora argentina).
          ════════════════════════════════════════════════════════ -->
-    <section class="cta-final" aria-labelledby="cta-aportar-title">
-      <h2 class="cta-final__title" id="cta-aportar-title">¿Querés aportar material?</h2>
-      <p class="cta-final__lead">
-        Si tenés apuntes, guías resueltas o material de estudio que pueda servirle a otros estudiantes, escribinos. Todo aporte queda disponible para la comunidad y se acredita al autor original. El correo abre con el asunto «Envío de material académico» ya cargado.
-      </p>
-      <a class="cta-final__email" href="mailto:achetiq.resistencia+apuntes@aneiqa.org?subject=Env%C3%ADo%20de%20material%20acad%C3%A9mico">
-        <svg class="cta-final__email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-          <path d="m3.5 7.5 8.5 6 8.5-6"></path>
-        </svg>
-        <span class="cta-final__email-address">achetiq.resistencia+apuntes@aneiqa.org</span>
-      </a>
-      <div class="cta-final__actions">
-        <a href="mailto:achetiq.resistencia+apuntes@aneiqa.org?subject=Env%C3%ADo%20de%20material%20acad%C3%A9mico"
-           class="btn btn-primary">Quiero aportar</a>
+    <section class="countdown" data-countdown data-target-date="2026-08-01T18:00:00-03:00">
+
+      <!-- ── Estado de espera (cuenta regresiva) ── -->
+      <div class="countdown__pending" data-countdown-pending>
+        <div class="countdown__panel">
+
+          <div class="countdown__head">
+            <span class="countdown__badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+              </svg>
+              <span>Apertura próxima</span>
+            </span>
+
+            <h2 class="countdown__title">
+              El repositorio de apuntes está por abrir
+            </h2>
+
+            <p class="countdown__lead">
+              Estamos terminando de reunir el repositorio académico de la asociación:
+              apuntes y guías de ejercicios de las 41 materias del Plan 2023,
+              bibliografía de referencia y el Diseño Curricular, organizados por
+              año y materia para acompañarte en cada cursada. La cuenta regresiva
+              marca lo que falta para su apertura.
+            </p>
+          </div>
+
+          <!-- A11y: el reloj NO lleva aria-live a propósito (ver partial
+               canónico): countdown-recursos.js inyecta una región sr-only
+               polite que anuncia el restante sólo al cambiar el minuto. -->
+          <div class="countdown__clock" role="timer"
+               aria-label="Tiempo restante para la apertura de Apuntes Académicos">
+            <div class="countdown__unit">
+              <div class="countdown__box">
+                <span class="countdown__digits" data-unit="days">00</span>
+              </div>
+              <span class="countdown__label">Días</span>
+            </div>
+
+            <span class="countdown__sep" aria-hidden="true">:</span>
+
+            <div class="countdown__unit">
+              <div class="countdown__box">
+                <span class="countdown__digits" data-unit="hours">00</span>
+              </div>
+              <span class="countdown__label">Horas</span>
+            </div>
+
+            <span class="countdown__sep" aria-hidden="true">:</span>
+
+            <div class="countdown__unit">
+              <div class="countdown__box">
+                <span class="countdown__digits" data-unit="minutes">00</span>
+              </div>
+              <span class="countdown__label">Minutos</span>
+            </div>
+
+            <span class="countdown__sep" aria-hidden="true">:</span>
+
+            <div class="countdown__unit">
+              <div class="countdown__box">
+                <span class="countdown__digits" data-unit="seconds">00</span>
+              </div>
+              <span class="countdown__label">Segundos</span>
+            </div>
+          </div>
+
+          <p class="countdown__note">
+            La sección se habilitará automáticamente al finalizar la cuenta.
+          </p>
+
+        </div>
       </div>
+
+      <!-- ── Contenido revelado al expirar la cuenta ── -->
+      <div class="countdown__content" data-countdown-revealed hidden>
+
+        <!-- ════════════════════════════════════════════════════════
+             [2] FILTROS POR AÑO — Wireframe §4 bloque [5]
+             componente: .pill-nav (FASE_1 §7.2)
+             comportamiento: seleccionar un año OCULTA las cards de
+             los demás años (no filtra in-place). «Todos» muestra
+             todo. Estado por defecto: «Todos» activo.
+             El wiring vive en assets/js/apuntes.js (override del
+             loader `recursos`).
+             ════════════════════════════════════════════════════════ -->
+        <div class="apuntes-filter">
+          <p class="apuntes-filter__label" id="apuntes-filter-label">Filtrar por año</p>
+          <nav class="pill-nav" data-anio-filter aria-labelledby="apuntes-filter-label">
+            <button class="pill-nav__pill is-active" type="button"
+                    data-anio="all" aria-pressed="true">Todos</button>
+            <button class="pill-nav__pill" type="button"
+                    data-anio="1" aria-pressed="false">1º año</button>
+            <button class="pill-nav__pill" type="button"
+                    data-anio="2" aria-pressed="false">2º año</button>
+            <button class="pill-nav__pill" type="button"
+                    data-anio="3" aria-pressed="false">3º año</button>
+            <button class="pill-nav__pill" type="button"
+                    data-anio="4" aria-pressed="false">4º año</button>
+            <button class="pill-nav__pill" type="button"
+                    data-anio="5" aria-pressed="false">5º año</button>
+          </nav>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════
+             [3] GRID DE MATERIAS — Wireframe §4 bloque [6]
+             data-loader="recursos" → override en assets/js/apuntes.js:
+               · ordena por anio asc, orden natural dentro del año;
+               · pinta cada materia como .card-materia con cover
+                 coloreado por var(--color-materia-anio-N), año en
+                 caption y nombre como h3;
+               · modelo «carpeta de Drive por materia»: cada materia
+                 de data/recursos.json lleva `drive_url`.
+                   – con drive_url → tarjeta <a> externa
+                     (target="_blank", rel="noopener noreferrer",
+                     aria-label de enlace externo) que abre la
+                     carpeta de Google Drive de la materia;
+                   – sin drive_url ("") → tarjeta <article> no
+                     interactiva en variante --placeholder con la
+                     línea «Carpeta no disponible».
+               · para sumar una carpeta, basta con cargar su URL en
+                 el campo drive_url de la materia en recursos.json;
+                 no hay subpáginas ni data/apuntes.json.
+             ════════════════════════════════════════════════════════ -->
+        <section aria-labelledby="materias-title">
+          <header class="section-title sr-only">
+            <h2 id="materias-title">Materias del Plan 2023</h2>
+          </header>
+          <div data-loader="recursos"></div>
+        </section>
+
+        <!-- ════════════════════════════════════════════════════════
+             [4] CTA — APORTAR MATERIAL — Wireframe §4 bloque [7]
+             Mecanismo de aporte: el correo institucional con sufijo
+             `+apuntes` y el asunto canónico «Envío de material
+             académico». Ambos datos quedan literales en el HTML
+             para que funcionen también con JS deshabilitado.
+             ════════════════════════════════════════════════════════ -->
+        <section class="cta-final" aria-labelledby="cta-aportar-title">
+          <h2 class="cta-final__title" id="cta-aportar-title">¿Querés aportar material?</h2>
+          <p class="cta-final__lead">
+            Si tenés apuntes, guías resueltas o material de estudio que pueda servirle a otros estudiantes, escribinos. Todo aporte queda disponible para la comunidad y se acredita al autor original. El correo abre con el asunto «Envío de material académico» ya cargado.
+          </p>
+          <a class="cta-final__email" href="mailto:achetiq.resistencia+apuntes@aneiqa.org?subject=Env%C3%ADo%20de%20material%20acad%C3%A9mico">
+            <svg class="cta-final__email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <path d="m3.5 7.5 8.5 6 8.5-6"></path>
+            </svg>
+            <span class="cta-final__email-address">achetiq.resistencia+apuntes@aneiqa.org</span>
+          </a>
+          <div class="cta-final__actions">
+            <a href="mailto:achetiq.resistencia+apuntes@aneiqa.org?subject=Env%C3%ADo%20de%20material%20acad%C3%A9mico"
+               class="btn btn-primary">Quiero aportar</a>
+          </div>
+        </section>
+
+      </div>
+
     </section>
 
   </main>
@@ -265,6 +368,7 @@
   <script src="../../assets/js/navbar.js" defer></script>
   <script src="../../assets/js/footer.js" defer></script>
   <script type="module" src="../../assets/js/apuntes.js"></script>
+  <script type="module" src="../../assets/js/countdown-recursos.js"></script>
   <script type="module" src="../../assets/js/main.js"></script>
 
 </body>
