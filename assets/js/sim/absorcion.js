@@ -80,6 +80,7 @@ export function montar(raiz) {
       });
       return filas;
     },
+    bajadaEsquema: 'Columna a contracorriente con la etapa 1 en el tope. Se redibuja con el número de etapas; pasá el puntero sobre una etapa para ubicarla en el diagrama.',
     alCambiarCapas: function () { dibujar(); },
     alCambiarPaso: function () { dibujar(); }
   });
@@ -283,8 +284,10 @@ export function montar(raiz) {
       capas: capas
     });
     A.mostrarElemento('ps', !!(r && r.ok && r.p.E < 1));
-    if (A.paso.activo && r && r.ok) A.pintarPaso(narrarEtapa(r, A.paso.k));
-    A.ajustarPlot();
+    if (A.paso.activo && r && r.ok) {
+      A.pintarPaso(narrarEtapa(r, A.paso.k));
+      A.esquema.resaltar(A.paso.k);
+    }
   }
 
   function textoPlano(r) {
@@ -297,6 +300,7 @@ export function montar(raiz) {
     var r = res;
     if (!r.ok) {
       A.kpis([{ etiqueta: 'Resultado', valor: '—', nota: 'especificación no válida' }]);
+      pintarEsquema(null);
       avisos(A.avisos, r.errores.map(function (t) { return { nivel: 'error', texto: t }; }).concat(r.avisos));
       ficha(A.ficha, []);
       A.tbody.replaceChildren();
@@ -320,6 +324,7 @@ export function montar(raiz) {
     ]);
     avisos(A.avisos, r.avisos);
     A.anunciar(textoPlano(r));
+    pintarEsquema(r);
 
     var items = [
       { termino: 'Gas de entrada, Y_{N+1}', valor: fmtSig(r.Yin, 5), nota: 'y_{N+1} = ' + fmtSig(r.p.yIn, 4) },
@@ -366,6 +371,66 @@ export function montar(raiz) {
       (r.p.E < 1 ? ' Con E_{MV} < 1, Y_n proviene del pseudoequilibrio.' : ''));
 
     pintarLectura(r);
+  }
+
+  /* ── Esquema del equipo + resumen de corrientes ── */
+  function pintarEsquema(r) {
+    var kmol = ' kmol/h';
+    if (!r) {
+      A.esquema.dibujar({
+        tipo: 'absorcion', n: Infinity, titulo: 'Esquema de la columna de absorción',
+        descripcion: 'Especificación no válida.',
+        Lin: ['—'], Gout: ['—'], Gin: ['—'], Lout: ['—'], LV: '', soluto: ''
+      });
+      A.corrientes.replaceChildren();
+      A.notaCorrientes.textContent = 'Corregí la especificación para ver las corrientes.';
+      return;
+    }
+    var c = {};
+    r.corrientes.forEach(function (k) { c[k.id] = k; });
+    var e = r.escalones;
+    var finito = isFinite(e.nFrac);
+    A.esquema.dibujar({
+      tipo: 'absorcion',
+      n: finito ? e.n : Infinity,
+      real: r.p.E < 1,
+      titulo: 'Esquema de la columna de absorción',
+      descripcion: finito
+        ? 'Columna de ' + e.n + ' etapas. Gas de entrada con Y_N+1 = ' + fmtSig(c.Gin.R, 4) +
+          ', gas tratado con Y_1 = ' + fmtSig(c.Gout.R, 4) + ', líquido de salida con X_N = ' + fmtSig(c.Lout.R, 4) + '.'
+        : 'Con un caudal de solvente menor o igual que el mínimo se requerirían infinitas etapas.',
+      Lin: ['L′_s = ' + fmt(c.Lin.libre, 1) + kmol, 'X_0 = ' + fmtSig(c.Lin.R, 4)],
+      Gout: ['V′_s = ' + fmt(c.Gout.libre, 1) + kmol, 'Y_1 = ' + fmtSig(c.Gout.R, 4), 'y_1 = ' + fmtSig(c.Gout.f, 4)],
+      Gin: ['V′_s = ' + fmt(c.Gin.libre, 1) + kmol, 'Y_{N+1} = ' + fmtSig(c.Gin.R, 4), 'y_{N+1} = ' + fmtSig(c.Gin.f, 4)],
+      Lout: ['L′_s = ' + fmt(c.Lout.libre, 1) + kmol, 'X_N = ' + fmtSig(c.Lout.R, 4), 'x_N = ' + fmtSig(c.Lout.f, 4)],
+      LV: 'L′_s/V′_s = ' + fmt(r.LV, 3),
+      soluto: 'Absorbido: ' + fmt(r.soluto, 2) + kmol
+    });
+
+    var t = A.corrientes;
+    t.replaceChildren();
+    t.appendChild(el('caption', 'sr-only', 'Caudales y composiciones de las corrientes de la columna'));
+    var thead = el('thead');
+    var trh = el('tr');
+    ['Corriente', 'Libre de soluto (kmol/h)', 'Total (kmol/h)', 'Relación molar', 'Fracción molar'].forEach(function (h, i) {
+      trh.appendChild(el('th', i ? 'sim-tabla__num' : null, h, { scope: 'col' }));
+    });
+    thead.appendChild(trh);
+    t.appendChild(thead);
+    var tb = el('tbody');
+    r.corrientes.forEach(function (k, i) {
+      var tr = el('tr', i === 2 ? 'is-separador' : null);
+      tr.appendChild(el('th', null, k.nombre, { scope: 'row' }));
+      tr.appendChild(el('td', 'sim-tabla__num', fmt(k.libre, 2)));
+      tr.appendChild(el('td', 'sim-tabla__num', fmt(k.total, 2)));
+      tr.appendChild(el('td', 'sim-tabla__num', fmtSig(k.R, 4)));
+      tr.appendChild(el('td', 'sim-tabla__num', fmtSig(k.f, 4)));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    A.notaCorrientes.replaceChildren();
+    enHTML(A.notaCorrientes, 'Soluto absorbido: V′_s (Y_{N+1} − Y_1) = L′_s (X_N − X_0) = ' + fmt(r.soluto, 3) +
+      ' kmol/h · recuperación ' + fmt(r.recuperacion * 100, 2) + ' %. El caudal total es el caudal libre de soluto multiplicado por (1 + relación molar).');
   }
 
   function fmtEtapas(e) {

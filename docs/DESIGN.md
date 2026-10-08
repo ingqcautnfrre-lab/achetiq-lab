@@ -326,10 +326,16 @@ distintivo del registro utilitario: convierte un índice de 41 materias en una g
 Los simuladores de Recursos › Simulaciones se listan como desplegables nativos (`<details class="sim">`)
 con la misma gramática del índice editorial: número y título en Fraunces, bajada en Hanken, filetes de
 tinta y lavado cobalto al hover. El registro interior es **producto**: controles en Hanken, datos en
-Geist Mono tabular y la figura fija junto a los parámetros. El diagrama usa una **paleta categórica de
-datos** propia (`--dataviz-naranja`, `--dataviz-turquesa` + `--cobalto-500`, tokens.css «Series de los
-simuladores»), validada para visión cromática atípica y contraste ≥ 3:1. La mauveína **no** entra al
-diagrama y los colores de estado no se reutilizan como series. Detalle técnico en `docs/SIMULADORES.md`.
+Geist Mono tabular, y la figura y el esquema del equipo estáticos junto a los parámetros. El diagrama
+usa una **paleta categórica de datos** propia (`--dataviz-azul`, `--dataviz-violeta`,
+`--dataviz-verde`, tokens.css «Series de los simuladores»), validada para visión cromática atípica.
+Los colores de estado no se reutilizan como series. Detalle técnico en `docs/SIMULADORES.md`.
+
+**Excepción registrada — Violeta de datos.** A pedido de la dirección del proyecto, la serie de
+rectificación (y la recta de operación de absorción) usa #702FA0, un violeta vecino de la mauveína.
+Se admite porque es **un trazo de datos**, nunca una superficie de acción: no rellena botones ni
+fondos, aparece siempre acompañado de rótulo directo y leyenda, y su matiz (≈ 307°) queda separado
+del de la mauveína de acción (≈ 322°). La Regla de la Mauveína Escasa sigue rigiendo para la acción.
 
 **Excepción registrada — Tema papel.** A pedido de la dirección del proyecto, las páginas de
 Simulaciones usan un fondo papel neutro (`--papel-50` #F8F7F4, C ≈ 0,004; `body.tema-papel`) con paneles

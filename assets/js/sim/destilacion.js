@@ -90,6 +90,7 @@ export function montar(raiz) {
       });
       return filas;
     },
+    bajadaEsquema: 'Columna con condensador total y calderín parcial. Se redibuja con el número de etapas y el plato de alimentación; pasá el puntero sobre un plato para ubicarlo en el diagrama.',
     alCambiarCapas: function () { dibujar(); },
     alCambiarPaso: function () { dibujar(); }
   });
@@ -300,8 +301,10 @@ export function montar(raiz) {
       capas: capas
     });
     A.mostrarElemento('ps', !!(r && r.ok && r.p.E < 1));
-    if (A.paso.activo && r && r.ok) A.pintarPaso(narrarEtapa(r, A.paso.k));
-    A.ajustarPlot();
+    if (A.paso.activo && r && r.ok) {
+      A.pintarPaso(narrarEtapa(r, A.paso.k));
+      A.esquema.resaltar(A.paso.k);
+    }
   }
 
   /* ── Resultado principal (oración) ── */
@@ -321,6 +324,7 @@ export function montar(raiz) {
     var r = res;
     if (!r.ok) {
       A.kpis([{ etiqueta: 'Resultado', valor: '—', nota: 'especificación no válida' }]);
+      pintarEsquema(null);
       avisos(A.avisos, r.errores.map(function (t) { return { nivel: 'error', texto: t }; }).concat(r.avisos));
       ficha(A.ficha, []);
       A.tbody.replaceChildren();
@@ -346,6 +350,7 @@ export function montar(raiz) {
     ]);
     avisos(A.avisos, r.avisos);
     A.anunciar(textoResultado(r, true));
+    pintarEsquema(r);
 
     /* Ficha técnica */
     var b = r.balance;
@@ -388,6 +393,76 @@ export function montar(raiz) {
       (r.p.E < 1 ? ' Con E_{MV} < 1, y_n proviene del pseudoequilibrio.' : ''));
 
     pintarLectura(r);
+  }
+
+  /* ── Esquema del equipo + resumen de corrientes ── */
+  var COND_CORTA = {
+    subenfriado: 'líquido subenfriado', liquido: 'líquido saturado', mezcla: 'mezcla líquido–vapor',
+    vapor: 'vapor saturado', sobrecalentado: 'vapor sobrecalentado'
+  };
+
+  function pintarEsquema(r) {
+    var kmol = ' kmol/h';
+    if (!r) {
+      A.esquema.dibujar({
+        tipo: 'destilacion', n: Infinity, titulo: 'Esquema de la columna de destilación',
+        descripcion: 'Especificación no válida.',
+        F: ['—'], D: ['—'], B: ['—'], L: [], V: '', Lb: '', Vb: '', LV: '', LVb: ''
+      });
+      A.corrientes.replaceChildren();
+      A.notaCorrientes.textContent = 'Corregí la especificación para ver las corrientes.';
+      return;
+    }
+    var c = {};
+    r.corrientes.forEach(function (k) { c[k.id] = k; });
+    var e = r.escalones;
+    var finito = isFinite(e.nFrac);
+    A.esquema.dibujar({
+      tipo: 'destilacion',
+      n: finito ? e.n : Infinity,
+      alim: e.alim,
+      titulo: 'Esquema de la columna de destilación',
+      descripcion: finito
+        ? 'Columna con ' + (e.n - 1) + ' platos y calderín parcial; alimentación en la etapa ' + e.alim + '. ' +
+          'Destilado ' + fmt(c.D.caudal, 2) + ' kmol/h con x_D = ' + fmt(r.p.xD, 3) +
+          '; residuo ' + fmt(c.B.caudal, 2) + ' kmol/h con x_B = ' + fmt(r.p.xB, 3) + '.'
+        : 'Con R menor o igual que el reflujo mínimo se requerirían infinitas etapas.',
+      F: [fmt(c.F.caudal, 1) + kmol, 'x_F = ' + fmt(c.F.x, 3), 'q = ' + fmt(r.p.q, 2), COND_CORTA[condicionDe(r.p.q)]],
+      D: [fmt(c.D.caudal, 2) + kmol, 'x_D = ' + fmt(c.D.x, 3)],
+      B: [fmt(c.B.caudal, 2) + kmol, 'x_B = ' + fmt(c.B.x, 3)],
+      L: ['L = ' + fmt(c.L.caudal, 1) + kmol, 'R = L/D = ' + fmt(r.R, 2)],
+      V: 'V = ' + fmt(c.V.caudal, 1) + kmol,
+      Lb: 'L̄ = ' + fmt(c.Lb.caudal, 1) + kmol,
+      Vb: 'V̄ = ' + fmt(c.Vb.caudal, 1) + kmol,
+      LV: 'L/V = ' + fmt(r.balance.LV, 3),
+      LVb: 'L̄/V̄ = ' + fmt(r.balance.LVb, 3)
+    });
+
+    var t = A.corrientes;
+    t.replaceChildren();
+    t.appendChild(el('caption', 'sr-only', 'Caudales y composiciones de las corrientes de la columna'));
+    var thead = el('thead');
+    var trh = el('tr');
+    ['Corriente', 'Caudal (kmol/h)', 'x (más volátil)'].forEach(function (h, i) {
+      trh.appendChild(el('th', i ? 'sim-tabla__num' : null, h, { scope: 'col' }));
+    });
+    thead.appendChild(trh);
+    t.appendChild(thead);
+    var tb = el('tbody');
+    r.corrientes.forEach(function (k, i) {
+      var tr = el('tr', i === 3 ? 'is-separador' : null);
+      tr.appendChild(el('th', null, k.nombre, { scope: 'row' }));
+      tr.appendChild(el('td', 'sim-tabla__num', fmt(k.caudal, 2)));
+      tr.appendChild(el('td', 'sim-tabla__num', isFinite(k.x) ? fmt(k.x, 4) : '—'));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    var cierre = Math.abs(c.F.caudal * c.F.x - (c.D.caudal * c.D.x + c.B.caudal * c.B.x));
+    A.notaCorrientes.replaceChildren();
+    enHTML(A.notaCorrientes, 'Balance global: F = D + B = ' + fmt(c.D.caudal + c.B.caudal, 2) +
+      ' kmol/h; balance del más volátil: F x_F − (D x_D + B x_B) = ' + fmt(cierre, 4) +
+      ' kmol/h. Con condensador total, el vapor de tope y el reflujo tienen la composición del destilado; ' +
+      'las corrientes del calderín toman la composición de la construcción (líquido de la etapa N − 1 y vapor de la etapa N).');
   }
 
   function fmtEtapas(e) {

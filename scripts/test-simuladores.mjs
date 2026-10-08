@@ -191,3 +191,29 @@ test("absorción — datos tabulados ilustrativos", () => {
   assert.equal(r.ok, true, String(r.errores));
   assert.ok(isFinite(r.escalones.nFrac));
 });
+
+/* ── Resumen de corrientes (esquema del equipo) ─────────────────── */
+
+test("destilación — corrientes: cierre de balances global y por componente", () => {
+  for (const over of [{}, { q: 1.2, R: 3, F: 250 }, { E: 0.7 }]) {
+    const r = dest(over);
+    const c = Object.fromEntries(r.corrientes.map((k) => [k.id, k]));
+    cerca(c.F.caudal, c.D.caudal + c.B.caudal, 1e-9, "F = D + B");
+    cerca(c.F.caudal * c.F.x, c.D.caudal * c.D.x + c.B.caudal * c.B.x, 1e-9, "F x_F = D x_D + B x_B");
+    cerca(c.V.caudal, c.L.caudal + c.D.caudal, 1e-9, "V = L + D");
+    cerca(c.Lb.caudal, c.Vb.caudal + c.B.caudal, 1e-9, "L̄ = V̄ + B");
+    assert.ok(c.Lb.x > 0 && c.Lb.x < 1 && c.Vb.x > 0 && c.Vb.x < 1, "composiciones del calderín");
+  }
+});
+
+test("absorción — corrientes: balance de soluto", () => {
+  for (const over of [{}, { E: 0.7 }, { equilibrio: { tipo: "henry", m: 0.8 }, yIn: 0.4, modoL: "ratio", lRatio: 1.5 }]) {
+    const r = abs(over);
+    const c = Object.fromEntries(r.corrientes.map((k) => [k.id, k]));
+    const absorbidoGas = c.Gin.libre * (c.Gin.R - c.Gout.R);
+    const absorbidoLiq = c.Lin.libre * (c.Lout.R - c.Lin.R);
+    cerca(absorbidoGas, absorbidoLiq, 1e-9, "V′(Y_{N+1} − Y_1) = L′(X_N − X_0)");
+    cerca(c.Gin.total - c.Gout.total, absorbidoGas, 1e-9, "caudal total de gas");
+    cerca(c.Lout.total - c.Lin.total, absorbidoGas, 1e-9, "caudal total de líquido");
+  }
+});

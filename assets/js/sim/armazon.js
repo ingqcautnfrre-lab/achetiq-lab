@@ -10,7 +10,11 @@
      │              │ │ └────────────────────────┘ │ Descargar PNG│ │
      │              │ │ avisos · paso a paso       └──────────────┘ │
      └──────────────┘ └──────────────────────────────────────────┘
+                      ┌ Esquema del equipo: columna + corrientes ┐
      ┌ Resultados: Ficha técnica · Etapas · Cómo leer el diagrama ┐
+
+   Todos los paneles son estáticos (ninguno acompaña al
+   desplazamiento de la página).
 
    La lógica de cada simulador vive en destilacion.js y
    absorcion.js; acá hay estructura, el panel de elementos (que es
@@ -24,6 +28,7 @@
 import { el, elNotacion, boton, pestanas, anunciador, descargar, csv } from './ui.js';
 import { crearGrafico, serializarSVG } from './grafico.js';
 import { exportarPNG } from './exportar.js';
+import { crearEsquema } from './esquema.js';
 import { enHTML } from './notacion.js';
 
 var NS = 'http://www.w3.org/2000/svg';
@@ -98,8 +103,7 @@ export function crearArmazon(raiz, cfg) {
   /* ── Panel lateral: elementos del gráfico + descarga ── */
   var lado = el('aside', 'sim-elementos', null, { 'aria-labelledby': cfg.id + '-elem' });
   lado.appendChild(el('h4', 'sim-elementos__titulo', 'Elementos del gráfico', { id: cfg.id + '-elem' }));
-  /* La lista se desplaza en su propia región (escritorio); el bloque
-     de descarga queda debajo, sin superponerse a ninguna casilla. */
+  /* Lista de casillas; el bloque de descarga va debajo. */
   var lista = el('div', 'sim-elementos__lista');
   lado.appendChild(lista);
 
@@ -199,6 +203,26 @@ export function crearArmazon(raiz, cfg) {
   figura.appendChild(lado);
   figura.appendChild(pie);
 
+  /* ── Panel del esquema del equipo ── */
+  var esqPanel = el('section', 'sim-panel sim-esquema', null, { 'aria-labelledby': cfg.id + '-esq' });
+  var esqCab = el('div', 'sim-panel__cab sim-esquema__cab');
+  esqCab.appendChild(el('h3', 'sim-panel__titulo', 'Esquema del equipo', { id: cfg.id + '-esq' }));
+  esqCab.appendChild(el('p', 'sim-esquema__bajada', cfg.bajadaEsquema || 'La columna se redibuja con el número de etapas calculado.'));
+  esqPanel.appendChild(esqCab);
+  var esqCuerpo = el('div', 'sim-esquema__cuerpo');
+  var esqHost = el('div', 'sim-esquema__dibujo');
+  var esqDatos = el('div', 'sim-esquema__datos');
+  esqDatos.appendChild(el('h4', 'sim-elementos__titulo', 'Resumen de corrientes'));
+  var corrMarco = el('div', 'sim-corrientes__marco', null, { tabindex: '0', role: 'region', 'aria-label': 'Resumen de corrientes' });
+  var corrTabla = el('table', 'sim-corrientes');
+  corrMarco.appendChild(corrTabla);
+  esqDatos.appendChild(corrMarco);
+  var corrNota = el('p', 'sim-tabla__nota');
+  esqDatos.appendChild(corrNota);
+  esqCuerpo.appendChild(esqHost);
+  esqCuerpo.appendChild(esqDatos);
+  esqPanel.appendChild(esqCuerpo);
+
   /* ── Panel de resultados (pestañas) ── */
   var detalle = el('section', 'sim-panel sim-app__detalle', null, { 'aria-labelledby': cfg.id + '-res-t' });
   detalle.appendChild(el('h3', 'sr-only', 'Resultados', { id: cfg.id + '-res-t' }));
@@ -234,6 +258,7 @@ export function crearArmazon(raiz, cfg) {
 
   raiz.appendChild(controles);
   raiz.appendChild(figura);
+  raiz.appendChild(esqPanel);
   raiz.appendChild(detalle);
 
   var anunciar = anunciador(raiz);
@@ -241,9 +266,13 @@ export function crearArmazon(raiz, cfg) {
   /* ── Gráfico ── */
   var filas = {};
   var btnVista = boton('Restablecer vista', 'sim-boton--sutil', function () { grafico.restablecerVista(); }, { hidden: '' });
+  /* Resaltado vinculado: diagrama ↔ esquema ↔ tabla de etapas. */
   grafico = crearGrafico(plotHost, {
-    onEtapa: function (n) { resaltarFila(n); },
+    onEtapa: function (n) { resaltarFila(n); esquema.resaltar(n); },
     onZoom: function (activo) { btnVista.hidden = !activo; }
+  });
+  var esquema = crearEsquema(esqHost, {
+    onEtapa: function (n) { grafico.resaltarEtapa(n); resaltarFila(n); }
   });
 
   function resaltarFila(n) {
@@ -259,6 +288,7 @@ export function crearArmazon(raiz, cfg) {
     btnPaso.setAttribute('aria-pressed', paso.activo ? 'true' : 'false');
     pasoBarra.hidden = !paso.activo;
     paso.k = 1;
+    if (!paso.activo) esquema.resaltar(null);
     cfg.alCambiarPaso();
   }, { 'aria-pressed': 'false' });
   utiles.appendChild(btnPaso);
@@ -271,6 +301,7 @@ export function crearArmazon(raiz, cfg) {
     paso.activo = false;
     btnPaso.setAttribute('aria-pressed', 'false');
     pasoBarra.hidden = true;
+    esquema.resaltar(null);
     cfg.alCambiarPaso();
     btnPaso.focus();
   });
@@ -290,39 +321,6 @@ export function crearArmazon(raiz, cfg) {
     cfg.alCambiarPaso();
   }
 
-  /* ── Tamaño del diagrama en escritorio ──
-     Con el panel del gráfico fijo (sticky, ≥ 1100 px) el diagrama se
-     acota para que el panel completo quepa en la altura visible. Si
-     aun así no entra (pantallas bajas), el panel deja de ser fijo. */
-  var escritorio = window.matchMedia('(min-width: 1100px)');
-  var ajustando = false;
-  function ajustarPlot() {
-    if (ajustando) return;
-    ajustando = true;
-    requestAnimationFrame(function () {
-      ajustando = false;
-      if (!escritorio.matches) {
-        plotHost.style.maxWidth = '';
-        lado.style.removeProperty('--sim-alto-lado');
-        figura.classList.remove('is-libre');
-        return;
-      }
-      var nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 56;
-      var util = window.innerHeight - nav - 32;
-      var otros = cab.offsetHeight + pie.offsetHeight + 72;
-      plotHost.style.maxWidth = Math.max(380, Math.floor(util - otros)) + 'px';
-      requestAnimationFrame(function () {
-        /* El panel lateral ocupa las filas del diagrama y del pie. */
-        lado.style.setProperty('--sim-alto-lado', Math.max(320, plotHost.offsetHeight + pie.offsetHeight + 20) + 'px');
-        requestAnimationFrame(function () {
-          figura.classList.toggle('is-libre', figura.offsetHeight > util + 8);
-        });
-      });
-    });
-  }
-  window.addEventListener('resize', ajustarPlot);
-  if (escritorio.addEventListener) escritorio.addEventListener('change', ajustarPlot);
-
   return {
     controles: controles,
     cabControles: cabCtrl,
@@ -334,7 +332,9 @@ export function crearArmazon(raiz, cfg) {
     lectura: panelLectura,
     grafico: grafico,
     anunciar: anunciar,
-    ajustarPlot: ajustarPlot,
+    esquema: esquema,
+    corrientes: corrTabla,
+    notaCorrientes: corrNota,
     visible: function (id) { return !!visibles[id]; },
     mostrarElemento: function (id, si) { if (checks[id]) checks[id].hidden = !si; },
     paso: paso,
@@ -360,8 +360,8 @@ export function crearArmazon(raiz, cfg) {
     },
     registrarFila: function (n, tr) {
       filas[n] = tr;
-      tr.addEventListener('pointerenter', function () { grafico.resaltarEtapa(n); });
-      tr.addEventListener('pointerleave', function () { grafico.resaltarEtapa(null); });
+      tr.addEventListener('pointerenter', function () { grafico.resaltarEtapa(n); esquema.resaltar(n); });
+      tr.addEventListener('pointerleave', function () { grafico.resaltarEtapa(null); esquema.resaltar(null); });
     },
     limpiarFilas: function () { filas = {}; }
   };

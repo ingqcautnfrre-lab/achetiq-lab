@@ -98,8 +98,9 @@
 --nivel-iv-accent:  #AA7323;  --nivel-iv-fondo-alt:  #FAF2E9;  --nivel-iv-texto:  #744B0A;
 --nivel-v-accent:   #C65A4F;  --nivel-v-fondo-alt:   #FDF0EE;  --nivel-v-texto:   #893830;
 --nivel-x-accent:   #7473D1;  --nivel-x-fondo-alt:   #F2F3FD;  --nivel-x-texto:   #4D4B91;
---dataviz-naranja:  #D9561F;
---dataviz-turquesa: #0F9A6A;
+--dataviz-azul:    #2E7BC4;
+--dataviz-violeta: #702FA0;
+--dataviz-verde:   #365623;
 --papel-50:  #F8F7F4;
 --papel-150: #EFEEEA;
 }
@@ -118,8 +119,9 @@
 --nivel-iv-accent:  oklch(0.600 0.115 72);   --nivel-iv-fondo-alt:  oklch(0.965 0.014 75);   --nivel-iv-texto:  oklch(0.450 0.092 70);
 --nivel-v-accent:   oklch(0.600 0.140 28);   --nivel-v-fondo-alt:   oklch(0.965 0.014 28);   --nivel-v-texto:   oklch(0.450 0.112 28);
 --nivel-x-accent:   oklch(0.600 0.140 282);  --nivel-x-fondo-alt:   oklch(0.965 0.014 282);  --nivel-x-texto:   oklch(0.450 0.112 282);
---dataviz-naranja:  oklch(0.618 0.177 40);
---dataviz-turquesa: oklch(0.608 0.130 162);
+--dataviz-azul:    oklch(0.572 0.135 251);
+--dataviz-violeta: oklch(0.453 0.176 307);
+--dataviz-verde:   oklch(0.415 0.086 135);
 --papel-50:  oklch(0.976 0.004 91);
 --papel-150: oklch(0.949 0.005 95);
 }

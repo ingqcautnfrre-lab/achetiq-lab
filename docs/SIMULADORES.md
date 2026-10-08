@@ -30,6 +30,8 @@ assets/js/sim/
   modelo-absorcion.js           modelo PURO (sin DOM) de absorción
   notacion.js                   subíndices «x_D», «Y_{N+1}» → <sub>/<tspan>
   grafico.js                    renderizador SVG propio + exportación SVG
+  esquema.js                    esquema del equipo (columna, corrientes rotuladas),
+                                redibujado con N y la etapa de alimentación
   exportar.js                   exportación PNG: recorre el SVG y lo repinta en un
                                 <canvas> (sin <img src="blob:…">, compatible con la CSP)
   ui.js                         controles, pestañas ARIA, ficha, avisos, CSV
@@ -53,8 +55,8 @@ o `blob:` (`img-src 'self'`). Por eso:
   exportan el SVG vectorial y la tabla de etapas en CSV.
 
 **Presupuesto de bytes.** Los simuladores se cargan con `import()` dinámico al abrir su
-desplegable. La página de materia entrega 11,5 KB gzip de JS inicial (umbral: 50 KB) y su hoja
-propia suma unos 7 KB gzip al CSS crítico.
+desplegable. La página de materia entrega 11,5 KB gzip de JS inicial (umbral: 50 KB); `esquema.js`
+suma 4,4 KB gzip al abrir el primer simulador. Su hoja propia suma unos 9 KB gzip al CSS crítico.
 
 ## 2. Modelos
 
@@ -119,7 +121,7 @@ sistema concreto deben reemplazarse por datos de bibliografía o de laboratorio.
 
 ## 3. Validación
 
-Los casos se ejecutan con `npm run test:sim`: 16 pruebas, sin dependencias, con el runner nativo de
+Los casos se ejecutan con `npm run test:sim`: 19 pruebas, sin dependencias, con el runner nativo de
 Node.
 
 | Caso | Resultado del simulador | Referencia / control |
@@ -133,6 +135,8 @@ Node.
 | Ídem: pseudoequilibrio en X_N | Y = 0,0849625 | Almajose: Y₁ = 0,0849625 (su etapa 1, en el fondo) |
 | Ídem con E = 1 | 3,39 etapas | Kremser: 3,42; Lewis + Kremser: N_real ≈ 5,09 |
 | y* = m·x con m = 0,8 | Pinch tangente; la pendiente de la curva en el pinch es igual a (L′/V′)_mín | Condición de tangencia |
+| Corrientes de destilación (`res.corrientes`) | F = D + B; F·x_F = D·x_D + B·x_B; V = L + D; V̄ = L̄ − B | Cierre de balances con tolerancia 1e-9 |
+| Corrientes de absorción | V′(Y_{N+1} − Y₁) = L′(X_N − X₀) | Balance de soluto con tolerancia 1e-9 |
 
 **Nota de rigor sobre el R_mín de la referencia TLK.** Para los valores por defecto de TLK, la
 intersección de la recta q con la curva de equilibrio está en (0,40503; 0,62989). La recta desde
@@ -142,36 +146,60 @@ publicados. El simulador adopta el valor analítico.
 
 ## 4. Diseño
 
-- **Composición.** Tres paneles blancos sobre el fondo papel:
-  - **Parámetros**, a la izquierda en escritorio, con «Restablecer» en su cabecera.
-  - **Gráfico**, fijo (sticky) a la derecha. Arriba muestra cuatro indicadores clave (etapas,
-    alimentación o solvente mínimo, reflujo o recuperación, etc.) y el botón «Paso a paso»; al
-    costado del diagrama, el panel **Elementos del gráfico**, que es a la vez leyenda,
-    interruptor de capas y selector de lo que entra en la imagen, con el bloque **Descargar
-    gráfico** (resolución, PNG, SVG). El diagrama se dimensiona para que el panel completo quepa
-    en la altura visible (`armazon.js`, `ajustarPlot`).
-  - **Resultados**, con las pestañas «Ficha técnica», «Etapas» (con descarga CSV) y «Cómo leer el
-    diagrama».
+- **Composición.** Cuatro paneles blancos sobre el fondo papel, todos **estáticos**: ninguno
+  acompaña el desplazamiento, de modo que el gráfico no cubre la ficha técnica.
+  - **Parámetros**, a la izquierda en escritorio (ocupa dos filas), con «Restablecer» en su
+    cabecera.
+  - **Gráfico**, a la derecha. Arriba muestra cuatro indicadores clave (etapas, alimentación o
+    solvente mínimo, reflujo o recuperación, etc.) y el botón «Paso a paso»; al costado del
+    diagrama, el panel **Elementos del gráfico**, que es a la vez leyenda, interruptor de capas y
+    selector de lo que entra en la imagen, con el bloque **Descargar gráfico** (resolución, PNG,
+    SVG). El diagrama se acota por ancho (`.sim-plot`, 44 rem).
+  - **Esquema del equipo**, debajo del gráfico (`esquema.js`). Destilación: N − 1 platos y el
+    calderín parcial como etapa N, condensador total con acumulador, reflujo al plato 1 y
+    alimentación en la etapa óptima; platos de rectificación teñidos de violeta y de agotamiento de
+    verde (los colores de sus rectas), con llaves que indican platos y L/V de cada sección.
+    Absorción: N etapas con la 1 en el tope; solvente y gas tratado arriba, gas de entrada y
+    líquido de salida abajo. Cada corriente lleva caudal y composición; con E_MV < 1 se dibujan las
+    etapas reales y, si R ≤ R_mín o L′ ≤ L′_mín, la columna se atenúa con el aviso «Se requerirían
+    infinitas etapas». En columnas densas se numeran 1, la alimentación, la última y cada 5 o 10.
+    Debajo, la tabla **Resumen de corrientes** (`res.corrientes` del modelo) con la verificación
+    de los balances.
+  - **Resultados**, a todo el ancho, con las pestañas «Ficha técnica», «Etapas» (con descarga CSV)
+    y «Cómo leer el diagrama».
 
-  En móvil el orden es gráfico, parámetros y resultados.
+  En móvil el orden es gráfico, parámetros, esquema y resultados; el esquema conserva un ancho
+  mínimo legible (38 rem) dentro de una región desplazable y enfocable.
 - **Desplegables.** Triángulo cobalto que gira al abrir, título Fraunces semibold y filete
   hairline, sin caja ni lavado. Los subdesplegables de fundamentos usan el mismo estilo un
   escalón tipográfico por debajo.
 - **Valores por defecto.** E_MV = 1 en ambos simuladores. La prueba de absorción fija E_MV = 0,70
   para reproducir el caso de referencia.
-- **Paleta del diagrama.** Tokens `--dataviz-*` en `tokens.css`: cobalto-500 para el equilibrio,
-  naranja para la rectificación y la operación, turquesa para el agotamiento. Se validó con la skill
-  `dataviz` (`validate_palette.js`, modo claro, todos los pares):
-  - ΔE CVD de 9,7 (objetivo ≥ 8);
-  - ΔE de visión normal de 23,3 (piso 15);
-  - contraste ≥ 3:1 sobre la superficie del trazado.
+- **Paleta del diagrama.** Tokens `--dataviz-*` en `tokens.css`, con los dos colores sugeridos por
+  la dirección del proyecto:
 
-  La mauveína no aparece en el diagrama (Regla de la Mauveína Escasa). Los rótulos van siempre en
-  tinta, y la identidad de cada serie se transmite por trazo, rótulo directo y leyenda.
+  | Serie | Token | Color | Contraste sobre blanco |
+  |---|---|---|---|
+  | Equilibrio y pseudoequilibrio (discontinuo) | `--dataviz-azul` | #2E7BC4 | 4,4 : 1 |
+  | Rectificación / recta de operación | `--dataviz-violeta` | #702FA0 | 8,1 : 1 |
+  | Agotamiento | `--dataviz-verde` | #365623 | 8,4 : 1 |
+
+  Se validó con la skill `dataviz` (`validate_palette.js`, modo claro, todos los pares):
+  - ΔE CVD de 11,8 (objetivo ≥ 8);
+  - ΔE de visión normal de 19,3 (piso 15).
+
+  El cobalto-500 anterior quedó descartado: frente al violeta daba ΔE normal de 14,2 y CVD de 6,1.
+  El verde queda apenas fuera de la banda de luminosidad y croma que el validador pide para
+  rellenos; se acepta porque se usa como trazo fino de 8,4 : 1, con rótulo directo y entrada en la
+  leyenda. Trazos: equilibrio 2,75 px, rectas de operación 2,5 px, escalones 1,75 px en tinta;
+  números de eje a 12 px y rótulos directos a 13 px. Los rótulos van siempre en tinta, y la
+  identidad de cada serie se transmite por trazo, rótulo directo y leyenda.
 - **Didáctica.**
   - Leyenda que funciona como interruptor de capas, incluidas las de reflujo mínimo y reflujo total.
   - Modo paso a paso con narración numérica de cada etapa.
-  - Bandas alternas bajo los escalones y resaltado cruzado entre la etapa y su fila de la tabla.
+  - Bandas alternas bajo los escalones, teñidas según la sección.
+  - Resaltado vinculado en tres sentidos: escalón del diagrama, plato del esquema y fila de la
+    tabla de etapas; en el modo paso a paso se resalta el plato de la etapa actual.
   - Pestaña «Cómo leer el diagrama», con interpretación del estado actual.
   - Fundamentos estáticos (hipótesis y ecuaciones en MathML), legibles sin JavaScript.
 

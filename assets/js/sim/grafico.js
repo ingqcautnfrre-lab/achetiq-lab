@@ -302,6 +302,7 @@ export function crearGrafico(host, opciones) {
       if (c.pasiva) continue;
       var poli = nodo('polygon', {
         class: 'sim-svg__banda' + (i % 2 ? ' sim-svg__banda--par' : '') +
+          (e.seccion ? ' sim-svg__banda--' + (e.seccion === 'rect' ? 'rect' : 'strip') : '') +
           (e.n === c.alim ? ' sim-svg__banda--alim' : ''),
         /* xc (opcional): cierre de la banda sobre la recta de
            operación en la última etapa parcial (absorción). */

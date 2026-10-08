@@ -19,12 +19,12 @@
      8. Movimiento reducido · impresión
 
    PALETA DEL DIAGRAMA (tokens.css, «Series de los simuladores»):
-   cobalto-500 = equilibrio · naranja = rectificación / operación ·
-   turquesa = agotamiento; neutros grafito para la diagonal, la
-   recta q y las referencias. Validada (dataviz) sobre blanco:
-   CVD ΔE ≥ 9,7, contraste ≥ 3:1. La mauveína no entra al diagrama;
-   aparece solo en la acción principal del panel (Descargar PNG).
-   Los textos nunca usan el color de una serie.
+   azul = equilibrio · violeta = rectificación / operación · verde =
+   agotamiento (colores pedidos por la dirección del proyecto);
+   neutros grafito para la diagonal, la recta q y las referencias.
+   Validada (dataviz) sobre blanco: CVD ΔE ≥ 11,8, visión normal
+   ΔE ≥ 19,3, contraste ≥ 4,4:1. Los textos nunca usan el color de
+   una serie.
 
    ESCALA TIPOGRÁFICA DE LA HERRAMIENTA (registro producto):
      título de desplegable  Fraunces 600 · --text-lead (22 → 26 px)
@@ -48,6 +48,7 @@
 
 .sim-lista {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
 }
 
@@ -128,9 +129,11 @@
 
 /* ─────────────────────────────────────────────────────────────
    2.  COMPOSICIÓN — .sim-app y paneles
-   Móvil: gráfico → parámetros → resultados. ≥ 1100 px: parámetros
-   a la izquierda y panel del gráfico fijo (sticky) a la derecha;
-   resultados a todo el ancho debajo.
+   Móvil: gráfico → parámetros → esquema → resultados. ≥ 1100 px:
+   parámetros a la izquierda (dos filas) y, a la derecha, el panel
+   del gráfico y debajo el esquema del equipo; resultados a todo el
+   ancho al final. Todo ESTÁTICO: ningún panel acompaña al
+   desplazamiento (antes el gráfico era sticky y tapaba la ficha).
    ───────────────────────────────────────────────────────────── */
 
 .sim-app {
@@ -139,6 +142,7 @@
   grid-template-areas:
     "figura"
     "controles"
+    "esquema"
     "detalle";
   gap: var(--space-5);
 }
@@ -149,6 +153,7 @@
 
 .sim-app__controles { grid-area: controles; }
 .sim-figura         { grid-area: figura; }
+.sim-esquema        { grid-area: esquema; }
 .sim-app__detalle   { grid-area: detalle; }
 
 /* Panel: superficie blanca sobre el papel, borde hairline, plano
@@ -218,20 +223,18 @@
 @media (min-width: 1100px) {
   .sim-app {
     grid-template-columns: minmax(19rem, 21.5rem) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       "controles figura"
+      "controles esquema"
       "detalle   detalle";
     gap: var(--space-6);
   }
 
-  .sim-figura {
-    position: sticky;
-    top: calc(var(--navbar-height) + var(--space-4));
-  }
-
-  /* El panel no entra en la altura visible: deja de ser fijo. */
-  .sim-figura.is-libre {
-    position: static;
+  /* Los parámetros ocupan las dos primeras filas; la altura sobrante
+     (si la columna derecha es más alta) queda debajo del panel. */
+  .sim-app__controles {
+    align-self: start;
   }
 }
 
@@ -716,6 +719,9 @@
 .sim-plot {
   position: relative;
   width: 100%;
+  /* Acotado por ancho (estático): cuadrado legible sin exceder la
+     altura típica de una pantalla de escritorio. */
+  max-width: 44rem;
   margin-inline: auto;
 }
 
@@ -936,32 +942,23 @@
 
 @media (min-width: 1100px) {
   /* Panel lateral: una columna, separado del diagrama por un filete
-     vertical hairline y acotado a la altura del diagrama
-     (--sim-alto-lado, escrito por armazon.js). Si la lista no cabe,
-     se desplaza en su propia región; el bloque de descarga queda
-     debajo, siempre a la vista y sin tapar ninguna casilla. */
+     vertical hairline. Con la página estática la lista se muestra
+     completa (sin desplazamiento interno) y el bloque de descarga
+     la sigue. */
   .sim-elementos {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    max-height: var(--sim-alto-lado, none);
     padding-top: 0;
     padding-left: var(--space-6);
     border-top: 0;
     border-left: 1px solid var(--color-border-soft);
   }
   .sim-elementos__lista {
-    flex: 1 1 auto;
-    min-height: 0;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-    padding-right: var(--space-1);
   }
   .sim-descarga {
-    flex: none;
     padding-top: var(--space-3);
     border-top: 1px solid var(--color-border-soft);
   }
@@ -1054,6 +1051,249 @@
 
 
 /* ─────────────────────────────────────────────────────────────
+   4b. ESQUEMA DEL EQUIPO — .sim-esquema (esquema.js)
+   Columna dibujada con el resultado: platos teñidos por sección con
+   los colores de sus rectas (violeta rectificación, verde
+   agotamiento), corrientes rotuladas y resumen en tabla.
+   ───────────────────────────────────────────────────────────── */
+
+.sim-esquema {
+  display: grid;
+  gap: var(--space-5);
+  align-self: start;
+}
+
+.sim-esquema__cab {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.sim-esquema__bajada {
+  max-width: var(--measure-prose);
+  font-size: 0.8125rem;
+  line-height: var(--leading-normal);
+  color: var(--color-text-faint);
+}
+
+.sim-esquema__cuerpo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+.sim-esquema__datos {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* El dibujo conserva un ancho mínimo legible: en pantallas angostas
+   se desplaza en horizontal en lugar de achicar los rótulos. */
+.sim-esq__marco {
+  overflow-x: auto;
+}
+
+.sim-esq {
+  display: block;
+  width: 100%;
+  min-width: 38rem;
+  max-width: 54rem;
+  height: auto;
+  margin-inline: auto;
+  font-family: var(--font-body);
+}
+
+.sim-esq__cuerpo {
+  fill: var(--color-surface-raised);
+  stroke: var(--grafito-700);
+  stroke-width: 1.75;
+}
+
+.sim-esq__etapa {
+  fill: transparent;
+  stroke: none;
+  cursor: pointer;
+  transition: fill-opacity var(--transition-fast);
+}
+
+.sim-esq__etapa--rect  { fill: var(--dataviz-violeta); fill-opacity: 0.1; }
+.sim-esq__etapa--strip { fill: var(--dataviz-verde);   fill-opacity: 0.1; }
+.sim-esq__etapa--alim  { fill: var(--dataviz-verde);   fill-opacity: 0.24; }
+.sim-esq__etapa--op    { fill: var(--dataviz-violeta); fill-opacity: 0.08; }
+
+.sim-esq__etapa.is-activa,
+.sim-esq__calderin.is-activa {
+  fill-opacity: 0.38;
+}
+
+.sim-esq__plato {
+  stroke: var(--grafito-700);
+  stroke-width: 1.25;
+}
+
+.sim-esq__bajante {
+  stroke: var(--grafito-450);
+  stroke-width: 1;
+}
+
+.sim-esq__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--color-text-soft);
+  pointer-events: none;
+}
+
+.sim-esq__num.is-alim {
+  font-weight: var(--weight-semibold);
+  fill: var(--color-text);
+}
+
+.sim-esq__linea {
+  fill: none;
+  stroke: var(--grafito-700);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.sim-esq__linea--alim {
+  stroke: var(--grafito-950);
+  stroke-width: 2;
+}
+
+.sim-esq__punta {
+  fill: var(--grafito-700);
+}
+
+.sim-esq__equipo circle,
+.sim-esq__tambor,
+.sim-esq__calderin {
+  fill: var(--color-surface-raised);
+  stroke: var(--grafito-700);
+  stroke-width: 1.5;
+}
+
+.sim-esq__calderin {
+  fill: var(--dataviz-verde);
+  fill-opacity: 0.1;
+  cursor: pointer;
+  transition: fill-opacity var(--transition-fast);
+}
+
+.sim-esq__serpentin {
+  fill: none;
+  stroke: var(--dataviz-azul);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.sim-esq__equipo-nombre {
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  fill: var(--color-text-soft);
+  pointer-events: none;
+}
+
+.sim-esq__corriente {
+  font-size: 14px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-text);
+}
+
+.sim-esq__dato {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  fill: var(--color-text-soft);
+}
+
+.sim-esq__llave {
+  fill: none;
+  stroke: var(--grafito-450);
+  stroke-width: 1.25;
+}
+
+/* Subíndices más contenidos que en el diagrama: los rótulos del
+   esquema tienen varias líneas y el desplazamiento «sub» por
+   defecto invade la línea siguiente. */
+.sim-esq .sim-svg__sub {
+  baseline-shift: -0.22em;
+}
+
+.sim-esq__seccion-titulo {
+  font-size: 14px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-text);
+}
+
+.sim-esq__aviso rect {
+  fill: var(--color-surface-raised);
+  stroke: var(--color-negative);
+  stroke-width: 1.25;
+}
+
+.sim-esq__inviable {
+  font-size: 13px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-negative);
+}
+
+.sim-esq__columna.is-inviable .sim-esq__cuerpo,
+.sim-esq__calderin.is-inviable {
+  stroke-dasharray: 5 4;
+  opacity: 0.55;
+}
+
+.sim-esq__columna.is-inviable .sim-esq__etapa {
+  fill-opacity: 0.04;
+  cursor: default;
+}
+
+/* ── Resumen de corrientes ── */
+.sim-corrientes__marco {
+  overflow-x: auto;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+}
+
+.sim-corrientes {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-small);
+}
+
+.sim-corrientes th,
+.sim-corrientes td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.sim-corrientes thead th {
+  font-weight: var(--weight-medium);
+  font-size: 0.8125rem;
+  color: var(--color-text-soft);
+  background: var(--color-surface-sunken);
+}
+
+.sim-corrientes tbody th {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.sim-corrientes tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+/* Separa las corrientes de proceso de las internas / de servicio. */
+.sim-corrientes tr.is-separador > * {
+  border-top: 1px solid var(--color-border);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
    5.  DIAGRAMA SVG
    ───────────────────────────────────────────────────────────── */
 
@@ -1073,6 +1313,7 @@
 
 .sim-svg__grilla line {
   stroke: var(--color-border-soft);
+  stroke-opacity: 0.75;
   stroke-width: 1;
   shape-rendering: crispEdges;
 }
@@ -1090,14 +1331,15 @@
 }
 
 .sim-svg__num {
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
-  fill: var(--color-text-faint);
+  fill: var(--color-text-soft);
 }
 
 .sim-svg__eje {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: var(--weight-medium);
   fill: var(--color-text-soft);
 }
 
@@ -1112,32 +1354,37 @@
   stroke-linejoin: round;
 }
 
-.sim-svg__eq     { stroke: var(--cobalto-500); stroke-width: 2.5; }
-.sim-svg__ps     { stroke: var(--cobalto-500); stroke-width: 1.75; stroke-dasharray: 7 5; }
-.sim-svg__diag   { stroke: var(--color-border-interactive); stroke-width: 1; }
+.sim-svg__eq     { stroke: var(--dataviz-azul); stroke-width: 2.75; }
+.sim-svg__ps     { stroke: var(--dataviz-azul); stroke-width: 2; stroke-dasharray: 7 5; }
+.sim-svg__diag   { stroke: var(--grafito-450); stroke-width: 1.25; }
 .sim-svg__rect,
-.sim-svg__op     { stroke: var(--dataviz-naranja); }
-.sim-svg__ext    { stroke: var(--dataviz-naranja); stroke-width: 1.25; stroke-dasharray: 1 5; }
-.sim-svg__strip  { stroke: var(--dataviz-turquesa); }
-.sim-svg__q      { stroke: var(--grafito-700); stroke-width: 1.75; stroke-dasharray: 9 4 2 4; }
-.sim-svg__rmin   { stroke: var(--grafito-600); stroke-width: 1.25; stroke-dasharray: 5 4; }
-.sim-svg__total  { stroke: var(--grafito-450); stroke-width: 1; stroke-dasharray: 3 3; }
-.sim-svg__etapas { stroke: var(--grafito-950); stroke-width: 1.5; }
+.sim-svg__op     { stroke: var(--dataviz-violeta); stroke-width: 2.5; }
+.sim-svg__ext    { stroke: var(--dataviz-violeta); stroke-width: 1.5; stroke-dasharray: 1 5; }
+.sim-svg__strip  { stroke: var(--dataviz-verde); stroke-width: 2.5; }
+.sim-svg__q      { stroke: var(--grafito-700); stroke-width: 2; stroke-dasharray: 9 4 2 4; }
+.sim-svg__rmin   { stroke: var(--grafito-600); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.sim-svg__total  { stroke: var(--grafito-450); stroke-width: 1.25; stroke-dasharray: 3 3; }
+.sim-svg__etapas { stroke: var(--grafito-950); stroke-width: 1.75; }
 
-/* Bandas de etapa: lavado alterno tenue bajo cada escalón. */
+/* Bandas de etapa: lavado alterno tenue bajo cada escalón, teñido
+   por sección en destilación (mismo color que su recta: violeta en
+   rectificación, verde en agotamiento) y azul en absorción. */
 .sim-svg__banda {
-  fill: var(--cobalto-500);
-  fill-opacity: 0.06;
+  fill: var(--dataviz-azul);
+  fill-opacity: 0.07;
   stroke: none;
   transition: fill-opacity var(--transition-fast);
 }
 
+.sim-svg__banda--rect  { fill: var(--dataviz-violeta); }
+.sim-svg__banda--strip { fill: var(--dataviz-verde); }
+
 .sim-svg__banda--par {
-  fill-opacity: 0.12;
+  fill-opacity: 0.14;
 }
 
 .sim-svg__banda.is-activa {
-  fill-opacity: 0.32;
+  fill-opacity: 0.36;
 }
 
 .sim-svg__guia {
@@ -1160,7 +1407,7 @@
 }
 
 .sim-svg__punto--corte {
-  fill: var(--dataviz-naranja);
+  fill: var(--dataviz-violeta);
 }
 
 .sim-svg__alim {
@@ -1173,7 +1420,7 @@
    superficie (paint-order) para leerse sobre las líneas. */
 .sim-svg__rotulo {
   font-family: var(--font-body);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: var(--weight-medium);
   fill: var(--color-text);
   paint-order: stroke;
@@ -1189,9 +1436,9 @@
 
 .sim-svg__rotulo--etapa {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: var(--weight-regular);
-  fill: var(--color-text-soft);
+  fill: var(--color-text);
 }
 
 .sim-svg__rotulo--alim {
@@ -1201,7 +1448,7 @@
 
 .sim-svg__rotulo--punto {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-regular);
 }
 
@@ -1213,9 +1460,9 @@
 }
 
 .sim-svg__zoom {
-  fill: var(--cobalto-500);
+  fill: var(--dataviz-azul);
   fill-opacity: 0.08;
-  stroke: var(--cobalto-500);
+  stroke: var(--dataviz-azul);
   stroke-width: 1;
   stroke-dasharray: 4 3;
 }
@@ -1410,6 +1657,7 @@
 
 .sim-teoria {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin-top: var(--space-10);
 }
@@ -1489,9 +1737,14 @@
 }
 
 /* Formulario (MathML). */
+/* El formulario completo es la región desplazable (una sola parada
+   de tabulación): en pantallas angostas las ecuaciones más largas
+   se leen desplazando en horizontal. */
 .sim-ecuaciones {
   max-width: 56rem;
   margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .sim-ecuaciones__fila {
@@ -1509,8 +1762,6 @@
 
 .sim-ecuaciones dd {
   margin: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
   color: var(--color-text);
 }
 
@@ -1594,6 +1845,10 @@
     max-height: none;
     overflow: visible;
     border: 0;
+  }
+  .sim-esquema {
+    margin-top: 1cm;
+    break-inside: avoid;
   }
   .sim-app__detalle {
     margin-top: 1cm;

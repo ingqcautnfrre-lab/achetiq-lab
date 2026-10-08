@@ -217,6 +217,16 @@ export function calcular(p, eqConstruido) {
     res.kremser = { aplica: false };
   }
 
+  /* ── Resumen de corrientes (esquema del equipo) ──
+     Caudales libres de soluto constantes; caudal total = caudal
+     libre de soluto × (1 + relación molar). */
+  res.corrientes = [
+    { id: 'Gin', nombre: 'Gas de entrada', libre: p.Vs, total: p.Vs * (1 + Yin), R: Yin, f: aFraccion(Yin) },
+    { id: 'Gout', nombre: 'Gas tratado', libre: p.Vs, total: p.Vs * (1 + Y1), R: Y1, f: aFraccion(Y1) },
+    { id: 'Lin', nombre: 'Solvente', libre: Ls, total: Ls * (1 + X0), R: X0, f: aFraccion(X0) },
+    { id: 'Lout', nombre: 'Líquido de salida', libre: Ls, total: Ls * (1 + XN), R: XN, f: aFraccion(XN) }
+  ];
+
   res.ok = true;
   return res;
 }

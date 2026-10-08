@@ -298,6 +298,25 @@ export function calcular(p, eqConstruido) {
       ', fuera del intervalo de separación especificado.' });
   }
 
+  /* ── Resumen de corrientes (esquema del equipo) ──
+     Condensador total: el vapor de tope y el reflujo tienen la
+     composición del destilado. Las corrientes del calderín toman las
+     composiciones de la construcción: líquido que baja de la etapa
+     N − 1 y vapor que sale de la etapa N (calderín). */
+  var et = real.etapas;
+  var finita = isFinite(real.nFrac) && et.length > 0;
+  var ultima = finita ? et[et.length - 1] : null;
+  var penultima = finita && et.length > 1 ? et[et.length - 2] : null;
+  res.corrientes = [
+    { id: 'F', nombre: 'Alimentación', caudal: F, x: xF },
+    { id: 'D', nombre: 'Destilado', caudal: D, x: xD },
+    { id: 'B', nombre: 'Residuo', caudal: B, x: xB },
+    { id: 'L', nombre: 'Reflujo', caudal: Lr, x: xD },
+    { id: 'V', nombre: 'Vapor de tope', caudal: V, x: xD },
+    { id: 'Lb', nombre: 'Líquido al calderín', caudal: Ls, x: penultima ? penultima.x : NaN },
+    { id: 'Vb', nombre: 'Vapor del calderín', caudal: Vs, x: ultima ? ultima.y : NaN }
+  ];
+
   res.ok = true;
   return res;
 }
