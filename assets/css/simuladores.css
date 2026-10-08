@@ -3,29 +3,36 @@
    ------------------------------------------------------------
    Hoja de PÁGINA (no entra en main.bundle.css): la enlazan solo
    las páginas de pages/recursos/simulaciones/. Precedente:
-   sobre-asociacion.css.
-
-   Fundamento: DESIGN.md «Cobalto & Mauveína» · índice editorial
-   (.recursos-index, recursos.css §1) · forms.css · states.css.
+   sobre-asociacion.css. El fondo papel de estas páginas lo aplica
+   body.tema-papel (recursos.css §5, tokens.css «Tema papel»).
 
    Estructura
-     1. Desplegables de simuladores (.sim)        — índice editorial
-     2. Composición del simulador (.sim-app)
-     3. Controles (.sim-grupo, .sim-campo, .sim-seg, …)
-     4. Figura: leyenda-interruptor, diagrama, paso a paso
-     5. Diagrama SVG (.sim-svg__*)                 — paleta de series
-     6. Resultado, avisos, ficha técnica
-     7. Pestañas, tabla de etapas, lectura guiada, exportación
-     8. Fundamentos estáticos (.sim-teoria, MathML)
-     9. Movimiento reducido · impresión
+     1. Desplegables (.sim, .sim-sub)  — triángulo + título serif
+                                          + filete, sin caja
+     2. Composición del simulador (.sim-app) y paneles (.sim-panel)
+     3. Parámetros (.sim-grupo, .sim-campo, .sim-seg, …)
+     4. Panel del gráfico: indicadores clave, diagrama, elementos y
+        descarga, avisos, paso a paso
+     5. Diagrama SVG (.sim-svg__*)        — paleta de series
+     6. Resultados: pestañas, ficha, tabla de etapas, lectura
+     7. Fundamentos: hipótesis, nomenclatura, formulario (MathML)
+     8. Movimiento reducido · impresión
 
    PALETA DEL DIAGRAMA (tokens.css, «Series de los simuladores»):
    cobalto-500 = equilibrio · naranja = rectificación / operación ·
    turquesa = agotamiento; neutros grafito para la diagonal, la
-   recta q y las referencias. Validada (dataviz): CVD ΔE ≥ 9,7,
-   contraste ≥ 3:1 sobre la superficie del trazado. La mauveína no
-   aparece en el diagrama (Regla de la Mauveína Escasa). Los textos
-   nunca usan el color de la serie: identidad por trazo + rótulo.
+   recta q y las referencias. Validada (dataviz) sobre blanco:
+   CVD ΔE ≥ 9,7, contraste ≥ 3:1. La mauveína no entra al diagrama;
+   aparece solo en la acción principal del panel (Descargar PNG).
+   Los textos nunca usan el color de una serie.
+
+   ESCALA TIPOGRÁFICA DE LA HERRAMIENTA (registro producto):
+     título de desplegable  Fraunces 600 · --text-lead (22 → 26 px)
+     título de subdesplegable Fraunces 600 · --text-h4 (17 → 18 px)
+     título de panel        Hanken 600 · 17 px
+     etiqueta de control    Hanken 500 · 15 px
+     valor KPI              Hanken 600 · 26 px, cifras tabulares
+     ayuda / notas          Hanken 400 · 13 px
 
    Mobile-first (contrato S3: solo @media min-width). Cero hex y
    cero familias literales.
@@ -33,126 +40,107 @@
 
 
 /* ─────────────────────────────────────────────────────────────
-   1.  DESPLEGABLES — .sim
-   Sumario editorial con filetes de tinta (espejo de
-   .recursos-index): número + título Fraunces + bajada + chevron.
-   La fila entera es el control; el lavado cobalto la realza.
+   1.  DESPLEGABLES
+   Estilo de disclosure editorial: triángulo cobalto que gira al
+   abrir, título serif semibold y filete inferior hairline. Sin
+   caja, sin lavado de fondo: la jerarquía la carga la tipografía.
    ───────────────────────────────────────────────────────────── */
 
 .sim-lista {
-  border-bottom: var(--rule-ink);
+  display: grid;
+  gap: var(--space-6);
 }
 
-.sim {
-  border-top: var(--rule-ink);
+.sim__summary,
+.sim-sub__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sim__summary {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr) max-content;
-  column-gap: var(--space-4);
-  align-items: start;
-  padding-block: var(--space-6);
-  list-style: none;
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
+  padding: var(--space-3) 0 var(--space-4);
 }
 
-.sim__summary::-webkit-details-marker {
+.sim__summary::-webkit-details-marker,
+.sim-sub__summary::-webkit-details-marker {
   display: none;
 }
 
-.sim__num {
-  font-family: var(--font-display);
-  font-size: var(--text-kpi);
-  line-height: var(--leading-tight);
-  color: var(--color-accent-soft);
-  font-variant-numeric: tabular-nums;
+/* Triángulo de apertura (▸ → ▾). */
+.sim__summary::before,
+.sim-sub__summary::before {
+  content: "";
+  flex: none;
+  width: 0.45rem;
+  height: 0.55rem;
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transition: transform var(--dur-normal) var(--ease-out);
 }
 
-.sim__cabecera {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  min-width: 0;
+.sim[open] > .sim__summary::before,
+.sim-sub[open] > .sim-sub__summary::before {
+  transform: rotate(90deg);
 }
 
-.sim__titulo {
+.sim__titulo,
+.sim-sub__titulo {
   font-family: var(--font-display);
-  font-size: var(--text-kpi);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.005em;
   color: var(--color-text);
   text-wrap: balance;
   transition: color var(--transition-fast);
 }
 
-.sim__bajada {
-  font-size: var(--text-small);
-  line-height: var(--leading-relaxed);
-  color: var(--color-text-soft);
-  max-width: var(--measure-narrow);
+.sim__titulo {
+  font-size: var(--text-lead);
+  line-height: var(--leading-snug);
 }
 
-.sim__chevron {
-  align-self: center;
-  width: var(--space-6);
-  height: var(--space-6);
-  color: var(--color-accent);
-  transition: transform var(--dur-normal) var(--ease-out);
-}
-
-.sim[open] .sim__chevron {
-  transform: rotate(180deg);
+.sim-sub__titulo {
+  font-size: var(--text-h4);
+  line-height: var(--leading-normal);
 }
 
 @media (hover: hover) {
-  .sim__summary:hover {
-    background-color: var(--color-surface-accent);
-  }
-  .sim__summary:hover .sim__titulo {
+  .sim__summary:hover .sim__titulo,
+  .sim-sub__summary:hover .sim-sub__titulo {
     color: var(--color-accent);
   }
 }
 
-.sim__summary:focus-visible {
-  background-color: var(--color-surface-accent);
-}
-
 .sim__panel {
-  padding-block: var(--space-2) var(--space-14);
+  padding-block: var(--space-6) var(--space-10);
 }
 
 .sim__intro {
   max-width: var(--measure-prose);
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
+  color: var(--color-text-soft);
   text-wrap: pretty;
-}
-
-@media (min-width: 768px) {
-  .sim__summary {
-    column-gap: var(--space-5);
-  }
 }
 
 
 /* ─────────────────────────────────────────────────────────────
-   2.  COMPOSICIÓN — .sim-app
-   Móvil: figura → controles → detalle (el diagrama primero: es
-   lo que se manipula). ≥ 1100 px: controles a la izquierda y
-   figura fija (sticky) a la derecha, de modo que el diagrama
-   queda a la vista mientras se ajustan los parámetros.
+   2.  COMPOSICIÓN — .sim-app y paneles
+   Móvil: gráfico → parámetros → resultados. ≥ 1100 px: parámetros
+   a la izquierda y panel del gráfico fijo (sticky) a la derecha;
+   resultados a todo el ancho debajo.
    ───────────────────────────────────────────────────────────── */
 
 .sim-app {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "escenario"
+    "figura"
     "controles"
     "detalle";
-  gap: var(--space-10);
+  gap: var(--space-5);
 }
 
 .sim-app [hidden] {
@@ -160,33 +148,57 @@
 }
 
 .sim-app__controles { grid-area: controles; }
-.sim-app__escenario { grid-area: escenario; min-width: 0; }
-.sim-app__detalle   { grid-area: detalle; min-width: 0; }
+.sim-figura         { grid-area: figura; }
+.sim-app__detalle   { grid-area: detalle; }
 
-/* Estado de carga (import() en vuelo): esqueleto con altura
-   reservada para que la apertura no reacomode la página. */
+/* Panel: superficie blanca sobre el papel, borde hairline, plano
+   en reposo (Regla del Reposo Plano). */
+.sim-panel {
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+}
+
+.sim-panel__cab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.sim-panel__titulo {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+}
+
+/* Carga del módulo (import() en vuelo): altura reservada. */
 .sim-app[aria-busy="true"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 24rem;
-  border: var(--elevation-border-soft);
+  min-height: 26rem;
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   background: var(--color-surface-raised);
 }
 
 .sim-app[aria-busy="true"]::before {
   content: "Cargando el simulador…";
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: var(--tracking-wide);
+  font-size: var(--text-small);
   color: var(--color-text-faint);
 }
 
 .sim-app__noscript,
 .sim-app__error {
   padding: var(--space-5);
-  border: var(--elevation-border);
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   background: var(--color-surface-raised);
   color: var(--color-text-soft);
@@ -197,42 +209,44 @@
   color: var(--color-negative);
 }
 
+@media (min-width: 768px) {
+  .sim-panel {
+    padding: var(--space-6);
+  }
+}
+
 @media (min-width: 1100px) {
   .sim-app {
-    grid-template-columns: minmax(18.5rem, 22rem) minmax(0, 1fr);
+    grid-template-columns: minmax(19rem, 21.5rem) minmax(0, 1fr);
     grid-template-areas:
-      "controles escenario"
+      "controles figura"
       "detalle   detalle";
-    column-gap: var(--space-12);
-    row-gap: var(--space-12);
+    gap: var(--space-6);
   }
 
   .sim-figura {
     position: sticky;
     top: calc(var(--navbar-height) + var(--space-4));
   }
+
+  /* El panel no entra en la altura visible: deja de ser fijo. */
+  .sim-figura.is-libre {
+    position: static;
+  }
 }
 
 
 /* ─────────────────────────────────────────────────────────────
-   3.  CONTROLES
+   3.  PARÁMETROS
    ───────────────────────────────────────────────────────────── */
 
 .sim-app__controles {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  min-width: 0;
+  gap: var(--space-5);
+  align-self: start;
 }
 
-.sim-app__titulo {
-  font-size: var(--text-h4);
-}
-
-/* Grupo: filete hairline + leyenda en Hanken (rotula el grupo; no
-   es un eyebrow de sección). */
-/* El filete lo lleva la leyenda a ancho completo (no el fieldset):
-   así no corta la línea como un <legend> incrustado en el borde. */
 .sim-grupo {
   display: flex;
   flex-direction: column;
@@ -243,19 +257,27 @@
   border: 0;
 }
 
+/* Leyenda del grupo a ancho completo con su filete superior (no
+   incrustada en el borde del fieldset). El primer grupo se apoya en
+   el filete de la cabecera del panel. */
 .sim-grupo__leyenda {
   width: 100%;
   padding: var(--space-5) 0 0;
   margin-bottom: var(--space-4);
-  border-top: var(--rule);
-  font-size: var(--text-small);
+  border-top: 1px solid var(--color-border-soft);
+  font-size: 0.9375rem;
   font-weight: var(--weight-semibold);
   color: var(--color-text);
 }
 
+.sim-panel__cab + .sim-grupo .sim-grupo__leyenda {
+  padding-top: 0;
+  border-top: 0;
+}
+
 .sim-grupo__nota {
   margin-top: calc(-1 * var(--space-3));
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   line-height: var(--leading-normal);
   color: var(--color-text-faint);
 }
@@ -275,7 +297,7 @@
 }
 
 .sim-campo__etiqueta {
-  font-size: var(--text-small);
+  font-size: 0.9375rem;
   font-weight: var(--weight-medium);
   line-height: var(--leading-snug);
   color: var(--color-text);
@@ -294,10 +316,10 @@
 }
 
 .sim-campo__numero {
-  width: 6.25rem;
-  padding: var(--space-1) var(--space-2);
+  width: 6.5rem;
+  padding: 0.3125rem var(--space-2);
   font-family: var(--font-mono);
-  font-size: var(--text-small);
+  font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
   text-align: right;
   color: var(--color-text);
@@ -331,13 +353,13 @@
 }
 
 .sim-campo__ayuda {
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   line-height: var(--leading-normal);
   color: var(--color-text-faint);
 }
 
 .sim-campo__error {
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   font-weight: var(--weight-medium);
   line-height: var(--leading-normal);
   color: var(--color-negative);
@@ -348,8 +370,7 @@
 }
 
 /* ── Deslizador: pista fina + pulgar con anillo cobalto. El
-   recorrido se rellena con --sim-pct (custom property escrita por
-   CSSOM desde ui.js: compatible con la CSP). ── */
+   recorrido se rellena con --sim-pct (CSSOM desde ui.js). ── */
 .sim-campo__rango {
   width: 100%;
   height: 1.5rem;
@@ -425,7 +446,7 @@
 .sim-seg__leyenda {
   padding: 0;
   margin-bottom: var(--space-2);
-  font-size: var(--text-small);
+  font-size: 0.9375rem;
   font-weight: var(--weight-medium);
   color: var(--color-text);
 }
@@ -436,10 +457,9 @@
   gap: 2px;
   width: fit-content;
   max-width: 100%;
-  padding: 2px;
-  border: 1px solid var(--color-border-interactive);
+  padding: 3px;
   border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
+  background: var(--color-surface-sunken);
 }
 
 .sim-seg__radio {
@@ -450,8 +470,7 @@
   pointer-events: none;
 }
 
-/* inline-block (no flex): los <sub> de la notación conservan su
-   alineación de subíndice. */
+/* inline-block (no flex): los <sub> conservan su alineación. */
 .sim-seg__opcion {
   display: inline-block;
   padding: var(--space-1) var(--space-3);
@@ -461,17 +480,17 @@
   font-weight: var(--weight-medium);
   color: var(--color-text-soft);
   cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .sim-seg__opcion:hover {
   color: var(--color-text);
-  background: var(--color-surface-accent);
 }
 
 .sim-seg__radio:checked + .sim-seg__opcion {
-  color: var(--color-on-accent);
-  background: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-xs), 0 0 0 1px var(--color-border-soft);
 }
 
 .sim-seg__radio:focus-visible + .sim-seg__opcion {
@@ -496,18 +515,13 @@
   min-height: 11rem;
   padding: var(--space-2) var(--space-3);
   font-family: var(--font-mono);
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   line-height: var(--leading-normal);
   color: var(--color-text);
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border-interactive);
   border-radius: var(--radius-md);
   resize: vertical;
-}
-
-.sim-app__acciones {
-  padding-top: var(--space-5);
-  border-top: var(--rule);
 }
 
 /* ── Botones de herramienta ── */
@@ -588,109 +602,117 @@
 
 
 /* ─────────────────────────────────────────────────────────────
-   4.  FIGURA
+   4.  PANEL DEL GRÁFICO
    ───────────────────────────────────────────────────────────── */
 
 .sim-figura {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "cab"
+    "plot"
+    "pie"
+    "lado";
+  gap: var(--space-5);
+  /* Sin estirarse a la altura de la fila (la marca la columna de
+     parámetros): las pistas no reparten espacio sobrante. */
+  align-self: start;
+  align-content: start;
+  align-items: start;
 }
 
-.sim-figura__barra {
+.sim-figura__cab  { grid-area: cab; }
+.sim-plot         { grid-area: plot; }
+.sim-figura__pie  { grid-area: pie; }
+.sim-elementos    { grid-area: lado; }
+
+@media (min-width: 1100px) {
+  .sim-figura {
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    grid-template-areas:
+      "cab  cab"
+      "plot lado"
+      "pie  lado";
+    column-gap: var(--space-6);
+  }
+}
+
+/* ── Cabecera: indicadores clave + utilidades ── */
+.sim-figura__cab {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.sim-figura__bajo {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-4) var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .sim-figura__utiles {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-left: auto;
 }
 
-/* Leyenda que es a la vez interruptor de capas: cada chip muestra
-   la muestra de trazo de su serie (identidad) y el nombre en tinta. */
-/* Móvil: una sola fila desplazable (no consume tres renglones
-   sobre el diagrama); ≥ 768 px: los chips fluyen en varias filas. */
-.sim-leyenda {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: var(--space-2);
-  max-width: 100%;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: thin;
+.sim-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-5);
+  flex: 1 1 30rem;
+  margin: 0;
 }
 
-.sim-chip {
-  flex: none;
+.sim-kpi {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
 }
 
-@media (min-width: 768px) {
-  .sim-leyenda {
-    flex-wrap: wrap;
-    overflow-x: visible;
+.sim-kpi__etiqueta {
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--color-text-soft);
+}
+
+.sim-kpi__valor {
+  margin: 0;
+  font-size: 1.625rem;
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.sim-kpi--destacado .sim-kpi__valor {
+  color: var(--color-accent);
+}
+
+.sim-kpi__nota {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-snug);
+  letter-spacing: 0;
+  color: var(--color-text-faint);
+}
+
+@media (min-width: 640px) {
+  .sim-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  /* Filete vertical hairline entre indicadores (1 px: separador,
+     no franja de acento). */
+  .sim-kpi + .sim-kpi {
+    padding-left: var(--space-5);
+    border-left: 1px solid var(--color-border-soft);
   }
 }
 
-.sim-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 2rem;
-  padding: 2px var(--space-3) 2px var(--space-2);
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-medium);
-  color: var(--color-text);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border-interactive);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: border-color var(--transition-fast), color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.sim-chip:hover {
-  border-color: var(--color-accent);
-}
-
-.sim-chip[aria-pressed="false"] {
-  color: var(--color-text-faint);
-  background: transparent;
-  border-style: dashed;
-  border-color: var(--color-border-interactive);
-}
-
-.sim-chip[aria-pressed="false"] .sim-chip__muestra {
-  opacity: 0.3;
-}
-
-.sim-chip__muestra {
-  flex: none;
-  width: 28px;
-  height: 12px;
-  overflow: visible;
-}
-
-.sim-chip__muestra .sim-svg__serie {
-  stroke-width: 2;
-}
-
-/* Diagrama: cuadrado, acotado a la altura útil del viewport en
-   escritorio para que la figura completa quepa con el sticky. */
+/* ── Diagrama ── */
 .sim-plot {
   position: relative;
   width: 100%;
@@ -714,14 +736,18 @@
   white-space: pre;
   color: var(--color-text);
   background: color-mix(in oklab, var(--color-surface-raised) 92%, transparent);
-  border: var(--elevation-border-soft);
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-sm);
   pointer-events: none;
 }
 
+.sim-figura__pie {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .sim-plot__ayuda {
   display: none;
-  max-width: 34ch;
   font-size: var(--text-caption);
   line-height: var(--leading-normal);
   color: var(--color-text-faint);
@@ -733,36 +759,211 @@
   }
 }
 
-/* Columna lateral: resultado + paso a paso. Apilada por defecto;
-   a partir de 1360 px se ubica a la derecha del diagrama, que así
-   conserva su tamaño dentro de la figura fija. */
-.sim-figura__lado {
+/* ── Elementos del gráfico + descarga ── */
+.sim-elementos {
   display: grid;
   align-content: start;
   gap: var(--space-4);
-  min-width: 0;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
 }
 
-@media (min-width: 1360px) {
-  .sim-figura {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
-    grid-template-areas:
-      "barra barra"
-      "plot  lado"
-      "bajo  lado";
-    align-items: start;
-    column-gap: var(--space-8);
-    row-gap: var(--space-3);
-  }
-  .sim-figura__barra { grid-area: barra; }
-  .sim-plot          { grid-area: plot; }
-  .sim-figura__bajo  { grid-area: bajo; }
-  .sim-figura__lado  { grid-area: lado; }
+.sim-elementos__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+  align-content: start;
+  gap: var(--space-4) var(--space-6);
+}
 
-  .sim-figura__lado .sim-figura__pie {
+.sim-elementos__titulo {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.sim-elementos__grupo {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sim-elementos__leyenda {
+  padding: 0;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.01em;
+  color: var(--color-text-faint);
+}
+
+.sim-check {
+  display: grid;
+  grid-template-columns: auto 1.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 1.625rem;
+  margin-inline: calc(-1 * var(--space-2));
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-small);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.sim-check:hover {
+  background: var(--color-surface-sunken);
+}
+
+.sim-check__caja {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.sim-check__muestra {
+  width: 1.75rem;
+  height: 0.75rem;
+  overflow: visible;
+}
+
+.sim-check__muestra .sim-svg__serie {
+  stroke-width: 2;
+}
+
+.sim-check__glifo {
+  width: 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-align: center;
+  color: var(--color-text-soft);
+}
+
+.sim-check:has(.sim-check__caja:not(:checked)) .sim-check__texto {
+  color: var(--color-text-faint);
+}
+
+.sim-check:has(.sim-check__caja:not(:checked)) .sim-check__muestra,
+.sim-check:has(.sim-check__caja:not(:checked)) .sim-check__glifo {
+  opacity: 0.35;
+}
+
+.sim-descarga {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.sim-descarga__incluir {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-4);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sim-descarga__incluir .sim-elementos__leyenda {
+  width: 100%;
+}
+
+.sim-check--compacto {
+  grid-template-columns: auto auto;
+  gap: var(--space-2);
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+.sim-check--compacto:hover {
+  background: none;
+}
+
+.sim-descarga__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sim-descarga__etiqueta {
+  font-size: var(--text-small);
+  color: var(--color-text-soft);
+}
+
+.sim-descarga__select {
+  width: auto;
+  padding-block: var(--space-1);
+}
+
+.sim-descarga__png {
+  justify-content: center;
+  width: 100%;
+  padding-block: var(--space-2);
+  font-size: 0.9375rem;
+}
+
+.sim-descarga__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.sim-descarga__icono {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sim-descarga__estado {
+  min-height: 1.2em;
+  font-size: var(--text-caption);
+  color: var(--color-text-faint);
+}
+
+@media (min-width: 1100px) {
+  /* Panel lateral: una columna, separado del diagrama por un filete
+     vertical hairline y acotado a la altura del diagrama
+     (--sim-alto-lado, escrito por armazon.js). Si la lista no cabe,
+     se desplaza en su propia región; el bloque de descarga queda
+     debajo, siempre a la vista y sin tapar ninguna casilla. */
+  .sim-elementos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-height: var(--sim-alto-lado, none);
     padding-top: 0;
+    padding-left: var(--space-6);
     border-top: 0;
+    border-left: 1px solid var(--color-border-soft);
+  }
+  .sim-elementos__lista {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    padding-right: var(--space-1);
+  }
+  .sim-descarga {
+    flex: none;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-soft);
   }
 }
 
@@ -770,8 +971,9 @@
 .sim-paso {
   display: grid;
   gap: var(--space-2);
-  padding-top: var(--space-3);
-  border-top: var(--rule);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
 }
 
 .sim-paso__controles {
@@ -782,15 +984,11 @@
 }
 
 .sim-paso__contador {
-  order: -1;
-  flex-basis: 100%;
-  min-width: 8.5rem;
-  text-align: left !important;
+  margin-right: auto;
   font-family: var(--font-mono);
   font-size: var(--text-caption);
   font-variant-numeric: tabular-nums;
   letter-spacing: var(--tracking-wide);
-  text-align: center;
   color: var(--color-text-soft);
 }
 
@@ -800,6 +998,58 @@
   line-height: var(--leading-relaxed);
   color: var(--color-text);
   text-wrap: pretty;
+}
+
+/* ── Avisos de factibilidad ── */
+.sim-avisos {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sim-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-small);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklab, var(--color-negative) 30%, var(--color-border));
+  background: color-mix(in oklab, var(--color-negative) 5%, var(--color-surface-raised));
+}
+
+.sim-aviso__glifo {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.1em;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  color: var(--color-on-accent);
+  background: var(--color-negative);
+}
+
+.sim-aviso--aviso {
+  border-color: color-mix(in oklab, var(--color-warning) 35%, var(--color-border));
+  background: color-mix(in oklab, var(--color-warning) 6%, var(--color-surface-raised));
+}
+
+.sim-aviso--aviso .sim-aviso__glifo {
+  background: var(--color-warning);
+}
+
+.sim-aviso--info {
+  border-color: color-mix(in oklab, var(--color-accent) 25%, var(--color-border));
+  background: var(--color-surface-accent);
+}
+
+.sim-aviso--info .sim-aviso__glifo {
+  background: var(--color-accent);
 }
 
 
@@ -847,7 +1097,7 @@
 
 .sim-svg__eje {
   font-family: var(--font-body);
-  font-size: 12.5px;
+  font-size: 13px;
   fill: var(--color-text-soft);
 }
 
@@ -855,7 +1105,6 @@
   font-size: 0.72em;
 }
 
-/* Series: 2 px, extremos y uniones redondeados. */
 .sim-svg__serie {
   fill: none;
   stroke-width: 2;
@@ -875,8 +1124,7 @@
 .sim-svg__total  { stroke: var(--grafito-450); stroke-width: 1; stroke-dasharray: 3 3; }
 .sim-svg__etapas { stroke: var(--grafito-950); stroke-width: 1.5; }
 
-/* Bandas de etapa: lavado alterno muy tenue bajo cada escalón,
-   para contar etapas de un vistazo. */
+/* Bandas de etapa: lavado alterno tenue bajo cada escalón. */
 .sim-svg__banda {
   fill: var(--cobalto-500);
   fill-opacity: 0.06;
@@ -898,8 +1146,6 @@
   stroke-dasharray: 1 3;
 }
 
-/* Marcadores: anillo de superficie de 2 px (legibles sobre las
-   series que cruzan). */
 .sim-svg__punto {
   fill: var(--grafito-950);
   stroke: var(--color-surface-raised);
@@ -927,7 +1173,7 @@
    superficie (paint-order) para leerse sobre las líneas. */
 .sim-svg__rotulo {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: var(--weight-medium);
   fill: var(--color-text);
   paint-order: stroke;
@@ -987,163 +1233,21 @@
 
 
 /* ─────────────────────────────────────────────────────────────
-   6.  RESULTADO, AVISOS Y FICHA
-   ───────────────────────────────────────────────────────────── */
-
-.sim-figura__pie {
-  display: grid;
-  gap: var(--space-3);
-  padding-top: var(--space-3);
-  border-top: var(--rule);
-}
-
-.sim-resultado {
-  font-size: var(--text-h4);
-  line-height: var(--leading-normal);
-  color: var(--color-text);
-  text-wrap: pretty;
-}
-
-.sim-resultado strong {
-  font-weight: var(--weight-semibold);
-  color: var(--color-accent);
-}
-
-.sim-resultado__nota {
-  display: block;
-  margin-top: var(--space-1);
-  font-size: var(--text-small);
-  color: var(--color-text-soft);
-}
-
-.sim-resultado__vacio {
-  color: var(--color-text-soft);
-}
-
-.sim-avisos {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.sim-aviso {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-small);
-  line-height: var(--leading-normal);
-  color: var(--color-text);
-  border-radius: var(--radius-md);
-  border: 1px solid color-mix(in oklab, var(--color-negative) 30%, var(--color-border));
-  background: color-mix(in oklab, var(--color-negative) 5%, var(--color-surface-raised));
-}
-
-.sim-aviso__glifo {
-  flex: none;
-  display: inline-grid;
-  place-items: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: 0.1em;
-  border-radius: 50%;
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-medium);
-  color: var(--color-on-accent);
-  background: var(--color-negative);
-}
-
-.sim-aviso--aviso {
-  border-color: color-mix(in oklab, var(--color-warning) 35%, var(--color-border));
-  background: color-mix(in oklab, var(--color-warning) 6%, var(--color-surface-raised));
-}
-
-.sim-aviso--aviso .sim-aviso__glifo {
-  background: var(--color-warning);
-}
-
-.sim-aviso--info {
-  border-color: color-mix(in oklab, var(--color-accent) 25%, var(--color-border));
-  background: var(--color-surface-accent);
-}
-
-.sim-aviso--info .sim-aviso__glifo {
-  background: var(--color-accent);
-}
-
-/* ── Ficha técnica: lista de definición en columnas fluidas,
-   filas separadas por filetes; valores en mono tabular. ── */
-.sim-app__detalle {
-  display: grid;
-  /* minmax(0, 1fr): la pista no hereda el min-content de la tabla
-     (su marco desplaza en horizontal en lugar de ensanchar la página). */
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-10);
-}
-
-.sim-bloque__titulo {
-  margin-bottom: var(--space-4);
-  font-size: var(--text-h4);
-}
-
-.sim-ficha {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
-  column-gap: var(--space-8);
-  margin: 0;
-  border-top: var(--rule-ink);
-}
-
-.sim-ficha__fila {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: baseline;
-  column-gap: var(--space-4);
-  padding-block: var(--space-3);
-  border-bottom: var(--rule);
-}
-
-.sim-ficha__termino {
-  font-size: var(--text-small);
-  line-height: var(--leading-snug);
-  color: var(--color-text-soft);
-}
-
-.sim-ficha__valor {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  color: var(--color-text);
-}
-
-.sim-ficha__nota {
-  display: block;
-  margin-top: 2px;
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  line-height: var(--leading-snug);
-  color: var(--color-text-faint);
-}
-
-
-/* ─────────────────────────────────────────────────────────────
-   7.  PESTAÑAS, TABLA, LECTURA, EXPORTACIÓN
+   6.  RESULTADOS — pestañas, ficha, tabla, lectura
    ───────────────────────────────────────────────────────────── */
 
 .sim-tabs__lista {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-6);
-  border-bottom: var(--rule);
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .sim-tabs__tab {
   margin-bottom: -1px;
-  padding: var(--space-3) 0;
+  padding: var(--space-2) 0 var(--space-3);
   font-family: var(--font-body);
-  font-size: var(--text-small);
+  font-size: 0.9375rem;
   font-weight: var(--weight-medium);
   color: var(--color-text-soft);
   background: none;
@@ -1159,6 +1263,7 @@
 
 .sim-tabs__tab[aria-selected="true"] {
   color: var(--color-text);
+  font-weight: var(--weight-semibold);
   border-bottom-color: var(--color-accent);
 }
 
@@ -1166,13 +1271,59 @@
   padding-top: var(--space-5);
 }
 
+/* ── Ficha técnica ── */
+.sim-ficha {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+  column-gap: var(--space-8);
+  margin: 0;
+}
+
+.sim-ficha__fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.sim-ficha__termino {
+  font-size: var(--text-small);
+  line-height: var(--leading-snug);
+  color: var(--color-text-soft);
+}
+
+.sim-ficha__valor {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--color-text);
+}
+
+.sim-ficha__nota {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: var(--leading-snug);
+  color: var(--color-text-faint);
+}
+
+/* ── Tabla de etapas ── */
+.sim-etapas {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .sim-tabla__marco {
   max-width: 52rem;
   max-height: 26rem;
   overflow: auto;
-  border: var(--elevation-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
 }
 
 .sim-tabla {
@@ -1187,7 +1338,7 @@
   padding: var(--space-2) var(--space-4);
   text-align: left;
   white-space: nowrap;
-  border-bottom: var(--elevation-border-soft);
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .sim-tabla thead th {
@@ -1197,7 +1348,6 @@
   font-weight: var(--weight-medium);
   color: var(--color-text-soft);
   background: var(--color-surface-sunken);
-  border-bottom: var(--elevation-border);
 }
 
 .sim-tabla tbody th {
@@ -1229,12 +1379,18 @@
 
 .sim-tabla__nota {
   max-width: var(--measure-prose);
-  margin-top: var(--space-3);
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   line-height: var(--leading-normal);
   color: var(--color-text-faint);
 }
 
+.sim-etapas__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ── Lectura guiada ── */
 .sim-lectura {
   display: grid;
   gap: var(--space-3);
@@ -1245,48 +1401,33 @@
   text-wrap: pretty;
 }
 
-.sim-herramientas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  padding-top: var(--space-5);
-  border-top: var(--rule);
-}
-
 
 /* ─────────────────────────────────────────────────────────────
-   8.  FUNDAMENTOS ESTÁTICOS — .sim-teoria (MathML)
+   7.  FUNDAMENTOS — hipótesis, nomenclatura, formulario
+   Subdesplegables con el mismo estilo de disclosure, un escalón
+   tipográfico por debajo.
    ───────────────────────────────────────────────────────────── */
 
 .sim-teoria {
-  margin-top: var(--space-14);
-  padding-top: var(--space-8);
-  border-top: var(--rule);
-}
-
-.sim-teoria__titulo {
-  margin-bottom: var(--space-6);
-  font-size: var(--text-h4);
-}
-
-.sim-teoria__columnas {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-10);
+  gap: var(--space-4);
+  margin-top: var(--space-10);
 }
 
-.sim-teoria__sub {
-  margin-bottom: var(--space-3);
-  font-size: var(--text-small);
-  font-weight: var(--weight-semibold);
+.sim-sub__summary {
+  padding: var(--space-2) 0 var(--space-3);
+}
+
+.sim-sub__panel {
+  padding-block: var(--space-5) var(--space-4);
 }
 
 .sim-teoria__lista {
   display: grid;
   gap: var(--space-2);
+  max-width: var(--measure-prose);
   margin: 0;
   padding-left: var(--space-5);
-  font-size: var(--text-small);
   line-height: var(--leading-relaxed);
   color: var(--color-text-soft);
 }
@@ -1295,22 +1436,74 @@
   color: var(--color-accent-soft);
 }
 
+/* Nomenclatura: símbolo · significado · unidades. */
+.sim-nomenclatura__marco {
+  overflow-x: auto;
+}
+
+.sim-nomenclatura {
+  width: 100%;
+  max-width: 56rem;
+  border-collapse: collapse;
+  font-size: var(--text-small);
+}
+
+.sim-nomenclatura th,
+.sim-nomenclatura td {
+  padding: var(--space-2) var(--space-4) var(--space-2) 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.sim-nomenclatura thead th {
+  font-weight: var(--weight-medium);
+  color: var(--color-text-faint);
+}
+
+.sim-nomenclatura tbody th {
+  min-width: 7rem;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-regular);
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.sim-nomenclatura td {
+  color: var(--color-text-soft);
+}
+
+/* Barra de sección de agotamiento (L̄, V̄): overline en lugar del
+   macrón combinado, que se desalinea sobre la itálica. */
+.sim-barra {
+  text-decoration: overline;
+  text-decoration-thickness: 1px;
+}
+
+.sim-nomenclatura td:last-child {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  white-space: nowrap;
+  color: var(--color-text-faint);
+}
+
+/* Formulario (MathML). */
 .sim-ecuaciones {
+  max-width: 56rem;
   margin: 0;
-  border-top: var(--rule);
 }
 
 .sim-ecuaciones__fila {
   display: grid;
   gap: var(--space-1);
   padding-block: var(--space-3);
-  border-bottom: var(--rule);
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .sim-ecuaciones dt {
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   font-weight: var(--weight-medium);
-  letter-spacing: 0.01em;
   color: var(--color-text-soft);
 }
 
@@ -1321,18 +1514,17 @@
   color: var(--color-text);
 }
 
-/* Ecuaciones alineadas a la izquierda y a tamaño completo
-   (math-style normal), con desplazamiento horizontal si no caben. */
+/* Ecuaciones alineadas a la izquierda y a tamaño completo. */
 .sim-ecuaciones math {
   display: inline math;
   math-style: normal;
-  font-size: 1.12em;
+  font-size: 1.15em;
   padding-block: var(--space-1);
 }
 
 .sim-ecuaciones__nota {
   margin-top: var(--space-1);
-  font-size: var(--text-caption);
+  font-size: 0.8125rem;
   line-height: var(--leading-normal);
   color: var(--color-text-faint);
   white-space: normal;
@@ -1340,8 +1532,8 @@
 
 .sim-teoria__refs {
   max-width: var(--measure-prose);
-  margin-top: var(--space-8);
-  font-size: var(--text-caption);
+  margin-top: var(--space-2);
+  font-size: 0.8125rem;
   line-height: var(--leading-normal);
   color: var(--color-text-faint);
 }
@@ -1350,16 +1542,9 @@
   font-style: italic;
 }
 
-@media (min-width: 960px) {
-  .sim-teoria__columnas {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: var(--space-12);
-  }
-}
-
 
 /* ─────────────────────────────────────────────────────────────
-   9.  MOVIMIENTO REDUCIDO · IMPRESIÓN
+   8.  MOVIMIENTO REDUCIDO · IMPRESIÓN
    ───────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1368,7 +1553,8 @@
     stroke-dasharray: none;
     stroke-dashoffset: 0;
   }
-  .sim__chevron,
+  .sim__summary::before,
+  .sim-sub__summary::before,
   .sim-svg__banda {
     transition: none;
   }
@@ -1376,25 +1562,30 @@
 
 @media print {
   .sim:not([open]),
-  .sim__chevron,
   .sim-app__controles,
-  .sim-figura__barra,
+  .sim-elementos,
+  .sim-figura__utiles,
   .sim-plot__ayuda,
   .sim-plot__lectura,
   .sim-paso,
   .sim-tabs__lista,
-  .sim-herramientas {
+  .sim-etapas__acciones {
     display: none !important;
   }
   .sim-app {
     display: block;
   }
+  .sim-panel {
+    border: 0;
+    padding: 0;
+  }
   .sim-figura {
+    display: block;
     position: static;
     break-inside: avoid;
   }
   .sim-plot {
-    max-width: 15cm;
+    max-width: 15cm !important;
   }
   .sim-tabs__panel[hidden] {
     display: block !important;

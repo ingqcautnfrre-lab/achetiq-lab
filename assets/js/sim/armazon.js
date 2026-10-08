@@ -1,154 +1,247 @@
 /* ============================================================
    AChETIQ — Simuladores · armazón común (armazon.js)
    ------------------------------------------------------------
-   Arma la composición compartida por los dos simuladores y
-   devuelve las referencias que cada uno completa:
+   Composición compartida por los dos simuladores:
 
-     ┌ controles ┐ ┌ figura ──────────────────────────────┐
-     │ fieldsets │ │ capas (chips) · paso a paso · vista  │
-     │   …       │ │ diagrama SVG                         │
-     │           │ │ barra «paso a paso» + narración      │
-     │           │ │ resultado principal + avisos         │
-     └───────────┘ └──────────────────────────────────────┘
-     ┌ ficha de resultados ─────────────────────────────────┐
-     ┌ pestañas: Etapas · Cómo leer el diagrama ────────────┐
-     ┌ exportación: SVG · CSV · imprimir ───────────────────┐
+     ┌ Parámetros ──┐ ┌ Gráfico ─────────────────────────────────┐
+     │ fieldsets…   │ │ indicadores clave        paso a paso·vista│
+     │              │ │ ┌ diagrama SVG ─────────┐ ┌ Elementos ───┐ │
+     │              │ │ │                        │ │ ☑ series…    │ │
+     │              │ │ └────────────────────────┘ │ Descargar PNG│ │
+     │              │ │ avisos · paso a paso       └──────────────┘ │
+     └──────────────┘ └──────────────────────────────────────────┘
+     ┌ Resultados: Ficha técnica · Etapas · Cómo leer el diagrama ┐
 
    La lógica de cada simulador vive en destilacion.js y
-   absorcion.js; acá solo hay estructura, la leyenda-interruptor
-   de capas y el control del modo paso a paso.
+   absorcion.js; acá hay estructura, el panel de elementos (que es
+   a la vez leyenda, interruptor de capas y selector de lo que
+   entra en la imagen descargada), la exportación y el control del
+   modo paso a paso.
    ============================================================ */
 
 'use strict';
 
-import { el, elNotacion, boton, pestanas, anunciador } from './ui.js';
-import { crearGrafico } from './grafico.js';
+import { el, elNotacion, boton, pestanas, anunciador, descargar, csv } from './ui.js';
+import { crearGrafico, serializarSVG } from './grafico.js';
+import { exportarPNG } from './exportar.js';
+import { enHTML } from './notacion.js';
 
 var NS = 'http://www.w3.org/2000/svg';
 
-/* Muestra de trazo para cada chip de la leyenda: una línea corta
-   con la misma clase que la serie (color + patrón de trazo). */
+/* Muestra de trazo de una serie (misma clase que en el diagrama). */
 function muestra(clase) {
   var svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('class', 'sim-chip__muestra');
+  svg.setAttribute('class', 'sim-check__muestra');
   svg.setAttribute('viewBox', '0 0 28 12');
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('focusable', 'false');
   var l = document.createElementNS(NS, 'path');
-  l.setAttribute('d', clase === 'etapas' || clase === 'total' ? 'M2 2H14V10H26' : 'M2 9L26 3');
+  l.setAttribute('d', clase === 'etapas' || clase === 'total' ? 'M2 10H14V2H26' : 'M2 9L26 3');
   l.setAttribute('class', 'sim-svg__serie sim-svg__' + clase);
   svg.appendChild(l);
+  return svg;
+}
+
+/* Glifo para los elementos que no son series. */
+function glifo(texto) {
+  return el('span', 'sim-check__glifo', texto, { 'aria-hidden': 'true' });
+}
+
+function iconoDescarga() {
+  var svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('class', 'sim-descarga__icono');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('focusable', 'false');
+  ['M12 4v11', 'm7 10 5 5 5-5', 'M5 20h14'].forEach(function (d) {
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    svg.appendChild(p);
+  });
   return svg;
 }
 
 export function crearArmazon(raiz, cfg) {
   raiz.replaceChildren();
   raiz.classList.add('sim-app');
-  raiz.setAttribute('data-estado', 'listo');
 
-  /* ── Columna de controles ── */
-  var controles = el('form', 'sim-app__controles', null, {
+  /* ── Panel de parámetros ── */
+  var controles = el('form', 'sim-panel sim-app__controles', null, {
     'aria-labelledby': cfg.id + '-param', novalidate: ''
   });
   controles.addEventListener('submit', function (ev) { ev.preventDefault(); });
-  controles.appendChild(el('h3', 'sim-app__titulo', 'Parámetros de diseño', { id: cfg.id + '-param' }));
+  var cabCtrl = el('div', 'sim-panel__cab');
+  cabCtrl.appendChild(el('h3', 'sim-panel__titulo', 'Parámetros de diseño', { id: cfg.id + '-param' }));
+  controles.appendChild(cabCtrl);
 
-  /* ── Figura ── */
-  var escenario = el('div', 'sim-app__escenario');
-  var figura = el('figure', 'sim-figura', null, { 'aria-labelledby': cfg.id + '-fig' });
-  var barra = el('div', 'sim-figura__barra');
-  var leyenda = el('div', 'sim-leyenda', null, { role: 'group', 'aria-label': 'Capas visibles del diagrama' });
-  barra.appendChild(leyenda);
+  /* ── Panel del gráfico ── */
+  var figura = el('section', 'sim-panel sim-figura', null, { 'aria-labelledby': cfg.id + '-fig' });
+  figura.appendChild(el('h3', 'sr-only', cfg.titulo, { id: cfg.id + '-fig' }));
+
+  var cab = el('div', 'sim-figura__cab');
+  var kpis = el('dl', 'sim-kpis');
+  var utiles = el('div', 'sim-figura__utiles');
+  cab.appendChild(kpis);
+  cab.appendChild(utiles);
 
   var plotHost = el('div', 'sim-plot');
-  var bajoPlot = el('div', 'sim-figura__bajo');
+  var pie = el('div', 'sim-figura__pie');
   var ayudaZoom = el('p', 'sim-plot__ayuda', 'Arrastrá sobre el diagrama para ampliar una zona; doble clic para volver a la vista completa.');
-  var utiles = el('div', 'sim-figura__utiles');
-  bajoPlot.appendChild(ayudaZoom);
-  bajoPlot.appendChild(utiles);
-
+  var avisos = el('div', 'sim-avisos', null, { hidden: '' });
   var pasoBarra = el('div', 'sim-paso', null, { hidden: '' });
   var pasoCtrl = el('div', 'sim-paso__controles');
   var pasoTexto = el('p', 'sim-paso__texto', null, { 'aria-live': 'polite' });
-
-  var pie = el('div', 'sim-figura__pie');
-  pie.appendChild(el('span', 'sr-only', cfg.titulo + '. ', { id: cfg.id + '-fig' }));
-  var resultado = el('p', 'sim-resultado');
-  var avisos = el('div', 'sim-avisos', null, { hidden: '' });
-  pie.appendChild(resultado);
   pie.appendChild(avisos);
+  pie.appendChild(pasoBarra);
+  pie.appendChild(ayudaZoom);
 
-  /* Columna lateral (≥ 1360 px): resultado + paso a paso junto al
-     diagrama; en anchos menores se apila debajo. */
-  var lado = el('div', 'sim-figura__lado');
-  lado.appendChild(pie);
-  lado.appendChild(pasoBarra);
+  /* ── Panel lateral: elementos del gráfico + descarga ── */
+  var lado = el('aside', 'sim-elementos', null, { 'aria-labelledby': cfg.id + '-elem' });
+  lado.appendChild(el('h4', 'sim-elementos__titulo', 'Elementos del gráfico', { id: cfg.id + '-elem' }));
+  /* La lista se desplaza en su propia región (escritorio); el bloque
+     de descarga queda debajo, sin superponerse a ninguna casilla. */
+  var lista = el('div', 'sim-elementos__lista');
+  lado.appendChild(lista);
 
-  figura.appendChild(barra);
+  var visibles = {};
+  var checks = {};
+  var series = [];   /* para la leyenda de la imagen */
+  var grafico = null;
+
+  function agregarGrupo(nombre, items, alCambiar) {
+    var fs = el('fieldset', 'sim-elementos__grupo');
+    fs.appendChild(el('legend', 'sim-elementos__leyenda', nombre));
+    items.forEach(function (it) {
+      visibles[it.id] = it.activa !== false;
+      var lab = el('label', 'sim-check');
+      var cb = el('input', 'sim-check__caja', null, { type: 'checkbox' });
+      cb.checked = visibles[it.id];
+      cb.addEventListener('change', function () {
+        visibles[it.id] = cb.checked;
+        if (alCambiar) alCambiar();
+      });
+      lab.appendChild(cb);
+      lab.appendChild(it.clase ? muestra(it.clase) : glifo(it.glifo || ''));
+      lab.appendChild(elNotacion('span', 'sim-check__texto', it.etiqueta));
+      fs.appendChild(lab);
+      checks[it.id] = lab;
+      if (it.clase) series.push(it);
+    });
+    lista.appendChild(fs);
+  }
+
+  cfg.elementos.forEach(function (g) { agregarGrupo(g.grupo, g.items, cfg.alCambiarCapas); });
+
+  var descarga = el('div', 'sim-descarga');
+  descarga.appendChild(el('h4', 'sim-elementos__titulo', 'Descargar gráfico'));
+  /* Agregados que solo existen en la imagen descargada (no en
+     pantalla): casillas compactas en una fila. */
+  var incluir = el('fieldset', 'sim-descarga__incluir');
+  incluir.appendChild(el('legend', 'sim-elementos__leyenda', 'Incluir en la imagen'));
+  [['img-titulo', 'Título'], ['img-param', 'Parámetros'], ['img-leyenda', 'Leyenda']].forEach(function (o) {
+    visibles[o[0]] = true;
+    var lab = el('label', 'sim-check sim-check--compacto');
+    var cb = el('input', 'sim-check__caja', null, { type: 'checkbox' });
+    cb.checked = true;
+    cb.addEventListener('change', function () { visibles[o[0]] = cb.checked; });
+    lab.appendChild(cb);
+    lab.appendChild(el('span', 'sim-check__texto', o[1]));
+    incluir.appendChild(lab);
+  });
+  descarga.appendChild(incluir);
+  var idRes = cfg.id + '-res';
+  var filaRes = el('div', 'sim-descarga__fila');
+  filaRes.appendChild(el('label', 'sim-descarga__etiqueta', 'Resolución', { for: idRes }));
+  var selRes = el('select', 'sim-select sim-descarga__select', null, { id: idRes });
+  [['2', '2× · ≈ 1 700 px'], ['3', '3× · ≈ 2 500 px'], ['4', '4× · ≈ 3 400 px']].forEach(function (o, i) {
+    var op = el('option', null, o[1], { value: o[0] });
+    if (i === 1) op.selected = true;
+    selRes.appendChild(op);
+  });
+  filaRes.appendChild(selRes);
+  descarga.appendChild(filaRes);
+  var estadoDescarga = el('p', 'sim-descarga__estado', null, { role: 'status', 'aria-live': 'polite' });
+  var btnPNG = el('button', 'btn btn-primary sim-descarga__png', null, { type: 'button' });
+  btnPNG.appendChild(iconoDescarga());
+  btnPNG.appendChild(document.createTextNode('Descargar PNG'));
+  btnPNG.addEventListener('click', function () {
+    btnPNG.disabled = true;
+    estadoDescarga.textContent = 'Generando la imagen…';
+    var leyenda = series.filter(function (s) {
+      return visibles[s.id] && !checks[s.id].hidden && s.leyenda !== false;
+    }).map(function (s) { return { clase: s.clase, etiqueta: s.etiquetaLeyenda || s.etiqueta }; });
+    exportarPNG({
+      grafico: grafico,
+      escala: Number(selRes.value),
+      ancho: 800,
+      titulo: visibles['img-titulo'] ? cfg.tituloExport : null,
+      subtitulo: visibles['img-param'] && cfg.subtituloExport ? cfg.subtituloExport() : null,
+      leyenda: visibles['img-leyenda'] ? leyenda : [],
+      nombre: cfg.archivo + '.png'
+    }).then(function () {
+      estadoDescarga.textContent = 'Imagen descargada.';
+    }).catch(function (err) {
+      console.error('[AChETIQ simuladores] Exportación PNG:', err);
+      estadoDescarga.textContent = 'No se pudo generar la imagen.';
+    }).then(function () { btnPNG.disabled = false; });
+  });
+  descarga.appendChild(btnPNG);
+  var pieDescarga = el('div', 'sim-descarga__pie');
+  pieDescarga.appendChild(boton('Descargar SVG (vectorial)', 'sim-boton--enlace', function () {
+    descargar(cfg.archivo + '.svg', serializarSVG(grafico.svg), 'image/svg+xml');
+  }));
+  pieDescarga.appendChild(estadoDescarga);
+  descarga.appendChild(pieDescarga);
+  lado.appendChild(descarga);
+
+  figura.appendChild(cab);
   figura.appendChild(plotHost);
-  figura.appendChild(bajoPlot);
   figura.appendChild(lado);
-  escenario.appendChild(figura);
+  figura.appendChild(pie);
 
-  /* ── Ficha y pestañas ── */
-  var detalle = el('div', 'sim-app__detalle');
-  var secFicha = el('section', 'sim-bloque', null, { 'aria-labelledby': cfg.id + '-ficha' });
-  secFicha.appendChild(el('h3', 'sim-bloque__titulo', 'Ficha de resultados', { id: cfg.id + '-ficha' }));
+  /* ── Panel de resultados (pestañas) ── */
+  var detalle = el('section', 'sim-panel sim-app__detalle', null, { 'aria-labelledby': cfg.id + '-res-t' });
+  detalle.appendChild(el('h3', 'sr-only', 'Resultados', { id: cfg.id + '-res-t' }));
   var fichaDl = el('dl', 'sim-ficha');
-  secFicha.appendChild(fichaDl);
 
   var tablaEnvoltura = el('div', 'sim-tabla__marco', null, { tabindex: '0', role: 'region', 'aria-label': 'Tabla de etapas' });
   var tabla = el('table', 'sim-tabla');
-  var caption = el('caption', 'sr-only', 'Composiciones por etapa');
+  tabla.appendChild(el('caption', 'sr-only', 'Composiciones por etapa'));
   var thead = el('thead');
   var tbody = el('tbody');
-  tabla.appendChild(caption);
   tabla.appendChild(thead);
   tabla.appendChild(tbody);
   tablaEnvoltura.appendChild(tabla);
-  var panelEtapas = el('div');
+  var panelEtapas = el('div', 'sim-etapas');
   var notaTabla = el('p', 'sim-tabla__nota');
   panelEtapas.appendChild(tablaEnvoltura);
   panelEtapas.appendChild(notaTabla);
+  var accionesTabla = el('div', 'sim-etapas__acciones');
+  accionesTabla.appendChild(boton('Descargar tabla (CSV)', 'sim-boton--secundario', function () {
+    var filasCsv = cfg.csv && cfg.csv();
+    if (filasCsv) descargar(cfg.archivo + '.csv', csv(filasCsv), 'text/csv;charset=utf-8');
+  }));
+  accionesTabla.appendChild(boton('Imprimir', 'sim-boton--secundario', function () { window.print(); }));
+  panelEtapas.appendChild(accionesTabla);
 
   var panelLectura = el('div', 'sim-lectura');
   var tabs = pestanas([
+    { titulo: 'Ficha técnica', panel: fichaDl },
     { titulo: 'Etapas', panel: panelEtapas },
     { titulo: 'Cómo leer el diagrama', panel: panelLectura }
   ]);
-
-  var herramientas = el('div', 'sim-herramientas', null, { role: 'group', 'aria-label': 'Exportar resultados' });
-
-  detalle.appendChild(secFicha);
   detalle.appendChild(tabs.nodo);
-  detalle.appendChild(herramientas);
 
   raiz.appendChild(controles);
-  raiz.appendChild(escenario);
+  raiz.appendChild(figura);
   raiz.appendChild(detalle);
 
   var anunciar = anunciador(raiz);
 
-  /* ── Leyenda-interruptor de capas ── */
-  var visibles = {};
-  var chips = {};
-  cfg.capas.forEach(function (c) {
-    visibles[c.id] = c.activa !== false;
-    var b = el('button', 'sim-chip', null, { type: 'button', 'aria-pressed': visibles[c.id] ? 'true' : 'false' });
-    b.appendChild(muestra(c.clase));
-    b.appendChild(elNotacion('span', 'sim-chip__texto', c.etiqueta));
-    b.addEventListener('click', function () {
-      visibles[c.id] = !visibles[c.id];
-      b.setAttribute('aria-pressed', visibles[c.id] ? 'true' : 'false');
-      cfg.alCambiarCapas();
-    });
-    chips[c.id] = b;
-    leyenda.appendChild(b);
-  });
-
   /* ── Gráfico ── */
   var filas = {};
-  var grafico = crearGrafico(plotHost, {
+  var btnVista = boton('Restablecer vista', 'sim-boton--sutil', function () { grafico.restablecerVista(); }, { hidden: '' });
+  grafico = crearGrafico(plotHost, {
     onEtapa: function (n) { resaltarFila(n); },
     onZoom: function (activo) { btnVista.hidden = !activo; }
   });
@@ -158,8 +251,6 @@ export function crearArmazon(raiz, cfg) {
       filas[k].classList.toggle('is-activa', Number(k) === n);
     });
   }
-
-  var btnVista = boton('Restablecer vista', 'sim-boton--sutil', function () { grafico.restablecerVista(); }, { hidden: '' });
 
   /* ── Paso a paso ── */
   var paso = { activo: false, k: 1, total: 0 };
@@ -174,7 +265,7 @@ export function crearArmazon(raiz, cfg) {
   utiles.appendChild(btnVista);
 
   var btnAnt = boton('← Anterior', 'sim-boton--sutil', function () { mover(-1); }, { 'aria-label': 'Etapa anterior' });
-  var contador = el('span', 'sim-paso__contador', null, { 'aria-live': 'off' });
+  var contador = el('span', 'sim-paso__contador');
   var btnSig = boton('Siguiente →', 'sim-boton--sutil', function () { mover(1); }, { 'aria-label': 'Etapa siguiente' });
   var btnTodas = boton('Ver todas', 'sim-boton--sutil', function () {
     paso.activo = false;
@@ -183,8 +274,8 @@ export function crearArmazon(raiz, cfg) {
     cfg.alCambiarPaso();
     btnPaso.focus();
   });
-  pasoCtrl.appendChild(btnAnt);
   pasoCtrl.appendChild(contador);
+  pasoCtrl.appendChild(btnAnt);
   pasoCtrl.appendChild(btnSig);
   pasoCtrl.appendChild(btnTodas);
   pasoBarra.appendChild(pasoCtrl);
@@ -200,49 +291,66 @@ export function crearArmazon(raiz, cfg) {
   }
 
   /* ── Tamaño del diagrama en escritorio ──
-     Con la figura fija (sticky, ≥ 1100 px) el diagrama se acota para
-     que la figura COMPLETA —leyenda, diagrama, paso a paso y
-     resultado— quepa en la altura visible. Se mide lo que ocupa el
-     resto de la figura y se asigna el remanente (CSSOM: compatible
-     con la CSP). */
+     Con el panel del gráfico fijo (sticky, ≥ 1100 px) el diagrama se
+     acota para que el panel completo quepa en la altura visible. Si
+     aun así no entra (pantallas bajas), el panel deja de ser fijo. */
   var escritorio = window.matchMedia('(min-width: 1100px)');
-  var conLado = window.matchMedia('(min-width: 1360px)');
   var ajustando = false;
   function ajustarPlot() {
     if (ajustando) return;
     ajustando = true;
     requestAnimationFrame(function () {
       ajustando = false;
-      if (!escritorio.matches) { plotHost.style.maxWidth = ''; return; }
+      if (!escritorio.matches) {
+        plotHost.style.maxWidth = '';
+        lado.style.removeProperty('--sim-alto-lado');
+        figura.classList.remove('is-libre');
+        return;
+      }
       var nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 56;
-      var otros = conLado.matches
-        ? barra.offsetHeight + bajoPlot.offsetHeight + 24
-        : figura.offsetHeight - plotHost.offsetHeight;
-      var disp = window.innerHeight - nav - 40 - otros;
-      plotHost.style.maxWidth = Math.max(352, Math.floor(disp)) + 'px';
+      var util = window.innerHeight - nav - 32;
+      var otros = cab.offsetHeight + pie.offsetHeight + 72;
+      plotHost.style.maxWidth = Math.max(380, Math.floor(util - otros)) + 'px';
+      requestAnimationFrame(function () {
+        /* El panel lateral ocupa las filas del diagrama y del pie. */
+        lado.style.setProperty('--sim-alto-lado', Math.max(320, plotHost.offsetHeight + pie.offsetHeight + 20) + 'px');
+        requestAnimationFrame(function () {
+          figura.classList.toggle('is-libre', figura.offsetHeight > util + 8);
+        });
+      });
     });
   }
   window.addEventListener('resize', ajustarPlot);
-  [escritorio, conLado].forEach(function (mq) {
-    if (mq.addEventListener) mq.addEventListener('change', ajustarPlot);
-  });
+  if (escritorio.addEventListener) escritorio.addEventListener('change', ajustarPlot);
 
   return {
     controles: controles,
-    resultado: resultado,
+    cabControles: cabCtrl,
     avisos: avisos,
     ficha: fichaDl,
     thead: thead,
     tbody: tbody,
     notaTabla: notaTabla,
     lectura: panelLectura,
-    herramientas: herramientas,
     grafico: grafico,
     anunciar: anunciar,
-    visible: function (id) { return !!visibles[id]; },
-    mostrarChip: function (id, si) { if (chips[id]) chips[id].hidden = !si; },
-    paso: paso,
     ajustarPlot: ajustarPlot,
+    visible: function (id) { return !!visibles[id]; },
+    mostrarElemento: function (id, si) { if (checks[id]) checks[id].hidden = !si; },
+    paso: paso,
+    /* Indicadores clave: [{ etiqueta, valor, nota?, destacado? }] */
+    kpis: function (lista) {
+      kpis.replaceChildren();
+      lista.forEach(function (k) {
+        var d = el('div', 'sim-kpi' + (k.destacado ? ' sim-kpi--destacado' : ''));
+        d.appendChild(elNotacion('dt', 'sim-kpi__etiqueta', k.etiqueta));
+        var dd = el('dd', 'sim-kpi__valor');
+        enHTML(dd, k.valor);
+        if (k.nota) dd.appendChild(elNotacion('span', 'sim-kpi__nota', k.nota));
+        d.appendChild(dd);
+        kpis.appendChild(d);
+      });
+    },
     pintarPaso: function (texto) {
       contador.textContent = 'Etapa ' + paso.k + ' de ' + paso.total;
       btnAnt.disabled = paso.k <= 1;

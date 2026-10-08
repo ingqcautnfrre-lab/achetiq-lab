@@ -13,9 +13,8 @@
 import * as Modelo from './modelo-absorcion.js';
 import { fmt, fmtSig } from './numerico.js';
 import { crearArmazon } from './armazon.js';
-import { el, elNotacion, grupo, campo, segmentado, selector, areaDatos, ficha, avisos, boton, descargar, csv } from './ui.js';
+import { el, elNotacion, grupo, campo, segmentado, selector, areaDatos, ficha, avisos, boton } from './ui.js';
 import { enHTML } from './notacion.js';
-import { serializarSVG } from './grafico.js';
 
 function copiaDefaults() {
   var d = Modelo.DEFAULTS;
@@ -39,13 +38,48 @@ export function montar(raiz) {
   var A = crearArmazon(raiz, {
     id: 'abs',
     titulo: 'Diagrama X–Y de McCabe-Thiele para la absorción de gases',
-    capas: [
-      { id: 'eq', etiqueta: 'Equilibrio', clase: 'eq' },
-      { id: 'ps', etiqueta: 'Pseudoequilibrio', clase: 'ps' },
-      { id: 'op', etiqueta: 'Operación', clase: 'op' },
-      { id: 'etapas', etiqueta: 'Etapas', clase: 'etapas' },
-      { id: 'lmin', etiqueta: 'Solvente mínimo', clase: 'rmin', activa: false }
+    tituloExport: 'Diagrama de McCabe-Thiele — absorción de gases',
+    archivo: 'mccabe-thiele-absorcion',
+    elementos: [
+      { grupo: 'Curvas y rectas', items: [
+        { id: 'eq', etiqueta: 'Curva de equilibrio', clase: 'eq', etiquetaLeyenda: 'Equilibrio' },
+        { id: 'ps', etiqueta: 'Pseudoequilibrio (E_{MV} < 1)', clase: 'ps', etiquetaLeyenda: 'Pseudoequilibrio' },
+        { id: 'op', etiqueta: 'Recta de operación', clase: 'op', etiquetaLeyenda: 'Operación' }
+      ] },
+      { grupo: 'Construcción', items: [
+        { id: 'etapas', etiqueta: 'Escalones (etapas)', clase: 'etapas', etiquetaLeyenda: 'Etapas' },
+        { id: 'numeros', etiqueta: 'Números de etapa', glifo: '1·2' },
+        { id: 'lmin', etiqueta: 'Solvente mínimo', clase: 'rmin', activa: false, etiquetaLeyenda: 'Solvente mínimo' }
+      ] },
+      { grupo: 'Anotaciones', items: [
+        { id: 'comp', etiqueta: 'Tope y fondo', glifo: '●' },
+        { id: 'rotulos', etiqueta: 'Rótulos de las curvas', glifo: 'Aa' },
+        { id: 'grilla', etiqueta: 'Cuadrícula', glifo: '#' }
+      ] }
     ],
+    subtituloExport: function () {
+      if (!res || !res.ok) return '';
+      var eqTxt = p.equilibrio.tipo === 'lineal' ? 'Y^* = ' + fmt(p.equilibrio.M, 3) + ' X'
+        : p.equilibrio.tipo === 'henry' ? 'y^* = ' + fmt(p.equilibrio.m, 3) + ' x' : 'equilibrio tabulado';
+      return eqTxt + ' · Y_{N+1} = ' + fmtSig(res.Yin, 4) + ' · Y_1 = ' + fmtSig(res.Y1, 4) +
+        ' · X_0 = ' + fmtSig(res.X0, 4) + ' · L′_s/V′_s = ' + fmt(res.LV, 3) +
+        ' (L′_s/L′_{s,mín} = ' + fmt(res.lRatio, 2) + ') · E_{MV} = ' + fmt(p.E, 2);
+    },
+    csv: function () {
+      if (!res || !res.ok) return null;
+      var filas = [
+        ['McCabe-Thiele — absorción de gases (AChETIQ)'],
+        ['V\'s (kmol/h)', p.Vs], ['Y_N+1', res.Yin], ['Y_1', res.Y1], ['X_0', res.X0], ['X_N', res.XN],
+        ['L\'s (kmol/h)', res.Ls], ['L\'s,min (kmol/h)', res.Lmin], ['E_MV', p.E],
+        [],
+        ['Etapa', 'X_n', 'Y_n', 'x_n', 'y_n']
+      ];
+      res.escalones.etapas.forEach(function (e) {
+        filas.push([e.n, Number(e.X.toPrecision(7)), Number(e.Y.toPrecision(7)),
+          Number(Modelo.aFraccion(e.X).toPrecision(7)), Number(Modelo.aFraccion(e.Y).toPrecision(7))]);
+      });
+      return filas;
+    },
     alCambiarCapas: function () { dibujar(); },
     alCambiarPaso: function () { dibujar(); }
   });
@@ -134,8 +168,7 @@ export function montar(raiz) {
   g5.appendChild(C.E.nodo);
 
   [g1, g2, g3, g4, g5].forEach(function (g) { A.controles.appendChild(g); });
-  var pieCtrl = el('div', 'sim-app__acciones');
-  pieCtrl.appendChild(boton('Restablecer valores', 'sim-boton--secundario', function () {
+  A.cabControles.appendChild(boton('Restablecer', 'sim-boton--sutil', function () {
     p = copiaDefaults();
     C.Vs.fijar(p.Vs); C.yIn.fijar(p.yIn); C.espec.fijar(p.especSalida); C.yOut.fijar(p.yOut);
     C.rec.fijar(p.recuperacion * 100); C.x0.fijar(p.x0); C.modoL.fijar(p.modoL); C.Ls.fijar(p.Ls);
@@ -144,8 +177,7 @@ export function montar(raiz) {
     C.E.fijar(p.E);
     A.grafico.restablecerVista();
     visibilidad(); recalcular();
-  }));
-  A.controles.appendChild(pieCtrl);
+  }, { 'aria-label': 'Restablecer los valores por defecto' }));
 
   function visibilidad() {
     var t = p.equilibrio.tipo;
@@ -159,27 +191,6 @@ export function montar(raiz) {
     C.Ls.mostrar(p.modoL === 'L');
     C.ratio.mostrar(p.modoL === 'ratio');
   }
-
-  /* ── Exportación ── */
-  A.herramientas.appendChild(boton('Descargar diagrama (SVG)', 'sim-boton--secundario', function () {
-    descargar('mccabe-thiele-absorcion.svg', serializarSVG(A.grafico.svg), 'image/svg+xml');
-  }));
-  A.herramientas.appendChild(boton('Descargar etapas (CSV)', 'sim-boton--secundario', function () {
-    if (!res || !res.ok) return;
-    var filas = [
-      ['McCabe-Thiele — absorción de gases (AChETIQ)'],
-      ['V\'s (kmol/h)', p.Vs], ['Y_N+1', res.Yin], ['Y_1', res.Y1], ['X_0', res.X0], ['X_N', res.XN],
-      ['L\'s (kmol/h)', res.Ls], ['L\'s,min (kmol/h)', res.Lmin], ['E_MV', p.E],
-      [],
-      ['Etapa', 'X_n', 'Y_n', 'x_n', 'y_n']
-    ];
-    res.escalones.etapas.forEach(function (e) {
-      filas.push([e.n, Number(e.X.toPrecision(7)), Number(e.Y.toPrecision(7)),
-        Number(Modelo.aFraccion(e.X).toPrecision(7)), Number(Modelo.aFraccion(e.Y).toPrecision(7))]);
-    });
-    descargar('mccabe-thiele-absorcion.csv', csv(filas), 'text/csv;charset=utf-8');
-  }));
-  A.herramientas.appendChild(boton('Imprimir', 'sim-boton--secundario', function () { window.print(); }));
 
   /* ── Cálculo ── */
   function recalcular() {
@@ -195,9 +206,14 @@ export function montar(raiz) {
   /* Etapas en el formato del renderizador. La vertical de la última
      etapa (parcial) se corta en Y_{N+1}: más allá del fondo la recta
      de operación no existe físicamente. */
-  function adaptar(etapas, Yin) {
+  function adaptar(etapas, Yin, XN) {
     return etapas.map(function (e) {
-      return { n: e.n, x0: e.X0, y: e.Y, x: e.X, y1: e.ultima ? Math.min(e.Y1, Yin) : e.Y1, ultima: e.ultima };
+      return {
+        n: e.n, x0: e.X0, y: e.Y, x: e.X,
+        y1: e.ultima ? Math.min(e.Y1, Yin) : e.Y1,
+        xc: e.ultima && e.Y1 > Yin ? XN : null,
+        ultima: e.ultima
+      };
     });
   }
 
@@ -233,16 +249,17 @@ export function montar(raiz) {
           etiqueta: { texto: 'Operación', en: r.X0 + (r.XN - r.X0) * 0.42, dx: -12, dy: -10, ancla: 'end' }
         });
       }
-      capas.push({ tipo: 'guia', x: r.XN, y: r.Yin });
+      var comp = A.visible('comp');
+      capas.push({ tipo: 'guia', x: r.XN, y: r.Yin, oculta: !comp });
       if (A.visible('etapas')) {
         capas.push({
-          tipo: 'escalones', clase: 'etapas', etapas: adaptar(r.escalones.etapas, r.Yin),
+          tipo: 'escalones', clase: 'etapas', etapas: adaptar(r.escalones.etapas, r.Yin, r.XN),
           hasta: A.paso.activo ? A.paso.k : null,
           rotulo: { dx: 7, dy: 15, ancla: 'start' }
         });
       }
       capas.push({
-        tipo: 'puntos', clase: 'comp', items: [
+        tipo: 'puntos', clase: 'comp', oculta: !comp, items: [
           { x: r.X0, y: r.Y1, etiqueta: 'Tope (X_0; Y_1)', dx: 64, dy: 44, ancla: 'start', guia: true },
           { x: r.XN, y: r.Yin, etiqueta: 'Fondo (X_N; Y_{N+1})', dx: -10, dy: -10, ancla: 'end' }
         ]
@@ -262,9 +279,10 @@ export function montar(raiz) {
       },
       titulo: 'Diagrama de McCabe-Thiele para absorción de gases',
       descripcion: desc,
+      mostrar: { grilla: A.visible('grilla'), rotulos: A.visible('rotulos'), numeros: A.visible('numeros') },
       capas: capas
     });
-    A.mostrarChip('ps', !!(r && r.ok && r.p.E < 1));
+    A.mostrarElemento('ps', !!(r && r.ok && r.p.E < 1));
     if (A.paso.activo && r && r.ok) A.pintarPaso(narrarEtapa(r, A.paso.k));
     A.ajustarPlot();
   }
@@ -277,9 +295,8 @@ export function montar(raiz) {
 
   function pintarResultados() {
     var r = res;
-    A.resultado.replaceChildren();
     if (!r.ok) {
-      A.resultado.appendChild(el('span', 'sim-resultado__vacio', 'Revisá la especificación: el diagrama no puede construirse con estos datos.'));
+      A.kpis([{ etiqueta: 'Resultado', valor: '—', nota: 'especificación no válida' }]);
       avisos(A.avisos, r.errores.map(function (t) { return { nivel: 'error', texto: t }; }).concat(r.avisos));
       ficha(A.ficha, []);
       A.tbody.replaceChildren();
@@ -288,17 +305,19 @@ export function montar(raiz) {
       return;
     }
     var e = r.escalones;
-    if (isFinite(e.nFrac)) {
-      A.resultado.appendChild(document.createTextNode('Se requieren '));
-      A.resultado.appendChild(el('strong', null, e.n + (r.p.E < 1 ? ' etapas reales' : ' etapas teóricas')));
-      A.resultado.appendChild(document.createTextNode(' (' + fmt(e.nFrac, 2) + ' en la construcción gráfica).'));
-      if (r.p.E < 1 && isFinite(r.teorico.nFrac)) {
-        A.resultado.appendChild(elNotacion('span', 'sim-resultado__nota', 'Con E_{MV} = 1 bastarían ' + r.teorico.n + ' etapas teóricas.'));
-      }
-    } else {
-      A.resultado.appendChild(el('strong', null, 'Infinitas etapas'));
-      enHTML(A.resultado, ': el caudal de solvente no supera el mínimo, L′_{s,mín} = ' + fmt(r.Lmin, 2) + ' kmol/h.');
-    }
+    var finito = isFinite(e.nFrac);
+    A.kpis([
+      {
+        etiqueta: r.p.E < 1 ? 'Etapas reales' : 'Etapas teóricas',
+        valor: finito ? String(e.n) : '∞',
+        nota: !finito ? 'L′_s no supera L′_{s,mín}'
+          : fmt(e.nFrac, 2) + ' en la construcción' + (r.p.E < 1 && isFinite(r.teorico.nFrac) ? ' · ' + r.teorico.n + ' teóricas' : ''),
+        destacado: true
+      },
+      { etiqueta: 'Solvente mínimo, L′_{s,mín}', valor: fmt(r.Lmin, 1), nota: 'kmol/h · L′_s/L′_{s,mín} = ' + fmt(r.lRatio, 2) },
+      { etiqueta: 'Recuperación', valor: fmt(r.recuperacion * 100, 1) + ' %', nota: 'del soluto alimentado' },
+      { etiqueta: 'Líquido de salida, X_N', valor: fmtSig(r.XN, 4), nota: 'x_N = ' + fmtSig(Modelo.aFraccion(r.XN), 4) }
+    ]);
     avisos(A.avisos, r.avisos);
     A.anunciar(textoPlano(r));
 

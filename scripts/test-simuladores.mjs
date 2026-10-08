@@ -14,7 +14,8 @@
  *     1,529: discrepancia documentada).
  *   · Absorción — valores por defecto del simulador de referencia
  *     (Almajose): V′ = 100; y_{N+1} = 0,10; y_1 = 0,015; x_0 = 0;
- *     Y* = 1,5 X; L′ = 195; E_MV = 0,70.
+ *     Y* = 1,5 X; L′ = 195; E_MV = 0,70 (el simulador arranca con
+ *     E_MV = 1; la prueba fija 0,70 para reproducir la referencia).
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -127,7 +128,8 @@ test("destilación — datos tabulados con azeótropo en el intervalo", () => {
 /* ── Absorción ──────────────────────────────────────────────────── */
 
 test("absorción — caso de referencia (Almajose)", () => {
-  const r = abs();
+  /* La referencia usa E_MV = 0,70 (el simulador arranca con E_MV = 1). */
+  const r = abs({ E: 0.7 });
   assert.equal(r.ok, true);
   cerca(r.Lmin, 129.4416, 1e-4, "L′_min");
   cerca(r.XN, 0.0491706, 1e-7, "X_N");
@@ -145,6 +147,14 @@ test("absorción — caso de referencia (Almajose)", () => {
   cerca(r.teorico.nFrac, 3.3884, 1e-3, "etapas teóricas (E = 1)");
   cerca(r.kremser.Nreal, 5.0929, 1e-3, "Kremser / E_o (Lewis)");
   assert.equal(Math.ceil(r.teorico.nFrac), Math.ceil(r.kremser.N));
+});
+
+test("absorción y destilación — E_MV = 1 por defecto", () => {
+  assert.equal(A.DEFAULTS.E, 1);
+  assert.equal(D.DEFAULTS.E, 1);
+  const r = abs();
+  assert.equal(r.escalones, r.teorico);
+  assert.equal(r.escalones.n, 4);
 });
 
 test("absorción — especificación por recuperación y por L′/L′_min", () => {
@@ -166,7 +176,7 @@ test("absorción — y* = m·x con m < 1 produce pinch tangente", () => {
 });
 
 test("absorción — L′ < L′_min se informa como pinch", () => {
-  const r = abs({ Ls: 120 });
+  const r = abs({ Ls: 120, E: 0.7 });
   assert.equal(r.escalones.nFrac, Infinity);
   assert.ok(r.avisos.some((a) => a.nivel === "error"));
 });

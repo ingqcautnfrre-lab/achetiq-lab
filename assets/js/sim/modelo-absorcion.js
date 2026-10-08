@@ -56,7 +56,7 @@ export var DEFAULTS = {
   yOut: 0.015,
   recuperacion: 0.85,
   x0: 0,
-  E: 0.7,
+  E: 1,
   modoL: 'L',
   Ls: 195,
   lRatio: 1.5,

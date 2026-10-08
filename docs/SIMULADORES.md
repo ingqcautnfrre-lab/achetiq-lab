@@ -7,7 +7,11 @@ McCabe-Thiele.
 | Ruta | Contenido |
 |---|---|
 | `pages/recursos/simulaciones` | Hub: una `.card-materia` por materia con simuladores (CTA «Acceder a los simuladores»). |
-| `pages/recursos/simulaciones/operaciones-unitarias-ii` | Página de la materia: desplegables «1. McCabe-Thiele para Absorción de Gases» (`#absorcion-gases`) y «2. McCabe-Thiele para Destilación Binaria» (`#destilacion-binaria`). |
+| `pages/recursos/simulaciones/operaciones-unitarias-ii` | Página de la materia: desplegables «1. McCabe-Thiele para Absorción de Gases» (`#absorcion-gases`) y «2. McCabe-Thiele para Destilación Binaria» (`#destilacion-binaria`). Cada simulador cierra con tres subdesplegables: «Hipótesis del modelo», «Nomenclatura» y «Formulario». |
+
+Ambas páginas usan `body.tema-papel`: fondo papel neutro (#F8F7F4) con paneles blancos, en lugar
+de la porcelana fría del resto del sitio. Es una excepción acotada, pedida por la dirección del
+proyecto (tokens.css «Tema papel», recursos.css §5).
 
 ## 1. Arquitectura
 
@@ -26,6 +30,8 @@ assets/js/sim/
   modelo-absorcion.js           modelo PURO (sin DOM) de absorción
   notacion.js                   subíndices «x_D», «Y_{N+1}» → <sub>/<tspan>
   grafico.js                    renderizador SVG propio + exportación SVG
+  exportar.js                   exportación PNG: recorre el SVG y lo repinta en un
+                                <canvas> (sin <img src="blob:…">, compatible con la CSP)
   ui.js                         controles, pestañas ARIA, ficha, avisos, CSV
   armazon.js                    composición común de los simuladores
   destilacion.js · absorcion.js cableado modelo ↔ interfaz
@@ -40,7 +46,11 @@ o `blob:` (`img-src 'self'`). Por eso:
 - el diagrama es un SVG propio;
 - los valores dinámicos se escriben por CSSOM (`el.style.setProperty`) o como atributos SVG;
 - las ecuaciones estáticas se escriben en MathML nativo;
-- la exportación es en SVG vectorial y CSV. No hay PNG, porque exigiría relajar `img-src`.
+- la exportación PNG no pasa por `<img src="blob:…">` (bloqueado por `img-src 'self'`):
+  `exportar.js` vuelve a dibujar el diagrama a 800 px de ancho y lo pinta en un `<canvas>` nodo a
+  nodo, leyendo los estilos computados (Path2D acepta los `d` del SVG). La imagen se ofrece en 2×,
+  3× o 4×, con fondo blanco y, a elección, título, línea de parámetros y leyenda. También se
+  exportan el SVG vectorial y la tabla de etapas en CSV.
 
 **Presupuesto de bytes.** Los simuladores se cargan con `import()` dinámico al abrir su
 desplegable. La página de materia entrega 11,5 KB gzip de JS inicial (umbral: 50 KB) y su hoja
@@ -132,11 +142,23 @@ publicados. El simulador adopta el valor analítico.
 
 ## 4. Diseño
 
-- **Composición.** En escritorio, los controles van a la izquierda y la figura queda fija (sticky) a
-  la derecha. A partir de 1360 px, el resultado y la narración del paso a paso ocupan una columna
-  lateral. El diagrama se dimensiona para que la figura completa quepa en la altura visible
-  (`armazon.js`, `ajustarPlot`). En móvil, el diagrama va primero y los chips de capas se
-  desplazan en una sola fila.
+- **Composición.** Tres paneles blancos sobre el fondo papel:
+  - **Parámetros**, a la izquierda en escritorio, con «Restablecer» en su cabecera.
+  - **Gráfico**, fijo (sticky) a la derecha. Arriba muestra cuatro indicadores clave (etapas,
+    alimentación o solvente mínimo, reflujo o recuperación, etc.) y el botón «Paso a paso»; al
+    costado del diagrama, el panel **Elementos del gráfico**, que es a la vez leyenda,
+    interruptor de capas y selector de lo que entra en la imagen, con el bloque **Descargar
+    gráfico** (resolución, PNG, SVG). El diagrama se dimensiona para que el panel completo quepa
+    en la altura visible (`armazon.js`, `ajustarPlot`).
+  - **Resultados**, con las pestañas «Ficha técnica», «Etapas» (con descarga CSV) y «Cómo leer el
+    diagrama».
+
+  En móvil el orden es gráfico, parámetros y resultados.
+- **Desplegables.** Triángulo cobalto que gira al abrir, título Fraunces semibold y filete
+  hairline, sin caja ni lavado. Los subdesplegables de fundamentos usan el mismo estilo un
+  escalón tipográfico por debajo.
+- **Valores por defecto.** E_MV = 1 en ambos simuladores. La prueba de absorción fija E_MV = 0,70
+  para reproducir el caso de referencia.
 - **Paleta del diagrama.** Tokens `--dataviz-*` en `tokens.css`: cobalto-500 para el equilibrio,
   naranja para la rectificación y la operación, turquesa para el agotamiento. Se validó con la skill
   `dataviz` (`validate_palette.js`, modo claro, todos los pares):

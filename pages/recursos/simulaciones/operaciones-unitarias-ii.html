@@ -126,7 +126,7 @@
   </script>
   <!-- /SEO:JSON-LD -->
 </head>
-<body>
+<body class="tema-papel">
 
   <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
 
@@ -175,20 +175,12 @@
       <!-- ── 1 · Absorción de gases ───────────────────────────── -->
       <details class="sim" id="absorcion-gases" name="simuladores" data-simulador="absorcion">
         <summary class="sim__summary">
-          <span class="sim__num" aria-hidden="true">1.</span>
-          <span class="sim__cabecera">
-            <h2 class="sim__titulo">McCabe-Thiele para Absorción de Gases</h2>
-            <span class="sim__bajada">Columna a contracorriente en relaciones molares libres de soluto: solvente mínimo, pinch, eficiencia de Murphree y verificación por Kremser.</span>
-          </span>
-          <svg class="sim__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
+          <h2 class="sim__titulo">1. McCabe-Thiele para Absorción de Gases</h2>
         </summary>
 
         <div class="sim__panel">
           <p class="sim__intro">
-            El soluto de una mezcla gaseosa se transfiere a un solvente líquido que circula a contracorriente. En relaciones molares libres de soluto, la recta de operación queda por encima de la curva de equilibrio y cada escalón entre ambas representa una etapa.
+            El soluto de una mezcla gaseosa se transfiere a un solvente líquido que circula a contracorriente. En relaciones molares libres de soluto, la recta de operación queda por encima de la curva de equilibrio y cada escalón entre ambas representa una etapa. El simulador calcula el solvente mínimo, distingue el pinch en el fondo del pinch tangente, incorpora la eficiencia de Murphree y verifica el resultado con la ecuación de Kremser.
           </p>
 
           <div class="sim-app" data-sim-app>
@@ -197,11 +189,12 @@
             </noscript>
           </div>
 
-          <section class="sim-teoria" aria-labelledby="abs-teoria">
-            <h3 class="sim-teoria__titulo" id="abs-teoria">Fundamentos del modelo</h3>
-            <div class="sim-teoria__columnas">
-              <div class="sim-teoria__bloque">
-                <h4 class="sim-teoria__sub">Hipótesis</h4>
+          <section class="sim-teoria" aria-label="Fundamentos del modelo">
+            <details class="sim-sub">
+              <summary class="sim-sub__summary">
+                <h3 class="sim-sub__titulo">Hipótesis del modelo</h3>
+              </summary>
+              <div class="sim-sub__panel">
                 <ul class="sim-teoria__lista">
                   <li>Un único soluto transferible; gas portador insoluble y solvente no volátil, de modo que los caudales libres de soluto <i>V′<sub>s</sub></i> y <i>L′<sub>s</sub></i> son constantes.</li>
                   <li>Operación isotérmica, a presión constante y en estado estacionario.</li>
@@ -210,8 +203,42 @@
                   <li>No se consideran efectos térmicos, pérdida de carga ni limitaciones hidráulicas o de transferencia de materia.</li>
                 </ul>
               </div>
-              <div class="sim-teoria__bloque">
-                <h4 class="sim-teoria__sub">Ecuaciones</h4>
+            </details>
+            <details class="sim-sub">
+              <summary class="sim-sub__summary">
+                <h3 class="sim-sub__titulo">Nomenclatura</h3>
+              </summary>
+              <div class="sim-sub__panel">
+                <div class="sim-nomenclatura__marco">
+                  <table class="sim-nomenclatura">
+                    <thead><tr><th scope="col">Símbolo</th><th scope="col">Significado</th><th scope="col">Unidades</th></tr></thead>
+                    <tbody>
+                      <tr><th scope="row"><i>x</i>, <i>y</i></th><td>Fracción molar de soluto en el líquido y en el gas</td><td>—</td></tr>
+                      <tr><th scope="row"><i>X</i>, <i>Y</i></th><td>Relación molar de soluto libre de soluto en el líquido y en el gas: <i>X</i> = <i>x</i>/(1 − <i>x</i>), <i>Y</i> = <i>y</i>/(1 − <i>y</i>)</td><td>mol soluto / mol inerte</td></tr>
+                      <tr><th scope="row"><i>V′<sub>s</sub></i></th><td>Caudal molar de gas portador (libre de soluto)</td><td>kmol/h</td></tr>
+                      <tr><th scope="row"><i>L′<sub>s</sub></i></th><td>Caudal molar de solvente (libre de soluto)</td><td>kmol/h</td></tr>
+                      <tr><th scope="row"><i>X</i><sub>0</sub></th><td>Relación molar del solvente que entra por el tope</td><td>—</td></tr>
+                      <tr><th scope="row"><i>Y</i><sub>1</sub></th><td>Relación molar del gas tratado que sale por el tope</td><td>—</td></tr>
+                      <tr><th scope="row"><i>X<sub>N</sub></i></th><td>Relación molar del líquido que sale por el fondo</td><td>—</td></tr>
+                      <tr><th scope="row"><i>Y</i><sub><i>N</i>+1</sub></th><td>Relación molar del gas que entra por el fondo</td><td>—</td></tr>
+                      <tr><th scope="row"><i>X<sub>n</sub></i>, <i>Y<sub>n</sub></i></th><td>Líquido y gas que abandonan la etapa <i>n</i> (etapas numeradas desde el tope)</td><td>—</td></tr>
+                      <tr><th scope="row"><i>Y</i>*</th><td>Relación molar del gas en equilibrio con el líquido</td><td>—</td></tr>
+                      <tr><th scope="row"><i>M</i></th><td>Pendiente del equilibrio en relaciones molares, <i>Y</i>* = <i>M·X</i></td><td>—</td></tr>
+                      <tr><th scope="row"><i>m</i></th><td>Constante de distribución en fracciones molares, <i>y</i>* = <i>m·x</i></td><td>—</td></tr>
+                      <tr><th scope="row"><i>A</i></th><td>Factor de absorción, <i>A</i> = <i>L′<sub>s</sub></i>/(<i>M V′<sub>s</sub></i>)</td><td>—</td></tr>
+                      <tr><th scope="row"><i>N</i></th><td>Número de etapas</td><td>—</td></tr>
+                      <tr><th scope="row"><i>E<sub>MV</sub></i></th><td>Eficiencia de Murphree de fase gas</td><td>—</td></tr>
+                      <tr><th scope="row"><i>E<sub>o</sub></i></th><td>Eficiencia global de la columna</td><td>—</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </details>
+            <details class="sim-sub">
+              <summary class="sim-sub__summary">
+                <h3 class="sim-sub__titulo">Formulario</h3>
+              </summary>
+              <div class="sim-sub__panel">
                 <dl class="sim-ecuaciones">
                   <div class="sim-ecuaciones__fila">
                     <dt>Relaciones molares libres de soluto</dt>
@@ -295,7 +322,7 @@
                   </div>
                 </dl>
               </div>
-            </div>
+            </details>
             <p class="sim-teoria__refs">
               Bibliografía de referencia: R. E. Treybal, <cite>Operaciones de transferencia de masa</cite>; C. J. Geankoplis, <cite>Procesos de transporte y principios de procesos de separación</cite>; W. L. McCabe, J. C. Smith y P. Harriott, <cite>Operaciones unitarias en ingeniería química</cite>.
             </p>
@@ -306,20 +333,12 @@
       <!-- ── 2 · Destilación binaria ──────────────────────────── -->
       <details class="sim" id="destilacion-binaria" name="simuladores" data-simulador="destilacion">
         <summary class="sim__summary">
-          <span class="sim__num" aria-hidden="true">2.</span>
-          <span class="sim__cabecera">
-            <h2 class="sim__titulo">McCabe-Thiele para Destilación Binaria</h2>
-            <span class="sim__bajada">Rectificación continua: rectas de operación, recta q, reflujo mínimo y total, etapa óptima de alimentación y eficiencia de Murphree.</span>
-          </span>
-          <svg class="sim__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
+          <h2 class="sim__titulo">2. McCabe-Thiele para Destilación Binaria</h2>
         </summary>
 
         <div class="sim__panel">
           <p class="sim__intro">
-            La columna separa una mezcla binaria en un destilado rico en el componente más volátil y un residuo empobrecido en él. Con flujo molar constante, las rectas de operación de rectificación y de agotamiento se cortan sobre la recta q, y los escalones entre ellas y la curva de equilibrio cuentan las etapas.
+            La columna separa una mezcla binaria en un destilado rico en el componente más volátil y un residuo empobrecido en él. Con flujo molar constante, las rectas de operación de rectificación y de agotamiento se cortan sobre la recta q, y los escalones entre ellas y la curva de equilibrio cuentan las etapas. El simulador determina el reflujo mínimo y el total, la etapa óptima de alimentación y el efecto de la eficiencia de Murphree.
           </p>
 
           <div class="sim-app" data-sim-app>
@@ -328,11 +347,12 @@
             </noscript>
           </div>
 
-          <section class="sim-teoria" aria-labelledby="dest-teoria">
-            <h3 class="sim-teoria__titulo" id="dest-teoria">Fundamentos del modelo</h3>
-            <div class="sim-teoria__columnas">
-              <div class="sim-teoria__bloque">
-                <h4 class="sim-teoria__sub">Hipótesis</h4>
+          <section class="sim-teoria" aria-label="Fundamentos del modelo">
+            <details class="sim-sub">
+              <summary class="sim-sub__summary">
+                <h3 class="sim-sub__titulo">Hipótesis del modelo</h3>
+              </summary>
+              <div class="sim-sub__panel">
                 <ul class="sim-teoria__lista">
                   <li>Mezcla binaria; presión constante en toda la columna.</li>
                   <li>Flujo molar constante en cada sección: calores latentes molares semejantes y pérdidas de calor despreciables.</li>
@@ -341,8 +361,40 @@
                   <li>Eficiencia de Murphree del vapor uniforme, aplicada también al calderín (simplificación).</li>
                 </ul>
               </div>
-              <div class="sim-teoria__bloque">
-                <h4 class="sim-teoria__sub">Ecuaciones</h4>
+            </details>
+            <details class="sim-sub">
+              <summary class="sim-sub__summary">
+                <h3 class="sim-sub__titulo">Nomenclatura</h3>
+              </summary>
+              <div class="sim-sub__panel">
+                <div class="sim-nomenclatura__marco">
+                  <table class="sim-nomenclatura">
+                    <thead><tr><th scope="col">Símbolo</th><th scope="col">Significado</th><th scope="col">Unidades</th></tr></thead>
+                    <tbody>
+                      <tr><th scope="row"><i>x</i>, <i>y</i></th><td>Fracción molar del componente más volátil en el líquido y en el vapor</td><td>—</td></tr>
+                      <tr><th scope="row"><i>x<sub>F</sub></i>, <i>x<sub>D</sub></i>, <i>x<sub>B</sub></i></th><td>Composición de la alimentación, del destilado y del residuo</td><td>—</td></tr>
+                      <tr><th scope="row"><i>F</i>, <i>D</i>, <i>B</i></th><td>Caudales molares de alimentación, destilado y residuo</td><td>kmol/h</td></tr>
+                      <tr><th scope="row"><i>L</i>, <i>V</i></th><td>Caudales molares de líquido y de vapor en la sección de rectificación</td><td>kmol/h</td></tr>
+                      <tr><th scope="row"><i class="sim-barra">L</i>, <i class="sim-barra">V</i></th><td>Caudales molares de líquido y de vapor en la sección de agotamiento</td><td>kmol/h</td></tr>
+                      <tr><th scope="row"><i>R</i></th><td>Relación de reflujo, <i>R</i> = <i>L</i>/<i>D</i></td><td>—</td></tr>
+                      <tr><th scope="row"><i>R</i><sub>mín</sub></th><td>Relación de reflujo mínima (pinch)</td><td>—</td></tr>
+                      <tr><th scope="row"><i>N</i><sub>mín</sub></th><td>Número mínimo de etapas (reflujo total)</td><td>—</td></tr>
+                      <tr><th scope="row"><i>q</i></th><td>Fracción líquida térmica de la alimentación</td><td>—</td></tr>
+                      <tr><th scope="row"><i>H<sub>V</sub></i>, <i>H<sub>L</sub></i>, <i>H<sub>F</sub></i></th><td>Entalpía molar del vapor saturado, del líquido saturado y de la alimentación</td><td>kJ/kmol</td></tr>
+                      <tr><th scope="row">α</th><td>Volatilidad relativa del componente más volátil respecto del menos volátil</td><td>—</td></tr>
+                      <tr><th scope="row"><i>y</i>*</th><td>Composición del vapor en equilibrio con el líquido</td><td>—</td></tr>
+                      <tr><th scope="row">θ</th><td>Raíz de la ecuación de Underwood, comprendida entre 1 y α</td><td>—</td></tr>
+                      <tr><th scope="row"><i>E<sub>MV</sub></i></th><td>Eficiencia de Murphree del vapor</td><td>—</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </details>
+            <details class="sim-sub">
+              <summary class="sim-sub__summary">
+                <h3 class="sim-sub__titulo">Formulario</h3>
+              </summary>
+              <div class="sim-sub__panel">
                 <dl class="sim-ecuaciones">
                   <div class="sim-ecuaciones__fila">
                     <dt>Equilibrio con volatilidad relativa constante</dt>
@@ -429,7 +481,7 @@
                   </div>
                 </dl>
               </div>
-            </div>
+            </details>
             <p class="sim-teoria__refs">
               Bibliografía de referencia: R. E. Treybal, <cite>Operaciones de transferencia de masa</cite>; W. L. McCabe, J. C. Smith y P. Harriott, <cite>Operaciones unitarias en ingeniería química</cite>; C. J. Geankoplis, <cite>Procesos de transporte y principios de procesos de separación</cite>.
             </p>

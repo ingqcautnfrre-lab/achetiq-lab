@@ -100,6 +100,8 @@
 --nivel-x-accent:   #7473D1;  --nivel-x-fondo-alt:   #F2F3FD;  --nivel-x-texto:   #4D4B91;
 --dataviz-naranja:  #D9561F;
 --dataviz-turquesa: #0F9A6A;
+--papel-50:  #F8F7F4;
+--papel-150: #EFEEEA;
 }
 @supports (color: oklch(40% 0 0)) {
 :root {
@@ -118,6 +120,8 @@
 --nivel-x-accent:   oklch(0.600 0.140 282);  --nivel-x-fondo-alt:   oklch(0.965 0.014 282);  --nivel-x-texto:   oklch(0.450 0.112 282);
 --dataviz-naranja:  oklch(0.618 0.177 40);
 --dataviz-turquesa: oklch(0.608 0.130 162);
+--papel-50:  oklch(0.976 0.004 91);
+--papel-150: oklch(0.949 0.005 95);
 }
 }
 :root {
@@ -4176,6 +4180,11 @@ display: block;
 .simulaciones__grid {
 grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min), 100%), 1fr));
 gap: var(--space-5);
+}
+.tema-papel {
+--color-surface: var(--papel-50);
+--color-surface-raised: var(--color-surface-white);
+--color-surface-sunken: var(--papel-150);
 }
 :focus-visible {
 outline: var(--focus-ring-width) solid var(--focus-ring-color);

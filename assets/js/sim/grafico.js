@@ -76,6 +76,8 @@ export function crearGrafico(host, opciones) {
   var id = 'simg-' + (++contador);
   var escena = null;
   var zoom = null;
+  var anchoForzado = null;   /* exportación: render a tamaño fijo */
+  var ver = { grilla: true, rotulos: true, numeros: true };
   var etapaActiva = null;
   var M = { l: 58, r: 18, t: 18, b: 50 };
   var W = 0, H = 0;
@@ -153,7 +155,8 @@ export function crearGrafico(host, opciones) {
   function render() {
     if (!escena) return;
     var r = envoltura.getBoundingClientRect();
-    W = Math.max(280, Math.round(r.width));
+    W = anchoForzado || Math.max(280, Math.round(r.width));
+    ver = Object.assign({ grilla: true, rotulos: true, numeros: true }, escena.mostrar || {});
     H = W;
     M = W < 520 ? { l: 52, r: 12, t: 14, b: 44 } : { l: 60, r: 18, t: 18, b: 50 };
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
@@ -198,13 +201,13 @@ export function crearGrafico(host, opciones) {
 
     mx.valores.forEach(function (v) {
       var X = sx(v);
-      nodo('line', { x1: X, x2: X, y1: M.t, y2: H - M.b }, gGrilla);
+      if (ver.grilla) nodo('line', { x1: X, x2: X, y1: M.t, y2: H - M.b }, gGrilla);
       nodo('line', { class: 'sim-svg__tick', x1: X, x2: X, y1: H - M.b, y2: H - M.b + 5 }, gEjes);
       texto(gEjes, X, H - M.b + 18, fmt(v, decX), { class: 'sim-svg__num', 'text-anchor': 'middle' });
     });
     my.valores.forEach(function (v) {
       var Y = sy(v);
-      nodo('line', { x1: M.l, x2: W - M.r, y1: Y, y2: Y }, gGrilla);
+      if (ver.grilla) nodo('line', { x1: M.l, x2: W - M.r, y1: Y, y2: Y }, gGrilla);
       nodo('line', { class: 'sim-svg__tick', x1: M.l - 5, x2: M.l, y1: Y, y2: Y }, gEjes);
       texto(gEjes, M.l - 8, Y + 4, fmt(v, decY), { class: 'sim-svg__num', 'text-anchor': 'end' });
     });
@@ -266,6 +269,7 @@ export function crearGrafico(host, opciones) {
      explícito `p`), desplazado en píxeles. Si cae fuera del área
      visible (por zoom) se omite. */
   function etiquetaSerie(c, f) {
+    if (!ver.rotulos) return;
     var e = c.etiqueta;
     var x, y;
     if (e.p) { x = e.p[0]; y = e.p[1]; } else { x = e.en; y = f(x); }
@@ -299,7 +303,9 @@ export function crearGrafico(host, opciones) {
       var poli = nodo('polygon', {
         class: 'sim-svg__banda' + (i % 2 ? ' sim-svg__banda--par' : '') +
           (e.n === c.alim ? ' sim-svg__banda--alim' : ''),
-        points: [[e.x0, e.y], [e.x, e.y], [e.x, e.y1]].map(function (p) {
+        /* xc (opcional): cierre de la banda sobre la recta de
+           operación en la última etapa parcial (absorción). */
+        points: [[e.x0, e.y], [e.x, e.y], [e.x, e.y1]].concat(e.xc != null ? [[e.xc, e.y1]] : []).map(function (p) {
           return sx(p[0]).toFixed(2) + ',' + sy(p[1]).toFixed(2);
         }).join(' ')
       }, gb);
@@ -311,7 +317,7 @@ export function crearGrafico(host, opciones) {
 
       var esUltima = (i === total - 1);
       var esActual = (c.hasta != null && i === hasta - 1);
-      var rotular = (e.n === 1 || e.n % cada === 0 || e.n === c.alim || esUltima || esActual);
+      var rotular = ver.numeros && (e.n === 1 || e.n % cada === 0 || e.n === c.alim || esUltima || esActual);
       if (rotular) {
         var X = sx(e.x) + ro.dx, Y = sy(e.y) + ro.dy;
         /* Ancho aproximado del número (mono 10,5 px) para no invadir
@@ -488,7 +494,18 @@ export function crearGrafico(host, opciones) {
     },
     restablecerVista: restablecerVista,
     hayZoom: function () { return !!zoom; },
-    resaltarEtapa: function (n) { etapaActiva = n; marcarDiente(n); }
+    resaltarEtapa: function (n) { etapaActiva = n; marcarDiente(n); },
+    /* Re-dibuja el diagrama a un ancho fijo (independiente de la
+       pantalla), ejecuta `fn(svg)` y restaura el render normal. Todo
+       ocurre en la misma tarea: no llega a pintarse. */
+    conAncho: function (ancho, fn) {
+      anchoForzado = ancho;
+      var previa = etapaActiva;
+      etapaActiva = null;
+      render();
+      try { return fn(svg); }
+      finally { anchoForzado = null; etapaActiva = previa; render(); }
+    }
   };
 }
 

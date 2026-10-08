@@ -14,9 +14,8 @@
 import * as Modelo from './modelo-destilacion.js';
 import { fmt } from './numerico.js';
 import { crearArmazon } from './armazon.js';
-import { el, elNotacion, grupo, campo, segmentado, selector, areaDatos, ficha, avisos, boton, descargar, csv } from './ui.js';
+import { el, elNotacion, grupo, campo, segmentado, selector, areaDatos, ficha, avisos, boton } from './ui.js';
 import { enHTML } from './notacion.js';
-import { serializarSVG } from './grafico.js';
 
 var CONDICIONES = [
   { valor: 'subenfriado', etiqueta: 'Líquido subenfriado (q > 1)', q: 1.2 },
@@ -47,16 +46,50 @@ export function montar(raiz) {
   var A = crearArmazon(raiz, {
     id: 'dest',
     titulo: 'Diagrama x–y de McCabe-Thiele para la destilación binaria',
-    capas: [
-      { id: 'eq', etiqueta: 'Equilibrio', clase: 'eq' },
-      { id: 'ps', etiqueta: 'Pseudoequilibrio', clase: 'ps' },
-      { id: 'rect', etiqueta: 'Rectificación', clase: 'rect' },
-      { id: 'strip', etiqueta: 'Agotamiento', clase: 'strip' },
-      { id: 'q', etiqueta: 'Recta q', clase: 'q' },
-      { id: 'etapas', etiqueta: 'Etapas', clase: 'etapas' },
-      { id: 'rmin', etiqueta: 'Reflujo mínimo', clase: 'rmin', activa: false },
-      { id: 'total', etiqueta: 'Reflujo total', clase: 'total', activa: false }
+    tituloExport: 'Diagrama de McCabe-Thiele — destilación binaria',
+    archivo: 'mccabe-thiele-destilacion',
+    elementos: [
+      { grupo: 'Curvas y rectas', items: [
+        { id: 'eq', etiqueta: 'Curva de equilibrio', clase: 'eq', etiquetaLeyenda: 'Equilibrio' },
+        { id: 'ps', etiqueta: 'Pseudoequilibrio (E_{MV} < 1)', clase: 'ps', etiquetaLeyenda: 'Pseudoequilibrio' },
+        { id: 'diag', etiqueta: 'Diagonal y = x', clase: 'diag', leyenda: false },
+        { id: 'rect', etiqueta: 'Recta de rectificación', clase: 'rect', etiquetaLeyenda: 'Rectificación' },
+        { id: 'strip', etiqueta: 'Recta de agotamiento', clase: 'strip', etiquetaLeyenda: 'Agotamiento' },
+        { id: 'q', etiqueta: 'Recta q', clase: 'q' }
+      ] },
+      { grupo: 'Construcción', items: [
+        { id: 'etapas', etiqueta: 'Escalones (etapas)', clase: 'etapas', etiquetaLeyenda: 'Etapas' },
+        { id: 'numeros', etiqueta: 'Números de etapa', glifo: '1·2' },
+        { id: 'rmin', etiqueta: 'Reflujo mínimo', clase: 'rmin', activa: false },
+        { id: 'total', etiqueta: 'Reflujo total (N_{mín})', clase: 'total', activa: false, etiquetaLeyenda: 'Reflujo total' }
+      ] },
+      { grupo: 'Anotaciones', items: [
+        { id: 'comp', etiqueta: 'Puntos x_B, x_F, x_D', glifo: '●' },
+        { id: 'rotulos', etiqueta: 'Rótulos de las curvas', glifo: 'Aa' },
+        { id: 'grilla', etiqueta: 'Cuadrícula', glifo: '#' }
+      ] }
     ],
+    subtituloExport: function () {
+      if (!res || !res.ok) return '';
+      var eqTxt = p.equilibrio.tipo === 'alfa' ? 'α = ' + fmt(p.equilibrio.alfa, 2) : 'equilibrio tabulado';
+      return eqTxt + ' · x_D = ' + fmt(p.xD, 3) + ' · x_F = ' + fmt(p.xF, 3) + ' · x_B = ' + fmt(p.xB, 3) +
+        ' · q = ' + fmt(p.q, 2) + ' · R = ' + fmt(res.R, 3) + ' (R/R_{mín} = ' + fmt(res.rRatio, 2) + ')' +
+        ' · E_{MV} = ' + fmt(p.E, 2);
+    },
+    csv: function () {
+      if (!res || !res.ok) return null;
+      var filas = [
+        ['McCabe-Thiele — destilación binaria (AChETIQ)'],
+        ['Equilibrio', p.equilibrio.tipo === 'alfa' ? 'alfa = ' + p.equilibrio.alfa : 'datos x-y'],
+        ['x_D', p.xD], ['x_F', p.xF], ['x_B', p.xB], ['q', p.q], ['R', res.R], ['R_min', res.Rmin], ['E_MV', p.E],
+        [],
+        ['Etapa', 'Sección', 'x_n', 'y_n']
+      ];
+      res.escalones.etapas.forEach(function (e) {
+        filas.push([e.n, nombreSeccion(e), Number(e.x.toFixed(6)), Number(e.y.toFixed(6))]);
+      });
+      return filas;
+    },
     alCambiarCapas: function () { dibujar(); },
     alCambiarPaso: function () { dibujar(); }
   });
@@ -136,8 +169,7 @@ export function montar(raiz) {
   g5.appendChild(C.E.nodo);
 
   [g1, g2, g3, g4, g5].forEach(function (g) { A.controles.appendChild(g); });
-  var pieCtrl = el('div', 'sim-app__acciones');
-  pieCtrl.appendChild(boton('Restablecer valores', 'sim-boton--secundario', function () {
+  A.cabControles.appendChild(boton('Restablecer', 'sim-boton--sutil', function () {
     p = copiaDefaults();
     C.modoEq.fijar(p.equilibrio.tipo); C.alfa.fijar(p.equilibrio.alfa); C.metodo.fijar(p.equilibrio.metodo);
     C.datos.fijar(p.equilibrio.texto); C.xD.fijar(p.xD); C.xF.fijar(p.xF); C.xB.fijar(p.xB);
@@ -145,8 +177,7 @@ export function montar(raiz) {
     C.R.fijar(p.R); C.ratio.fijar(p.rRatio); C.E.fijar(p.E);
     A.grafico.restablecerVista();
     visibilidad(); recalcular();
-  }));
-  A.controles.appendChild(pieCtrl);
+  }, { 'aria-label': 'Restablecer los valores por defecto' }));
 
   function visibilidad() {
     var tabla = p.equilibrio.tipo === 'tabla';
@@ -157,26 +188,6 @@ export function montar(raiz) {
     C.R.mostrar(p.modoR === 'R');
     C.ratio.mostrar(p.modoR === 'ratio');
   }
-
-  /* ── Exportación ── */
-  A.herramientas.appendChild(boton('Descargar diagrama (SVG)', 'sim-boton--secundario', function () {
-    descargar('mccabe-thiele-destilacion.svg', serializarSVG(A.grafico.svg), 'image/svg+xml');
-  }));
-  A.herramientas.appendChild(boton('Descargar etapas (CSV)', 'sim-boton--secundario', function () {
-    if (!res || !res.ok) return;
-    var filas = [
-      ['McCabe-Thiele — destilación binaria (AChETIQ)'],
-      ['Equilibrio', p.equilibrio.tipo === 'alfa' ? 'alfa = ' + p.equilibrio.alfa : 'datos x-y'],
-      ['x_D', p.xD], ['x_F', p.xF], ['x_B', p.xB], ['q', p.q], ['R', res.R], ['R_min', res.Rmin], ['E_MV', p.E],
-      [],
-      ['Etapa', 'Sección', 'x_n', 'y_n']
-    ];
-    res.escalones.etapas.forEach(function (e) {
-      filas.push([e.n, nombreSeccion(e), Number(e.x.toFixed(6)), Number(e.y.toFixed(6))]);
-    });
-    descargar('mccabe-thiele-destilacion.csv', csv(filas), 'text/csv;charset=utf-8');
-  }));
-  A.herramientas.appendChild(boton('Imprimir', 'sim-boton--secundario', function () { window.print(); }));
 
   function nombreSeccion(e) {
     if (e.ultima) return 'Calderín';
@@ -200,7 +211,7 @@ export function montar(raiz) {
     var r = res;
     var capas = [];
     var desc = '';
-    capas.push({ tipo: 'linea', clase: 'diag', p: [[0, 0], [1, 1]] });
+    capas.push({ tipo: 'linea', clase: 'diag', p: [[0, 0], [1, 1]], oculta: !A.visible('diag') });
     if (r && r.eq) {
       capas.push({
         tipo: 'curva', clase: 'eq', f: r.eq.y, x: [0, 1], n: 300, oculta: !A.visible('eq'),
@@ -249,9 +260,10 @@ export function montar(raiz) {
           etiqueta: { texto: 'q', p: [(pp.xF + fin[0]) / 2, (pp.xF + fin[1]) / 2], dx: 8, dy: 4, ancla: 'start' }
         });
       }
-      capas.push({ tipo: 'guia', x: pp.xB, y: pp.xB });
-      capas.push({ tipo: 'guia', x: pp.xF, y: pp.xF });
-      capas.push({ tipo: 'guia', x: pp.xD, y: pp.xD });
+      var comp = A.visible('comp');
+      capas.push({ tipo: 'guia', x: pp.xB, y: pp.xB, oculta: !comp });
+      capas.push({ tipo: 'guia', x: pp.xF, y: pp.xF, oculta: !comp });
+      capas.push({ tipo: 'guia', x: pp.xD, y: pp.xD, oculta: !comp });
       if (A.visible('etapas')) {
         capas.push({
           tipo: 'escalones', clase: 'etapas', etapas: r.escalones.etapas,
@@ -260,7 +272,7 @@ export function montar(raiz) {
         });
       }
       capas.push({
-        tipo: 'puntos', clase: 'comp', items: [
+        tipo: 'puntos', clase: 'comp', oculta: !comp, items: [
           { x: pp.xB, y: pp.xB, etiqueta: 'x_B', dx: 9, dy: 14 },
           { x: pp.xF, y: pp.xF, etiqueta: 'x_F', dx: 9, dy: 14 },
           { x: pp.xD, y: pp.xD, etiqueta: 'x_D', dx: 9, dy: 14 }
@@ -284,9 +296,10 @@ export function montar(raiz) {
       },
       titulo: 'Diagrama de McCabe-Thiele para destilación binaria',
       descripcion: desc,
+      mostrar: { grilla: A.visible('grilla'), rotulos: A.visible('rotulos'), numeros: A.visible('numeros') },
       capas: capas
     });
-    A.mostrarChip('ps', !!(r && r.ok && r.p.E < 1));
+    A.mostrarElemento('ps', !!(r && r.ok && r.p.E < 1));
     if (A.paso.activo && r && r.ok) A.pintarPaso(narrarEtapa(r, A.paso.k));
     A.ajustarPlot();
   }
@@ -306,9 +319,8 @@ export function montar(raiz) {
 
   function pintarResultados() {
     var r = res;
-    A.resultado.replaceChildren();
     if (!r.ok) {
-      A.resultado.appendChild(el('span', 'sim-resultado__vacio', 'Revisá la especificación: el diagrama no puede construirse con estos datos.'));
+      A.kpis([{ etiqueta: 'Resultado', valor: '—', nota: 'especificación no válida' }]);
       avisos(A.avisos, r.errores.map(function (t) { return { nivel: 'error', texto: t }; }).concat(r.avisos));
       ficha(A.ficha, []);
       A.tbody.replaceChildren();
@@ -317,20 +329,21 @@ export function montar(raiz) {
       return;
     }
     var e = r.escalones;
-    if (isFinite(e.nFrac)) {
-      A.resultado.appendChild(document.createTextNode('Se requieren '));
-      A.resultado.appendChild(el('strong', null, e.n + (r.p.E < 1 ? ' etapas reales' : ' etapas teóricas')));
-      var platos = e.n - 1;
-      A.resultado.appendChild(document.createTextNode(' —' + platos + (platos === 1 ? ' plato' : ' platos') + ' más el calderín— con alimentación en la etapa '));
-      A.resultado.appendChild(el('strong', null, String(e.alim)));
-      A.resultado.appendChild(document.createTextNode('.'));
-      if (r.p.E < 1 && isFinite(r.teorico.nFrac)) {
-        A.resultado.appendChild(elNotacion('span', 'sim-resultado__nota', 'Con E_{MV} = 1 bastarían ' + r.teorico.n + ' etapas teóricas.'));
-      }
-    } else {
-      A.resultado.appendChild(el('strong', null, 'Infinitas etapas'));
-      enHTML(A.resultado, ': R no supera el reflujo mínimo, R_{mín} = ' + fmt(r.Rmin, 3) + '.');
-    }
+    var finito = isFinite(e.nFrac);
+    var platos = e.n - 1;
+    A.kpis([
+      {
+        etiqueta: r.p.E < 1 ? 'Etapas reales' : 'Etapas teóricas',
+        valor: finito ? String(e.n) : '∞',
+        nota: !finito ? 'R no supera R_{mín}'
+          : (r.p.E < 1 && isFinite(r.teorico.nFrac) ? r.teorico.n + ' teóricas con E_{MV} = 1'
+            : platos + (platos === 1 ? ' plato' : ' platos') + ' + calderín'),
+        destacado: true
+      },
+      { etiqueta: 'Alimentación', valor: finito && e.alim ? 'Etapa ' + e.alim : '—', nota: 'contada desde el tope' },
+      { etiqueta: 'Reflujo mínimo, R_{mín}', valor: fmt(r.Rmin, 3), nota: 'R/R_{mín} = ' + fmt(r.rRatio, 2) },
+      { etiqueta: 'Reflujo total, N_{mín}', valor: fmt(r.Nmin, 2), nota: r.NminFenske != null ? 'Fenske: ' + fmt(r.NminFenske, 2) : 'etapas a reflujo total' }
+    ]);
     avisos(A.avisos, r.avisos);
     A.anunciar(textoResultado(r, true));
 

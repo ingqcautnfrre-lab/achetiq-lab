@@ -359,6 +359,18 @@
   --dataviz-naranja:  #D9561F;   /* oklch(0.618 0.177  40) */
   --dataviz-turquesa: #0F9A6A;   /* oklch(0.608 0.130 162) */
 
+  /* ── Tema «papel» — sección Simulaciones ──────────────────────
+     EXCEPCIÓN ACOTADA a la Regla de la Porcelana Fría, pedida por
+     la dirección del proyecto para las páginas de simuladores: el
+     gris lavanda de la porcelana competía con los colores de los
+     diagramas. Neutro casi acromático (C ≈ 0,004), no crema: sobre
+     él los paneles blancos y las series del diagrama leen limpios.
+     Se aplica solo bajo body.tema-papel (recursos.css §5).
+     Contraste sobre papel-50: texto 16,7:1 · texto-soft 8,4:1 ·
+     texto-faint 6,0:1 · cobalto 8,2:1 (todos AA o AAA). */
+  --papel-50:  #F8F7F4;   /* oklch(0.976 0.004 91) — fondo de página   */
+  --papel-150: #EFEEEA;   /* oklch(0.949 0.005 95) — plancha hundida   */
+
 }
 
 @supports (color: oklch(40% 0 0)) {
@@ -381,6 +393,9 @@
 
     --dataviz-naranja:  oklch(0.618 0.177 40);
     --dataviz-turquesa: oklch(0.608 0.130 162);
+
+    --papel-50:  oklch(0.976 0.004 91);
+    --papel-150: oklch(0.949 0.005 95);
   }
 }
 

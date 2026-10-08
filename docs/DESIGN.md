@@ -331,6 +331,12 @@ datos** propia (`--dataviz-naranja`, `--dataviz-turquesa` + `--cobalto-500`, tok
 simuladores»), validada para visión cromática atípica y contraste ≥ 3:1. La mauveína **no** entra al
 diagrama y los colores de estado no se reutilizan como series. Detalle técnico en `docs/SIMULADORES.md`.
 
+**Excepción registrada — Tema papel.** A pedido de la dirección del proyecto, las páginas de
+Simulaciones usan un fondo papel neutro (`--papel-50` #F8F7F4, C ≈ 0,004; `body.tema-papel`) con paneles
+blancos, en lugar de la porcelana fría: el gris lavanda competía con los colores de los diagramas. Es
+casi acromático —no crema— y se limita a esa sección; el resto del sitio conserva la Regla de la
+Porcelana Fría.
+
 ### Cierre de página (`.cta-final`)
 El módulo de cierre abre **directo con el titular display** (Fraunces, con su itálica cobalto de
 énfasis) seguido del *lead* en Hanken y los botones; **no lleva eyebrow**. Bajo la doctrina
