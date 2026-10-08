@@ -225,7 +225,7 @@ export function crearEsquema(host, opciones) {
         ]);
       }
       llave(590, c.y0 + (alim - 1) * c.paso, c.y1, [
-        'Agotamiento', platosStrip + (platosStrip === 1 ? ' plato' : ' platos') + ' + 1 reboiler', d.LVb
+        'Agotamiento', platosStrip + (platosStrip === 1 ? ' plato' : ' platos'), '+ 1 reboiler', d.LVb
       ]);
     } else {
       aviso(cx, c.y0 + (c.y1 - c.y0) / 2);
