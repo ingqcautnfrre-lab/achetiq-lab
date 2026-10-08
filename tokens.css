@@ -340,6 +340,25 @@
   --nivel-v-accent:   #C65A4F;  --nivel-v-fondo-alt:   #FDF0EE;  --nivel-v-texto:   #893830;
   --nivel-x-accent:   #7473D1;  --nivel-x-fondo-alt:   #F2F3FD;  --nivel-x-texto:   #4D4B91;
 
+  /* ── Series de los simuladores (assets/css/simuladores.css) ──
+     Paleta CATEGÓRICA de los diagramas de McCabe-Thiele: identidad
+     de serie, no acción ni estado. La mauveína queda fuera a
+     propósito (Regla de la Mauveína Escasa) y los colores de estado
+     no se reutilizan. Validada con el procedimiento de la skill
+     dataviz (validate_palette.js, modo claro, superficie raised,
+     todos los pares — las líneas se cruzan en cualquier punto):
+       serie 1 = --cobalto-500 (curva de equilibrio)
+       serie 2 = naranja (rectificación / recta de operación)
+       serie 3 = turquesa (agotamiento)
+     Banda de luminosidad PASS · croma PASS · ΔE CVD peor par 9,7
+     (deuteranopía; objetivo ≥ 8) · ΔE visión normal peor par 23,3
+     (piso 15) · contraste sobre raised: 5,5 / 3,8 / 3,4 : 1 (≥ 3:1,
+     WCAG 1.4.11). Codificación redundante: rótulos directos y
+     patrón de trazo. */
+
+  --dataviz-naranja:  #D9561F;   /* oklch(0.618 0.177  40) */
+  --dataviz-turquesa: #0F9A6A;   /* oklch(0.608 0.130 162) */
+
 }
 
 @supports (color: oklch(40% 0 0)) {
@@ -359,6 +378,9 @@
     --nivel-iv-accent:  oklch(0.600 0.115 72);   --nivel-iv-fondo-alt:  oklch(0.965 0.014 75);   --nivel-iv-texto:  oklch(0.450 0.092 70);
     --nivel-v-accent:   oklch(0.600 0.140 28);   --nivel-v-fondo-alt:   oklch(0.965 0.014 28);   --nivel-v-texto:   oklch(0.450 0.112 28);
     --nivel-x-accent:   oklch(0.600 0.140 282);  --nivel-x-fondo-alt:   oklch(0.965 0.014 282);  --nivel-x-texto:   oklch(0.450 0.112 282);
+
+    --dataviz-naranja:  oklch(0.618 0.177 40);
+    --dataviz-turquesa: oklch(0.608 0.130 162);
   }
 }
 

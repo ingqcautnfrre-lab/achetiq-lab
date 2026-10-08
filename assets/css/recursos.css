@@ -282,3 +282,18 @@
 [data-loader="recursos"][data-loader-state="loading"] {
   display: block;
 }
+
+
+/* ─────────────────────────────────────────────────────────────
+   4.  SIMULACIONES — GRILLA DE MATERIAS
+   ─────────────────────────────────────────────────────────────
+   Reutiliza la .card-materia de Apuntes (variante --enlace, interna).
+   auto-fill —no auto-fit— conserva las pistas vacías: con una sola
+   materia la tarjeta mantiene el ancho de columna en lugar de
+   estirarse a todo el contenedor. Mismo gap que el grid de Apuntes.
+   ───────────────────────────────────────────────────────────── */
+
+.simulaciones__grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min), 100%), 1fr));
+  gap: var(--space-5);
+}

@@ -322,6 +322,15 @@ Cada materia del Plan 2023 se pinta como `.card-materia` con una cubierta colore
 (`--color-materia-anio-1..5`, una rampa de arena → cobalto profundo). Es el componente más
 distintivo del registro utilitario: convierte un índice de 41 materias en una grilla legible por año.
 
+### Signature — Simuladores (`simuladores.css`)
+Los simuladores de Recursos › Simulaciones se listan como desplegables nativos (`<details class="sim">`)
+con la misma gramática del índice editorial: número y título en Fraunces, bajada en Hanken, filetes de
+tinta y lavado cobalto al hover. El registro interior es **producto**: controles en Hanken, datos en
+Geist Mono tabular y la figura fija junto a los parámetros. El diagrama usa una **paleta categórica de
+datos** propia (`--dataviz-naranja`, `--dataviz-turquesa` + `--cobalto-500`, tokens.css «Series de los
+simuladores»), validada para visión cromática atípica y contraste ≥ 3:1. La mauveína **no** entra al
+diagrama y los colores de estado no se reutilizan como series. Detalle técnico en `docs/SIMULADORES.md`.
+
 ### Cierre de página (`.cta-final`)
 El módulo de cierre abre **directo con el titular display** (Fraunces, con su itálica cobalto de
 énfasis) seguido del *lead* en Hanken y los botones; **no lleva eyebrow**. Bajo la doctrina

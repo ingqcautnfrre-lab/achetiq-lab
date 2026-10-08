@@ -43,15 +43,8 @@
 
 'use strict';
 
-import { registerLoader, createElement, safeHref, coverSkeleton } from './loaders.js';
-
-var YEAR_LABEL = {
-  1: '1º año',
-  2: '2º año',
-  3: '3º año',
-  4: '4º año',
-  5: '5º año'
-};
+import { registerLoader, createElement, safeHref } from './loaders.js';
+import { YEAR_LABEL, buildCover, buildBody, buildLinkedStatus } from './materia-card.js';
 
 
 /* --- Override del renderer de «recursos» -------------------- */
@@ -115,7 +108,7 @@ function buildLinkedCard(m, anio, href, nombre) {
   });
 
   card.appendChild(buildCover(m));
-  card.appendChild(buildBody(anio, nombre, buildLinkedStatus()));
+  card.appendChild(buildBody(anio, nombre, buildLinkedStatus('Acceder al repositorio', true)));
   return card;
 }
 
@@ -145,79 +138,8 @@ function buildPlaceholderCard(m, anio, nombre) {
 
 
 /* --- Piezas compartidas de la tarjeta ---------------------- */
-
-function buildCover(m) {
-  var cover = createElement('div', {
-    class: 'card-materia__cover',
-    attrs: { 'aria-hidden': 'true' }
-  });
-
-  /* Imagen representativa de la materia (campo `imagen` en
-     data/recursos.json). Contrato 16:9 (1280×720): width/height
-     explícitos reservan el alto ANTES de cargar (CLS < 0,1 —
-     RENDIMIENTO_Presupuesto.md). El color por año del cover queda
-     de fondo como fallback mientras carga o si falta la imagen. La
-     imagen es decorativa (el nombre va en el <h3>): alt vacío bajo
-     el cover ya marcado aria-hidden. La ruta pasa por safeHref(). */
-  var rawImg = (m && typeof m.imagen === 'string') ? m.imagen.trim() : '';
-  var imgSrc = rawImg ? safeHref(window.AChETIQBase.resolve(rawImg)) : null;
-  if (imgSrc) {
-    var img = createElement('img', {
-      attrs: {
-        src: imgSrc, alt: '', width: '1280', height: '720',
-        loading: 'lazy', decoding: 'async'
-      }
-    });
-    /* Mientras la imagen (lazy) baja, un esqueleto gris con barrido
-       cubre la caja del cover en vez de un plano vacío; se retira al
-       resolverse la imagen (load) o si falla (error). El estilo vive
-       en assets/css/cards.css (.card-materia__cover-skeleton). */
-    coverSkeleton(cover, img);
-    cover.appendChild(img);
-  }
-  return cover;
-}
-
-function buildBody(anio, nombre, statusNode) {
-  var body = createElement('div', { class: 'card-materia__body' });
-  if (anio) {
-    body.appendChild(createElement('p', {
-      class: 'card-materia__year caption',
-      text: YEAR_LABEL[anio]
-    }));
-  }
-  body.appendChild(createElement('h3', {
-    class: 'card-materia__name',
-    text: nombre
-  }));
-  body.appendChild(statusNode);
-  return body;
-}
-
-/* Estado de la variante enlazada: afordancia editorial E05 —
-   «Acceder al repositorio» en cobalto + flecha (→) que avanza al
-   hover/foco de la tarjeta + refuerzo sr-only de pestaña nueva.
-   El glifo flecha es decorativo (aria-hidden): el destino externo
-   ya lo verbaliza el aria-label del <a> y el refuerzo sr-only. */
-function buildLinkedStatus() {
-  var status = createElement('p', {
-    class: 'card-materia__status card-materia__status--link'
-  });
-  status.appendChild(createElement('span', {
-    class: 'card-materia__cta',
-    text: 'Acceder al repositorio'
-  }));
-  status.appendChild(createElement('span', {
-    class: 'card-materia__arrow',
-    text: '→',
-    attrs: { 'aria-hidden': 'true' }
-  }));
-  status.appendChild(createElement('span', {
-    class: 'sr-only',
-    text: ' (se abre en una pestaña nueva)'
-  }));
-  return status;
-}
+/* buildCover, buildBody y buildLinkedStatus viven en
+   assets/js/materia-card.js (compartidos con simulaciones.js). */
 
 
 /* --- Filtro por año (.pill-nav) ---------------------------- */

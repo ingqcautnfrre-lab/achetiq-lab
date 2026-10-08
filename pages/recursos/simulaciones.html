@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEC:CSP — generado por scripts/build-csp.mjs · no editar a mano -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.google.com; form-action 'self'; upgrade-insecure-requests">
+  <!-- /SEC:CSP -->
+
+  <title>Simulaciones - AChETIQ</title>
+  <meta name="description" content="Simuladores interactivos de Ingeniería Química UTN FRRe organizados por materia del Plan 2023: McCabe-Thiele para absorción de gases y destilación binaria en Operaciones Unitarias II.">
+
+  <link rel="canonical" href="https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/simulaciones">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <meta name="theme-color" content="#1344A5">
+
+  <link rel="preload" href="../../assets/fonts/hanken-grotesk-400-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/fraunces-400-600.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
+
+  <link rel="stylesheet" href="../../assets/css/main.bundle.css">
+
+  <!-- Precarga del camino crítico de fetch (S6): partial + config de la
+       navbar y el JSON que la página consume sobre el primer viewport. -->
+  <link rel="preload" href="../../partials/navbar.html" as="fetch" crossorigin>
+  <link rel="preload" href="../../data/navbar.json" as="fetch" crossorigin>
+  <link rel="preload" href="../../data/simulaciones.json" as="fetch" crossorigin>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AChETIQ">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="Simulaciones - AChETIQ">
+  <meta property="og:description" content="Simuladores interactivos de Ingeniería Química UTN FRRe organizados por materia del Plan 2023.">
+  <meta property="og:url" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/simulaciones">
+  <meta property="og:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Simulaciones - AChETIQ">
+  <meta name="twitter:description" content="Simuladores interactivos de Ingeniería Química UTN FRRe organizados por materia del Plan 2023.">
+  <meta name="twitter:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
+  <link rel="modulepreload" href="../../assets/js/loaders.js">
+  <link rel="modulepreload" href="../../assets/js/main.js">
+  <link rel="modulepreload" href="../../assets/js/materia-card.js">
+  <link rel="modulepreload" href="../../assets/js/simulaciones.js">
+
+  <!-- SEO:JSON-LD — generado por scripts/build-jsonld.mjs · no editar a mano -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "@id": "https://ingqcautnfrre-lab.github.io/achetiq-lab/#organization",
+    "name": "Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química",
+    "alternateName": "AChETIQ",
+    "url": "https://ingqcautnfrre-lab.github.io/achetiq-lab/",
+    "logo": "https://ingqcautnfrre-lab.github.io/achetiq-lab/icon-512.png",
+    "image": "https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png",
+    "description": "Asociación civil sin fines de lucro que nuclea a los estudiantes de la carrera de Ingeniería Química de la Universidad Tecnológica Nacional, Facultad Regional Resistencia (UTN FRRe).",
+    "foundingDate": "2009-04-30",
+    "email": "achetiq.resistencia@aneiqa.org",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Calle French 414",
+      "postalCode": "H3506",
+      "addressLocality": "Resistencia",
+      "addressRegion": "Chaco",
+      "addressCountry": "AR"
+    },
+    "parentOrganization": {
+      "@type": "EducationalOrganization",
+      "name": "Asociación Nacional de Estudiantes de Ingeniería Química y en Alimentos",
+      "alternateName": "ANEIQA",
+      "url": "https://aneiqa.org/"
+    },
+    "sameAs": [
+      "https://www.instagram.com/achetiq/"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://ingqcautnfrre-lab.github.io/achetiq-lab/#website",
+    "name": "AChETIQ",
+    "alternateName": "Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química",
+    "url": "https://ingqcautnfrre-lab.github.io/achetiq-lab/",
+    "publisher": {
+      "@id": "https://ingqcautnfrre-lab.github.io/achetiq-lab/#organization"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://ingqcautnfrre-lab.github.io/achetiq-lab/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Recursos académicos",
+        "item": "https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Simulaciones"
+      }
+    ]
+  }
+  </script>
+  <!-- /SEO:JSON-LD -->
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+  <div data-loader="navbar">
+    <noscript>
+      <header class="navbar-fallback">
+        <div class="navbar-fallback__inner">
+          <a class="navbar-fallback__brand" href="../../">AChETIQ</a>
+        </div>
+      </header>
+    </noscript>
+  </div>
+
+  <main id="main-content" class="page" tabindex="-1">
+
+    <!-- ════════════════════════════════════════════════════════
+         BREADCRUMBS — Inicio › Recursos académicos › Simulaciones
+         ════════════════════════════════════════════════════════ -->
+    <nav class="breadcrumbs" aria-label="Ruta de navegación">
+      <ol class="breadcrumbs__list">
+        <li><a href="../../">Inicio</a></li>
+        <li><a href="../recursos">Recursos académicos</a></li>
+        <li aria-current="page">Simulaciones</li>
+      </ol>
+    </nav>
+
+    <header class="page-header">
+      <h1 class="page-header__title">Simulaciones</h1>
+      <p class="page-header__lead">
+        Simuladores interactivos de los métodos de cálculo de la carrera, organizados por materia del Plan 2023. Cada uno permite modificar las variables de diseño y observar en tiempo real su efecto sobre la construcción y los resultados.
+      </p>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════════
+         GRILLA DE MATERIAS — data-loader="simulaciones"
+         assets/js/simulaciones.js pinta una .card-materia por
+         materia de data/simulaciones.json (misma tarjeta que
+         Apuntes Académicos, CTA «Acceder a los simuladores»).
+         En esta primera etapa: Operaciones Unitarias II.
+         ════════════════════════════════════════════════════════ -->
+    <section aria-labelledby="simulaciones-title">
+      <header class="section-title sr-only">
+        <h2 id="simulaciones-title">Materias con simuladores</h2>
+      </header>
+      <div data-loader="simulaciones">
+        <noscript>
+          <ul class="simulaciones-noscript">
+            <li><a href="./simulaciones/operaciones-unitarias-ii">Operaciones Unitarias II — McCabe-Thiele para absorción de gases y destilación binaria</a></li>
+          </ul>
+        </noscript>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-loader="footer">
+    <noscript>
+      <footer class="footer-fallback" role="contentinfo">
+        <div class="footer-fallback__inner">
+          <p>© 2026 Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química · UTN FRRe</p>
+        </div>
+      </footer>
+    </noscript>
+  </div>
+
+  <div class="loader loader--overlay loader--msg-bottom" id="global-loader"
+       role="status" aria-live="polite" hidden>
+    <div class="loader__dots">
+      <span class="loader__dot safe-motion"></span>
+      <span class="loader__dot safe-motion"></span>
+      <span class="loader__dot safe-motion"></span>
+    </div>
+    <p class="loader__message">Cargando…</p>
+  </div>
+
+  <script src="../../assets/js/loader.js" defer></script>
+  <script src="../../assets/js/navbar.js" defer></script>
+  <script src="../../assets/js/footer.js" defer></script>
+  <script type="module" src="../../assets/js/simulaciones.js"></script>
+  <script type="module" src="../../assets/js/main.js"></script>
+
+</body>
+</html>

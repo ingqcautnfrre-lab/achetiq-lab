@@ -611,7 +611,8 @@
 }
 
 /* Variante «con carpeta de Drive» (drive_url válido). La tarjeta es
-   un <a> externo. La línea de status es la afordancia editorial E05
+   un <a> externo. La variante --enlace (Simulaciones) es un <a>
+   interno con la misma afordancia. La línea de status es la afordancia editorial E05
    —espejo de .recursos-index (recursos.css §1)—: rótulo «Acceder al
    repositorio» en cobalto + flecha (→) que avanza al hover/foco. El
    cobalto firma la navegación; la mauveína no aparece aquí (queda
@@ -633,7 +634,9 @@
 }
 
 .card-materia--drive:hover .card-materia__arrow,
-.card-materia--drive:focus-visible .card-materia__arrow {
+.card-materia--drive:focus-visible .card-materia__arrow,
+.card-materia--enlace:hover .card-materia__arrow,
+.card-materia--enlace:focus-visible .card-materia__arrow {
   transform: translateX(var(--space-1));
 }
 
@@ -643,7 +646,9 @@
    el cover conserva su color por año y el cuerpo (transparente sobre el
    blanco de la tarjeta) deja ver el lavado. */
 .card-materia--drive:hover,
-.card-materia--drive:focus-visible {
+.card-materia--drive:focus-visible,
+.card-materia--enlace:hover,
+.card-materia--enlace:focus-visible {
   background: var(--color-surface-accent);
 }
 

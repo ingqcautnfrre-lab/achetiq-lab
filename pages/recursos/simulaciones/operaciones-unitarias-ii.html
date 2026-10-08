@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEC:CSP — generado por scripts/build-csp.mjs · no editar a mano -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://www.google.com; form-action 'self'; upgrade-insecure-requests">
+  <!-- /SEC:CSP -->
+
+  <title>Simuladores de Operaciones Unitarias II - AChETIQ</title>
+  <meta name="description" content="Simuladores interactivos del método de McCabe-Thiele para Operaciones Unitarias II: absorción de gases y destilación binaria, con reflujo y solvente mínimos, eficiencia de Murphree y tabla de etapas.">
+
+  <link rel="canonical" href="https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/simulaciones/operaciones-unitarias-ii">
+  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../../favicon.ico" sizes="32x32">
+  <link rel="icon" href="../../../icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+  <link rel="manifest" href="../../../site.webmanifest">
+  <meta name="theme-color" content="#1344A5">
+
+  <link rel="preload" href="../../../assets/fonts/hanken-grotesk-400-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../../assets/fonts/fraunces-400-600.woff2" as="font" type="font/woff2" crossorigin fetchpriority="high">
+  <link rel="preload" href="../../../assets/fonts/geist-mono-400-500.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="../../../assets/css/main.bundle.css">
+  <!-- Hoja de página (no va en el bundle): los simuladores solo
+       viven acá. Precedente: sobre-asociacion.css. -->
+  <link rel="stylesheet" href="../../../assets/css/simuladores.css">
+
+  <!-- Precarga del camino crítico de fetch (S6): partial + config de la
+       navbar, igual que el resto de las páginas internas. -->
+  <link rel="preload" href="../../../partials/navbar.html" as="fetch" crossorigin>
+  <link rel="preload" href="../../../data/navbar.json" as="fetch" crossorigin>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AChETIQ">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="Simuladores de Operaciones Unitarias II - AChETIQ">
+  <meta property="og:description" content="Simuladores interactivos del método de McCabe-Thiele: absorción de gases y destilación binaria.">
+  <meta property="og:url" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/simulaciones/operaciones-unitarias-ii">
+  <meta property="og:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Simuladores de Operaciones Unitarias II - AChETIQ">
+  <meta name="twitter:description" content="Simuladores interactivos del método de McCabe-Thiele: absorción de gases y destilación binaria.">
+  <meta name="twitter:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
+  <link rel="modulepreload" href="../../../assets/js/sim/acordeon.js">
+
+  <!-- SEO:JSON-LD — generado por scripts/build-jsonld.mjs · no editar a mano -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "@id": "https://ingqcautnfrre-lab.github.io/achetiq-lab/#organization",
+    "name": "Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química",
+    "alternateName": "AChETIQ",
+    "url": "https://ingqcautnfrre-lab.github.io/achetiq-lab/",
+    "logo": "https://ingqcautnfrre-lab.github.io/achetiq-lab/icon-512.png",
+    "image": "https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png",
+    "description": "Asociación civil sin fines de lucro que nuclea a los estudiantes de la carrera de Ingeniería Química de la Universidad Tecnológica Nacional, Facultad Regional Resistencia (UTN FRRe).",
+    "foundingDate": "2009-04-30",
+    "email": "achetiq.resistencia@aneiqa.org",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Calle French 414",
+      "postalCode": "H3506",
+      "addressLocality": "Resistencia",
+      "addressRegion": "Chaco",
+      "addressCountry": "AR"
+    },
+    "parentOrganization": {
+      "@type": "EducationalOrganization",
+      "name": "Asociación Nacional de Estudiantes de Ingeniería Química y en Alimentos",
+      "alternateName": "ANEIQA",
+      "url": "https://aneiqa.org/"
+    },
+    "sameAs": [
+      "https://www.instagram.com/achetiq/"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://ingqcautnfrre-lab.github.io/achetiq-lab/#website",
+    "name": "AChETIQ",
+    "alternateName": "Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química",
+    "url": "https://ingqcautnfrre-lab.github.io/achetiq-lab/",
+    "publisher": {
+      "@id": "https://ingqcautnfrre-lab.github.io/achetiq-lab/#organization"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://ingqcautnfrre-lab.github.io/achetiq-lab/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Recursos académicos",
+        "item": "https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Simulaciones",
+        "item": "https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/simulaciones"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Operaciones Unitarias II"
+      }
+    ]
+  }
+  </script>
+  <!-- /SEO:JSON-LD -->
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+  <div data-loader="navbar">
+    <noscript>
+      <header class="navbar-fallback">
+        <div class="navbar-fallback__inner">
+          <a class="navbar-fallback__brand" href="../../../">AChETIQ</a>
+        </div>
+      </header>
+    </noscript>
+  </div>
+
+  <main id="main-content" class="page" tabindex="-1">
+
+    <!-- ════════════════════════════════════════════════════════
+         BREADCRUMBS — Inicio › Recursos académicos › Simulaciones
+         › Operaciones Unitarias II
+         ════════════════════════════════════════════════════════ -->
+    <nav class="breadcrumbs" aria-label="Ruta de navegación">
+      <ol class="breadcrumbs__list">
+        <li><a href="../../../">Inicio</a></li>
+        <li><a href="../../recursos">Recursos académicos</a></li>
+        <li><a href="../simulaciones">Simulaciones</a></li>
+        <li aria-current="page">Operaciones Unitarias II</li>
+      </ol>
+    </nav>
+
+    <header class="page-header">
+      <h1 class="page-header__title">Operaciones Unitarias II</h1>
+      <p class="page-header__lead">
+        Simuladores del método gráfico de McCabe-Thiele para el cálculo de etapas de equilibrio. Modificá las variables de diseño y observá en tiempo real cómo responden las rectas de operación, las condiciones límite y el número de etapas.
+      </p>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════════
+         SIMULADORES — desplegables nativos (<details>), uno abierto
+         a la vez (name="simuladores"). El simulador se monta en
+         [data-sim-app] por import() dinámico la primera vez que se
+         abre (assets/js/sim/acordeon.js). Los fundamentos (hipótesis
+         y ecuaciones en MathML) son HTML estático: se leen también
+         sin JavaScript.
+         ════════════════════════════════════════════════════════ -->
+    <section class="sim-lista" aria-label="Simuladores disponibles">
+
+      <!-- ── 1 · Absorción de gases ───────────────────────────── -->
+      <details class="sim" id="absorcion-gases" name="simuladores" data-simulador="absorcion">
+        <summary class="sim__summary">
+          <span class="sim__num" aria-hidden="true">1.</span>
+          <span class="sim__cabecera">
+            <h2 class="sim__titulo">McCabe-Thiele para Absorción de Gases</h2>
+            <span class="sim__bajada">Columna a contracorriente en relaciones molares libres de soluto: solvente mínimo, pinch, eficiencia de Murphree y verificación por Kremser.</span>
+          </span>
+          <svg class="sim__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </summary>
+
+        <div class="sim__panel">
+          <p class="sim__intro">
+            El soluto de una mezcla gaseosa se transfiere a un solvente líquido que circula a contracorriente. En relaciones molares libres de soluto, la recta de operación queda por encima de la curva de equilibrio y cada escalón entre ambas representa una etapa.
+          </p>
+
+          <div class="sim-app" data-sim-app>
+            <noscript>
+              <p class="sim-app__noscript">El simulador interactivo requiere JavaScript habilitado. Los fundamentos del modelo se presentan a continuación.</p>
+            </noscript>
+          </div>
+
+          <section class="sim-teoria" aria-labelledby="abs-teoria">
+            <h3 class="sim-teoria__titulo" id="abs-teoria">Fundamentos del modelo</h3>
+            <div class="sim-teoria__columnas">
+              <div class="sim-teoria__bloque">
+                <h4 class="sim-teoria__sub">Hipótesis</h4>
+                <ul class="sim-teoria__lista">
+                  <li>Un único soluto transferible; gas portador insoluble y solvente no volátil, de modo que los caudales libres de soluto <i>V′<sub>s</sub></i> y <i>L′<sub>s</sub></i> son constantes.</li>
+                  <li>Operación isotérmica, a presión constante y en estado estacionario.</li>
+                  <li>Etapas numeradas desde el tope (notación de Treybal): el solvente entra con <i>X</i><sub>0</sub> y el gas tratado sale con <i>Y</i><sub>1</sub>; el gas entra por el fondo con <i>Y</i><sub><i>N</i>+1</sub> y el líquido sale con <i>X<sub>N</sub></i>.</li>
+                  <li>Eficiencia de Murphree de fase gas uniforme en todas las etapas.</li>
+                  <li>No se consideran efectos térmicos, pérdida de carga ni limitaciones hidráulicas o de transferencia de materia.</li>
+                </ul>
+              </div>
+              <div class="sim-teoria__bloque">
+                <h4 class="sim-teoria__sub">Ecuaciones</h4>
+                <dl class="sim-ecuaciones">
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Relaciones molares libres de soluto</dt>
+                    <dd>
+                      <math display="block">
+                        <mi>X</mi><mo>=</mo><mfrac><mi>x</mi><mrow><mn>1</mn><mo>−</mo><mi>x</mi></mrow></mfrac>
+                        <mo separator="true">,</mo><mspace width="1em"></mspace>
+                        <mi>Y</mi><mo>=</mo><mfrac><mi>y</mi><mrow><mn>1</mn><mo>−</mo><mi>y</mi></mrow></mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Recta de operación (balance de soluto)</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>Y</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo>
+                        <mfrac><msubsup><mi>L</mi><mi>s</mi><mo>′</mo></msubsup><msubsup><mi>V</mi><mi>s</mi><mo>′</mo></msubsup></mfrac>
+                        <mo stretchy="false">(</mo><msub><mi>X</mi><mi>n</mi></msub><mo>−</mo><msub><mi>X</mi><mn>0</mn></msub><mo stretchy="false">)</mo>
+                        <mo>+</mo><msub><mi>Y</mi><mn>1</mn></msub>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Solvente mínimo (pinch en el fondo)</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mrow><mo>(</mo><mfrac><msubsup><mi>L</mi><mi>s</mi><mo>′</mo></msubsup><msubsup><mi>V</mi><mi>s</mi><mo>′</mo></msubsup></mfrac><mo>)</mo></mrow><mi>mín</mi></msub>
+                        <mo>=</mo>
+                        <mfrac>
+                          <mrow><msub><mi>Y</mi><mrow><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>Y</mi><mn>1</mn></msub></mrow>
+                          <mrow><msubsup><mi>X</mi><mi>N</mi><mo>*</mo></msubsup><mo>−</mo><msub><mi>X</mi><mn>0</mn></msub></mrow>
+                        </mfrac>
+                      </math>
+                      <p class="sim-ecuaciones__nota">Si la curva de equilibrio es cóncava, la recta tangente trazada desde (<i>X</i><sub>0</sub>; <i>Y</i><sub>1</sub>) puede tener mayor pendiente: en ese caso el pinch es tangente y fija el mínimo.</p>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Eficiencia de Murphree (fase gas)</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>E</mi><mi>MV</mi></msub><mo>=</mo>
+                        <mfrac>
+                          <mrow><msub><mi>Y</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>Y</mi><mi>n</mi></msub></mrow>
+                          <mrow><msub><mi>Y</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msubsup><mi>Y</mi><mi>n</mi><mo>*</mo></msubsup></mrow>
+                        </mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Ecuación de Kremser (equilibrio <i>Y</i>* = <i>M·X</i>)</dt>
+                    <dd>
+                      <math display="block">
+                        <mi>N</mi><mo>=</mo>
+                        <mfrac>
+                          <mrow><mi>ln</mi><mo>⁡</mo><mrow><mo>[</mo>
+                            <mfrac>
+                              <mrow><msub><mi>Y</mi><mrow><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><mi>M</mi><msub><mi>X</mi><mn>0</mn></msub></mrow>
+                              <mrow><msub><mi>Y</mi><mn>1</mn></msub><mo>−</mo><mi>M</mi><msub><mi>X</mi><mn>0</mn></msub></mrow>
+                            </mfrac>
+                            <mrow><mo>(</mo><mn>1</mn><mo>−</mo><mfrac><mn>1</mn><mi>A</mi></mfrac><mo>)</mo></mrow>
+                            <mo>+</mo><mfrac><mn>1</mn><mi>A</mi></mfrac>
+                          <mo>]</mo></mrow></mrow>
+                          <mrow><mi>ln</mi><mo>⁡</mo><mi>A</mi></mrow>
+                        </mfrac>
+                        <mo separator="true">,</mo><mspace width="1em"></mspace>
+                        <mi>A</mi><mo>=</mo><mfrac><msubsup><mi>L</mi><mi>s</mi><mo>′</mo></msubsup><mrow><mi>M</mi><msubsup><mi>V</mi><mi>s</mi><mo>′</mo></msubsup></mrow></mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Eficiencia global a partir de <i>E<sub>MV</sub></i> (Lewis)</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>E</mi><mi>o</mi></msub><mo>=</mo>
+                        <mfrac>
+                          <mrow><mi>ln</mi><mo>⁡</mo><mrow><mo>[</mo><mn>1</mn><mo>+</mo><msub><mi>E</mi><mi>MV</mi></msub><mrow><mo>(</mo><mfrac><mn>1</mn><mi>A</mi></mfrac><mo>−</mo><mn>1</mn><mo>)</mo></mrow><mo>]</mo></mrow></mrow>
+                          <mrow><mi>ln</mi><mo>⁡</mo><mrow><mo>(</mo><mn>1</mn><mo>/</mo><mi>A</mi><mo>)</mo></mrow></mrow>
+                        </mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+            <p class="sim-teoria__refs">
+              Bibliografía de referencia: R. E. Treybal, <cite>Operaciones de transferencia de masa</cite>; C. J. Geankoplis, <cite>Procesos de transporte y principios de procesos de separación</cite>; W. L. McCabe, J. C. Smith y P. Harriott, <cite>Operaciones unitarias en ingeniería química</cite>.
+            </p>
+          </section>
+        </div>
+      </details>
+
+      <!-- ── 2 · Destilación binaria ──────────────────────────── -->
+      <details class="sim" id="destilacion-binaria" name="simuladores" data-simulador="destilacion">
+        <summary class="sim__summary">
+          <span class="sim__num" aria-hidden="true">2.</span>
+          <span class="sim__cabecera">
+            <h2 class="sim__titulo">McCabe-Thiele para Destilación Binaria</h2>
+            <span class="sim__bajada">Rectificación continua: rectas de operación, recta q, reflujo mínimo y total, etapa óptima de alimentación y eficiencia de Murphree.</span>
+          </span>
+          <svg class="sim__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </summary>
+
+        <div class="sim__panel">
+          <p class="sim__intro">
+            La columna separa una mezcla binaria en un destilado rico en el componente más volátil y un residuo empobrecido en él. Con flujo molar constante, las rectas de operación de rectificación y de agotamiento se cortan sobre la recta q, y los escalones entre ellas y la curva de equilibrio cuentan las etapas.
+          </p>
+
+          <div class="sim-app" data-sim-app>
+            <noscript>
+              <p class="sim-app__noscript">El simulador interactivo requiere JavaScript habilitado. Los fundamentos del modelo se presentan a continuación.</p>
+            </noscript>
+          </div>
+
+          <section class="sim-teoria" aria-labelledby="dest-teoria">
+            <h3 class="sim-teoria__titulo" id="dest-teoria">Fundamentos del modelo</h3>
+            <div class="sim-teoria__columnas">
+              <div class="sim-teoria__bloque">
+                <h4 class="sim-teoria__sub">Hipótesis</h4>
+                <ul class="sim-teoria__lista">
+                  <li>Mezcla binaria; presión constante en toda la columna.</li>
+                  <li>Flujo molar constante en cada sección: calores latentes molares semejantes y pérdidas de calor despreciables.</li>
+                  <li>Condensador total (<i>y</i><sub>1</sub> = <i>x<sub>D</sub></i>) y calderín parcial, que se cuenta como una etapa de equilibrio.</li>
+                  <li>Una sola alimentación, ubicada en la etapa óptima, y sin extracciones laterales.</li>
+                  <li>Eficiencia de Murphree del vapor uniforme, aplicada también al calderín (simplificación).</li>
+                </ul>
+              </div>
+              <div class="sim-teoria__bloque">
+                <h4 class="sim-teoria__sub">Ecuaciones</h4>
+                <dl class="sim-ecuaciones">
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Equilibrio con volatilidad relativa constante</dt>
+                    <dd>
+                      <math display="block">
+                        <msup><mi>y</mi><mo>*</mo></msup><mo>=</mo>
+                        <mfrac><mrow><mi>α</mi><mi>x</mi></mrow><mrow><mn>1</mn><mo>+</mo><mo stretchy="false">(</mo><mi>α</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>x</mi></mrow></mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Recta de rectificación</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>y</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo>
+                        <mfrac><mi>R</mi><mrow><mi>R</mi><mo>+</mo><mn>1</mn></mrow></mfrac><msub><mi>x</mi><mi>n</mi></msub>
+                        <mo>+</mo><mfrac><msub><mi>x</mi><mi>D</mi></msub><mrow><mi>R</mi><mo>+</mo><mn>1</mn></mrow></mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Recta q (condición térmica de la alimentación)</dt>
+                    <dd>
+                      <math display="block">
+                        <mi>y</mi><mo>=</mo><mfrac><mi>q</mi><mrow><mi>q</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mi>x</mi>
+                        <mo>−</mo><mfrac><msub><mi>x</mi><mi>F</mi></msub><mrow><mi>q</mi><mo>−</mo><mn>1</mn></mrow></mfrac>
+                        <mo separator="true">,</mo><mspace width="1em"></mspace>
+                        <mi>q</mi><mo>=</mo><mfrac><mrow><msub><mi>H</mi><mi>V</mi></msub><mo>−</mo><msub><mi>H</mi><mi>F</mi></msub></mrow><mrow><msub><mi>H</mi><mi>V</mi></msub><mo>−</mo><msub><mi>H</mi><mi>L</mi></msub></mrow></mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Recta de agotamiento</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>y</mi><mrow><mi>m</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo>
+                        <mfrac><mover><mi>L</mi><mo>‾</mo></mover><mover><mi>V</mi><mo>‾</mo></mover></mfrac><msub><mi>x</mi><mi>m</mi></msub>
+                        <mo>−</mo><mfrac><mrow><mi>B</mi><msub><mi>x</mi><mi>B</mi></msub></mrow><mover><mi>V</mi><mo>‾</mo></mover></mfrac>
+                        <mo separator="true">,</mo><mspace width="1em"></mspace>
+                        <mover><mi>L</mi><mo>‾</mo></mover><mo>=</mo><mi>L</mi><mo>+</mo><mi>q</mi><mi>F</mi>
+                        <mo separator="true">,</mo><mspace width="0.5em"></mspace>
+                        <mover><mi>V</mi><mo>‾</mo></mover><mo>=</mo><mi>V</mi><mo>−</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>q</mi><mo stretchy="false">)</mo><mi>F</mi>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Eficiencia de Murphree del vapor</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>E</mi><mi>MV</mi></msub><mo>=</mo>
+                        <mfrac>
+                          <mrow><msub><mi>y</mi><mi>n</mi></msub><mo>−</mo><msub><mi>y</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub></mrow>
+                          <mrow><msubsup><mi>y</mi><mi>n</mi><mo>*</mo></msubsup><mo>−</mo><msub><mi>y</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub></mrow>
+                        </mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Reflujo total: ecuación de Fenske (α constante)</dt>
+                    <dd>
+                      <math display="block">
+                        <msub><mi>N</mi><mi>mín</mi></msub><mo>=</mo>
+                        <mfrac>
+                          <mrow><mi>ln</mi><mo>⁡</mo><mrow><mo>[</mo><mfrac><msub><mi>x</mi><mi>D</mi></msub><mrow><mn>1</mn><mo>−</mo><msub><mi>x</mi><mi>D</mi></msub></mrow></mfrac><mfrac><mrow><mn>1</mn><mo>−</mo><msub><mi>x</mi><mi>B</mi></msub></mrow><msub><mi>x</mi><mi>B</mi></msub></mfrac><mo>]</mo></mrow></mrow>
+                          <mrow><mi>ln</mi><mo>⁡</mo><mi>α</mi></mrow>
+                        </mfrac>
+                      </math>
+                    </dd>
+                  </div>
+                  <div class="sim-ecuaciones__fila">
+                    <dt>Reflujo mínimo: método de Underwood (binario, α constante)</dt>
+                    <dd>
+                      <math display="block">
+                        <mfrac><mrow><mi>α</mi><msub><mi>x</mi><mi>F</mi></msub></mrow><mrow><mi>α</mi><mo>−</mo><mi>θ</mi></mrow></mfrac>
+                        <mo>+</mo><mfrac><mrow><mn>1</mn><mo>−</mo><msub><mi>x</mi><mi>F</mi></msub></mrow><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow></mfrac>
+                        <mo>=</mo><mn>1</mn><mo>−</mo><mi>q</mi>
+                        <mo separator="true">,</mo><mspace width="1em"></mspace>
+                        <msub><mi>R</mi><mi>mín</mi></msub><mo>+</mo><mn>1</mn><mo>=</mo>
+                        <mfrac><mrow><mi>α</mi><msub><mi>x</mi><mi>D</mi></msub></mrow><mrow><mi>α</mi><mo>−</mo><mi>θ</mi></mrow></mfrac>
+                        <mo>+</mo><mfrac><mrow><mn>1</mn><mo>−</mo><msub><mi>x</mi><mi>D</mi></msub></mrow><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow></mfrac>
+                      </math>
+                      <p class="sim-ecuaciones__nota">θ es la raíz comprendida entre 1 y α. Para datos de equilibrio tabulados, el simulador determina <i>R</i><sub>mín</sub> numéricamente como el menor reflujo con el que ambas rectas quedan por debajo de la curva, lo que incluye el pinch tangente.</p>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+            <p class="sim-teoria__refs">
+              Bibliografía de referencia: R. E. Treybal, <cite>Operaciones de transferencia de masa</cite>; W. L. McCabe, J. C. Smith y P. Harriott, <cite>Operaciones unitarias en ingeniería química</cite>; C. J. Geankoplis, <cite>Procesos de transporte y principios de procesos de separación</cite>.
+            </p>
+          </section>
+        </div>
+      </details>
+
+    </section>
+
+  </main>
+
+  <div data-loader="footer">
+    <noscript>
+      <footer class="footer-fallback" role="contentinfo">
+        <div class="footer-fallback__inner">
+          <p>© 2026 Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química · UTN FRRe</p>
+        </div>
+      </footer>
+    </noscript>
+  </div>
+
+  <div class="loader loader--overlay loader--msg-bottom" id="global-loader"
+       role="status" aria-live="polite" hidden>
+    <div class="loader__dots">
+      <span class="loader__dot safe-motion"></span>
+      <span class="loader__dot safe-motion"></span>
+      <span class="loader__dot safe-motion"></span>
+    </div>
+    <p class="loader__message">Cargando…</p>
+  </div>
+
+  <script src="../../../assets/js/loader.js" defer></script>
+  <script src="../../../assets/js/navbar.js" defer></script>
+  <script src="../../../assets/js/footer.js" defer></script>
+  <script type="module" src="../../../assets/js/sim/acordeon.js"></script>
+
+</body>
+</html>
