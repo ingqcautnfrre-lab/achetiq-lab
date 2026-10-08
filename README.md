@@ -49,9 +49,12 @@ El script `scripts/build-urls.mjs` (sin dependencias) reescribe esas etiquetas
 en `index.html`, `404.html` y `pages/**`, derivando cada `og:url` de la ruta del
 archivo. Es idempotente: ejecutarlo sin cambiar `BASE_URL` no modifica nada.
 
-**Migrar al dominio final:** editar una sola línea en `site.config.mjs`
-(`BASE_URL = "https://achetiq.org.ar"`), ejecutar `npm run build:urls` y
-commitear el HTML regenerado.
+**Publicar en el sitio oficial:** este repositorio es el sitio de construcción
+(`https://ingqcautnfrre-lab.github.io/achetiq-lab`). El sitio oficial se publica
+en **`https://achetiq.github.io`** (GitHub Pages de la organización AChETIQ). Para
+generar los archivos del sitio oficial, fijar
+`BASE_URL = "https://achetiq.github.io"` en `site.config.mjs`, ejecutar
+`npm run build` y cargar el HTML regenerado en el repositorio oficial.
 
 ## Contribuir
 

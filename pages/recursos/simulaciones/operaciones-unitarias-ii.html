@@ -338,7 +338,7 @@
 
         <div class="sim__panel">
           <p class="sim__intro">
-            La columna separa una mezcla binaria en un destilado rico en el componente más volátil y un residuo empobrecido en él. Con flujo molar constante, las rectas de operación de rectificación y de agotamiento se cortan sobre la recta q, y los escalones entre ellas y la curva de equilibrio cuentan las etapas. El simulador determina el reflujo mínimo y el total, la etapa óptima de alimentación y el efecto de la eficiencia de Murphree.
+            La columna separa una mezcla binaria en un destilado rico en el componente más volátil y un residuo empobrecido en él. Con flujo molar constante, las rectas de operación de rectificación y de agotamiento se cortan sobre la recta de alimentación, y los escalones entre ellas y la curva de equilibrio cuentan las etapas. El simulador determina el reflujo mínimo y el total, la etapa óptima de alimentación y el efecto de la eficiencia de Murphree.
           </p>
 
           <div class="sim-app" data-sim-app>
@@ -356,9 +356,9 @@
                 <ul class="sim-teoria__lista">
                   <li>Mezcla binaria; presión constante en toda la columna.</li>
                   <li>Flujo molar constante en cada sección: calores latentes molares semejantes y pérdidas de calor despreciables.</li>
-                  <li>Condensador total (<i>y</i><sub>1</sub> = <i>x<sub>D</sub></i>) y calderín parcial, que se cuenta como una etapa de equilibrio.</li>
-                  <li>Una sola alimentación, ubicada en la etapa óptima, y sin extracciones laterales.</li>
-                  <li>Eficiencia de Murphree del vapor uniforme, aplicada también al calderín (simplificación).</li>
+                  <li>Condensador total (<i>y</i><sub>1</sub> = <i>x<sub>D</sub></i>) y reboiler parcial, que se cuenta como una etapa de equilibrio (ideal).</li>
+                  <li>Una sola alimentación, ubicada en la etapa óptima, especificada por su fracción vaporizada <i>f</i> = 1 − <i>q</i>, y sin extracciones laterales.</li>
+                  <li>Eficiencia de Murphree del vapor uniforme en los platos; el reboiler parcial se escalona sobre la curva de equilibrio real.</li>
                 </ul>
               </div>
             </details>
@@ -379,7 +379,7 @@
                       <tr><th scope="row"><i>R</i></th><td>Relación de reflujo, <i>R</i> = <i>L</i>/<i>D</i></td><td>—</td></tr>
                       <tr><th scope="row"><i>R</i><sub>mín</sub></th><td>Relación de reflujo mínima (pinch)</td><td>—</td></tr>
                       <tr><th scope="row"><i>N</i><sub>mín</sub></th><td>Número mínimo de etapas (reflujo total)</td><td>—</td></tr>
-                      <tr><th scope="row"><i>q</i></th><td>Fracción líquida térmica de la alimentación</td><td>—</td></tr>
+                      <tr><th scope="row"><i>f</i></th><td>Fracción vaporizada de la alimentación (<i>f</i> = 1 − <i>q</i>)</td><td>—</td></tr>
                       <tr><th scope="row"><i>H<sub>V</sub></i>, <i>H<sub>L</sub></i>, <i>H<sub>F</sub></i></th><td>Entalpía molar del vapor saturado, del líquido saturado y de la alimentación</td><td>kJ/kmol</td></tr>
                       <tr><th scope="row">α</th><td>Volatilidad relativa del componente más volátil respecto del menos volátil</td><td>—</td></tr>
                       <tr><th scope="row"><i>y</i>*</th><td>Composición del vapor en equilibrio con el líquido</td><td>—</td></tr>
@@ -416,14 +416,16 @@
                     </dd>
                   </div>
                   <div class="sim-ecuaciones__fila">
-                    <dt>Recta q (condición térmica de la alimentación)</dt>
+                    <dt>Recta de alimentación (condición térmica, fracción vaporizada f)</dt>
                     <dd>
                       <math display="block">
-                        <mi>y</mi><mo>=</mo><mfrac><mi>q</mi><mrow><mi>q</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mi>x</mi>
-                        <mo>−</mo><mfrac><msub><mi>x</mi><mi>F</mi></msub><mrow><mi>q</mi><mo>−</mo><mn>1</mn></mrow></mfrac>
+                        <mi>y</mi><mo>=</mo><mo>−</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>f</mi></mrow><mi>f</mi></mfrac><mi>x</mi>
+                        <mo>+</mo><mfrac><msub><mi>x</mi><mi>F</mi></msub><mi>f</mi></mfrac>
                         <mo separator="true">,</mo><mspace width="1em"></mspace>
-                        <mi>q</mi><mo>=</mo><mfrac><mrow><msub><mi>H</mi><mi>V</mi></msub><mo>−</mo><msub><mi>H</mi><mi>F</mi></msub></mrow><mrow><msub><mi>H</mi><mi>V</mi></msub><mo>−</mo><msub><mi>H</mi><mi>L</mi></msub></mrow></mfrac>
+                        <mi>f</mi><mo>=</mo><mfrac><mrow><msub><mi>H</mi><mi>F</mi></msub><mo>−</mo><msub><mi>H</mi><mi>L</mi></msub></mrow><mrow><msub><mi>H</mi><mi>V</mi></msub><mo>−</mo><msub><mi>H</mi><mi>L</mi></msub></mrow></mfrac>
+                        <mo>=</mo><mn>1</mn><mo>−</mo><mi>q</mi>
                       </math>
+                      <p class="sim-ecuaciones__nota">Con <i>f</i> = 0 (líquido saturado) la recta es vertical en <i>x</i> = <i>x<sub>F</sub></i>; con <i>f</i> = 1 (vapor saturado), horizontal en <i>y</i> = <i>x<sub>F</sub></i>. <i>f</i> &lt; 0 corresponde a líquido subenfriado y <i>f</i> &gt; 1 a vapor sobrecalentado.</p>
                     </dd>
                   </div>
                   <div class="sim-ecuaciones__fila">
@@ -434,9 +436,9 @@
                         <mfrac><mover><mi>L</mi><mo>‾</mo></mover><mover><mi>V</mi><mo>‾</mo></mover></mfrac><msub><mi>x</mi><mi>m</mi></msub>
                         <mo>−</mo><mfrac><mrow><mi>B</mi><msub><mi>x</mi><mi>B</mi></msub></mrow><mover><mi>V</mi><mo>‾</mo></mover></mfrac>
                         <mo separator="true">,</mo><mspace width="1em"></mspace>
-                        <mover><mi>L</mi><mo>‾</mo></mover><mo>=</mo><mi>L</mi><mo>+</mo><mi>q</mi><mi>F</mi>
+                        <mover><mi>L</mi><mo>‾</mo></mover><mo>=</mo><mi>L</mi><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>f</mi><mo stretchy="false">)</mo><mi>F</mi>
                         <mo separator="true">,</mo><mspace width="0.5em"></mspace>
-                        <mover><mi>V</mi><mo>‾</mo></mover><mo>=</mo><mi>V</mi><mo>−</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>q</mi><mo stretchy="false">)</mo><mi>F</mi>
+                        <mover><mi>V</mi><mo>‾</mo></mover><mo>=</mo><mi>V</mi><mo>−</mo><mi>f</mi><mi>F</mi>
                       </math>
                     </dd>
                   </div>
@@ -470,7 +472,7 @@
                       <math display="block">
                         <mfrac><mrow><mi>α</mi><msub><mi>x</mi><mi>F</mi></msub></mrow><mrow><mi>α</mi><mo>−</mo><mi>θ</mi></mrow></mfrac>
                         <mo>+</mo><mfrac><mrow><mn>1</mn><mo>−</mo><msub><mi>x</mi><mi>F</mi></msub></mrow><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow></mfrac>
-                        <mo>=</mo><mn>1</mn><mo>−</mo><mi>q</mi>
+                        <mo>=</mo><mi>f</mi>
                         <mo separator="true">,</mo><mspace width="1em"></mspace>
                         <msub><mi>R</mi><mi>mín</mi></msub><mo>+</mo><mn>1</mn><mo>=</mo>
                         <mfrac><mrow><mi>α</mi><msub><mi>x</mi><mi>D</mi></msub></mrow><mrow><mi>α</mi><mo>−</mo><mi>θ</mi></mrow></mfrac>

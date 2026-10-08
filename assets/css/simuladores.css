@@ -1124,7 +1124,7 @@
 .sim-esq__etapa--op    { fill: var(--dataviz-violeta); fill-opacity: 0.08; }
 
 .sim-esq__etapa.is-activa,
-.sim-esq__calderin.is-activa {
+.sim-esq__reboiler.is-activa {
   fill-opacity: 0.38;
 }
 
@@ -1168,13 +1168,13 @@
 
 .sim-esq__equipo circle,
 .sim-esq__tambor,
-.sim-esq__calderin {
+.sim-esq__reboiler {
   fill: var(--color-surface-raised);
   stroke: var(--grafito-700);
   stroke-width: 1.5;
 }
 
-.sim-esq__calderin {
+.sim-esq__reboiler {
   fill: var(--dataviz-verde);
   fill-opacity: 0.1;
   cursor: pointer;
@@ -1239,7 +1239,7 @@
 }
 
 .sim-esq__columna.is-inviable .sim-esq__cuerpo,
-.sim-esq__calderin.is-inviable {
+.sim-esq__reboiler.is-inviable {
   stroke-dasharray: 5 4;
   opacity: 0.55;
 }

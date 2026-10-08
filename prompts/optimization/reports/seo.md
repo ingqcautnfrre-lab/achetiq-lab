@@ -106,7 +106,7 @@ not invented — they light up on their own once `data/redes.json` is filled in.
 ## 7. Design notes & trade-offs
 
 - **Single source of truth.** Canonical, og:url and the breadcrumb item URLs are
-  all derived from `BASE_URL`. Switching to `https://achetiq.org.ar` stays a
+  all derived from `BASE_URL`. Switching to the official site, `https://achetiq.github.io`, stays a
   one-line edit in `site.config.mjs` followed by `npm run build`.
 - **Idempotent, marker-based injection.** JSON-LD lives between
   `<!-- SEO:JSON-LD … -->` markers; canonical is insert-or-sync; robots/sitemap
@@ -133,8 +133,9 @@ not invented — they light up on their own once `data/redes.json` is filled in.
 - **`robots.txt` on a github.io subpath.** Crawlers only honor `robots.txt` at
   the *host root* (`ingqcautnfrre-lab.github.io/robots.txt`), not under
   `/achetiq-lab/`. The generated file is correct and harmless today and becomes
-  authoritative once the apex domain (`achetiq.org.ar`) is connected. Until
-  then, submit `sitemap.xml` directly via Google Search Console.
+  authoritative on the official site (`https://achetiq.github.io`, served at
+  the host root). For the build site, submit `sitemap.xml` directly via Google
+  Search Console.
 - **Sandbox network.** `cdnjs`, Google Drive/Maps and social origins are blocked
   in the audit sandbox; this does not affect SEO scores or the structured data.
 

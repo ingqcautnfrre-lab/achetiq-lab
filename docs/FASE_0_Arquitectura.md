@@ -304,7 +304,7 @@ achetiq-lab/                      ← raíz del repositorio
 |---|---|---|---|
 | D1 | ~~Aprobación del stack~~ → **HTML/CSS/JS puro. RESUELTO.** | — | — |
 | D2 | Nombre de usuario de GitHub para la organización | Comisión directiva | URL base del sitio |
-| D3 | Dominio personalizado (achetiq.org.ar o similar) | Comisión directiva | Configuración DNS |
+| D3 | ~~Dominio personalizado~~ → **Sitio oficial en https://achetiq.github.io. RESUELTO.** | — | — |
 | D4 | Listado oficial de gabinetes activos | Comisión directiva | Sección Gabinetes |
 | D5 | Logo e identidad visual oficial | Diseño (Fase 1) | Todo el sitio |
 | D6 | Paleta de colores institucional | Diseño (Fase 1) | Todo el sitio |

@@ -8,7 +8,8 @@
  *
  * Casos de validación (docs/SIMULADORES.md §Validación):
  *   · Destilación — valores por defecto del simulador de referencia
- *     (TLK Energy): α = 2,5; R = 2; q = 0,8; x_F = 0,45; x_D = 0,98;
+ *     (TLK Energy): α = 2,5; R = 2; f = 0,2 (q = 1 − f = 0,8);
+ *     x_F = 0,45; x_D = 0,98;
  *     x_B = 0,02. La referencia informa 17 etapas; el pinch gráfico
  *     y Underwood coinciden en R_min = 1,5570 (la referencia muestra
  *     1,529: discrepancia documentada).
@@ -77,16 +78,18 @@ test("destilación — caso de referencia (TLK)", () => {
   cerca(r.balance.LVb, r.rectas.ms, 1e-9, "L̄/V̄ = pendiente de agotamiento");
 });
 
-test("destilación — condiciones térmicas de la alimentación", () => {
-  for (const q of [1.3, 1, 0.5, 0, -0.5]) {
-    const r = dest({ q, modoR: "ratio", rRatio: 1.5 });
-    assert.equal(r.ok, true, `q = ${q}: ${r.errores}`);
-    cerca(r.Rmin, r.RminUnderwood, 1e-6, `R_min q = ${q}`);
-    assert.ok(isFinite(r.escalones.nFrac), `etapas finitas q = ${q}`);
+test("destilación — condiciones térmicas de la alimentación (f = 1 − q)", () => {
+  for (const f of [-0.3, 0, 0.5, 1, 1.5]) {
+    const r = dest({ f, modoR: "ratio", rRatio: 1.5 });
+    assert.equal(r.ok, true, `f = ${f}: ${r.errores}`);
+    cerca(r.Rmin, r.RminUnderwood, 1e-6, `R_min f = ${f}`);
+    assert.ok(isFinite(r.escalones.nFrac), `etapas finitas f = ${f}`);
     cerca(r.R, 1.5 * r.Rmin, 1e-9, "R = 1,5 R_min");
+    /* V − V̄ = f·F: la fracción vaporizada se suma al vapor de rectificación. */
+    cerca(r.balance.V - r.balance.Vb, f * r.balance.F, 1e-9, "V − V̄ = fF");
   }
-  /* R_min crece al bajar q (alimentación más vaporizada). */
-  const rm = [1.3, 1, 0.5, 0, -0.5].map((q) => dest({ q }).Rmin);
+  /* R_min crece al aumentar f (alimentación más vaporizada). */
+  const rm = [-0.3, 0, 0.5, 1, 1.5].map((f) => dest({ f }).Rmin);
   for (let i = 1; i < rm.length; i++) assert.ok(rm[i] > rm[i - 1]);
 });
 
@@ -105,13 +108,33 @@ test("destilación — eficiencia de Murphree aumenta las etapas", () => {
   assert.ok(r.escalones.n > 17);
 });
 
+test("destilación — reboiler ideal con E_MV < 1", () => {
+  const r = dest({ E: 0.6 });
+  assert.equal(r.ok, true);
+  const et = r.escalones.etapas;
+  const ult = et[et.length - 1];
+  assert.equal(ult.ultima, true);
+  assert.equal(ult.ideal, true);
+  /* La última etapa (reboiler) cae sobre la curva de equilibrio real. */
+  cerca(r.eq.y(ult.x), ult.y, 1e-7, "reboiler sobre el equilibrio");
+  /* Los platos caen sobre el pseudoequilibrio y no alcanzan x_B. */
+  for (const e of et.slice(0, -1)) {
+    cerca(r.psEquilibrio(e.x), e.y, 1e-7, `plato ${e.n} sobre el pseudoequilibrio`);
+    assert.ok(e.x > r.p.xB);
+  }
+  /* Con E = 1 el reboiler ideal no cambia nada: 17 etapas. */
+  assert.equal(dest({ E: 1 }).escalones.n, 17);
+  /* Cota: N_real − 1 platos superan (N_teórico − 1) platos ideales. */
+  assert.ok(r.escalones.n - 1 > r.teorico.n - 1);
+});
+
 test("destilación — especificación incoherente", () => {
   assert.equal(dest({ xB: 0.5 }).ok, false);
   assert.equal(dest({ equilibrio: { alfa: 0.9 } }).ok, false);
 });
 
 test("destilación — datos tabulados con pinch tangente", () => {
-  const r = dest({ equilibrio: { tipo: "tabla" }, xF: 0.4, xD: 0.95, xB: 0.05, q: 1, R: 3 });
+  const r = dest({ equilibrio: { tipo: "tabla" }, xF: 0.4, xD: 0.95, xB: 0.05, f: 0, R: 3 });
   assert.equal(r.ok, true, String(r.errores));
   assert.equal(r.pinch.tipo, "tangente");
   assert.ok(r.pinch.x > 0.4 && r.pinch.x < 0.95);
@@ -195,14 +218,14 @@ test("absorción — datos tabulados ilustrativos", () => {
 /* ── Resumen de corrientes (esquema del equipo) ─────────────────── */
 
 test("destilación — corrientes: cierre de balances global y por componente", () => {
-  for (const over of [{}, { q: 1.2, R: 3, F: 250 }, { E: 0.7 }]) {
+  for (const over of [{}, { f: -0.2, R: 3, F: 250 }, { E: 0.7 }]) {
     const r = dest(over);
     const c = Object.fromEntries(r.corrientes.map((k) => [k.id, k]));
     cerca(c.F.caudal, c.D.caudal + c.B.caudal, 1e-9, "F = D + B");
     cerca(c.F.caudal * c.F.x, c.D.caudal * c.D.x + c.B.caudal * c.B.x, 1e-9, "F x_F = D x_D + B x_B");
     cerca(c.V.caudal, c.L.caudal + c.D.caudal, 1e-9, "V = L + D");
     cerca(c.Lb.caudal, c.Vb.caudal + c.B.caudal, 1e-9, "L̄ = V̄ + B");
-    assert.ok(c.Lb.x > 0 && c.Lb.x < 1 && c.Vb.x > 0 && c.Vb.x < 1, "composiciones del calderín");
+    assert.ok(c.Lb.x > 0 && c.Lb.x < 1 && c.Vb.x > 0 && c.Vb.x < 1, "composiciones del reboiler");
   }
 });
 

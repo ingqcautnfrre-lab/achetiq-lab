@@ -237,7 +237,7 @@ Antes de implementar se reabrió la discusión, dado que GitHub Pages no procesa
 2. **Subpáginas en lugar de plantilla con `?id=` (Decisión 2026-05-16, ratificada por estructura).** Gabinetes y subsecciones de Recursos se resolvieron con un archivo HTML por hijo (`pages/gabinetes/<slug>.html`, `pages/recursos/<sub-seccion>.html`). Contradice la prescripción original de `INSTRUCCION_PROYECTO.md §4.2`; convendría alinear ambos documentos al cerrar la vista individual de materia en Fase 4 (P4.6).
 3. **CTA final como componente compartido (`assets/css/cta.css`).** El cierre con fondo `--color-primary` y botones invertidos se formalizó como `.cta-final` reutilizable; las páginas no redefinen este bloque.
 4. **`color-mix()` para tintas con alfa.** Toda mezcla de color con transparencia (sombras, overlays, badges, glows decorativos) se expresa con `color-mix(in srgb|oklab, var(--token) N%, transparent)`. Las únicas instancias `rgba()` hardcodeadas que quedaban (navbar.css overlay/sombra, countdown shadow fallback) se migraron a `color-mix` durante P3.15.
-5. **Rutas relativas + `AChETIQBase` runtime.** Toda URL interna se calcula a partir del `src` real del propio `loader.js`. Esto hace que el sitio sirva por igual desde la raíz del dominio (`https://achetiq.org.ar/`), un subpath de GitHub Pages (`https://<org>.github.io/<repo>/`) o file://.
+5. **Rutas relativas + `AChETIQBase` runtime.** Toda URL interna se calcula a partir del `src` real del propio `loader.js`. Esto hace que el sitio sirva por igual desde la raíz del dominio (sitio oficial `https://achetiq.github.io/`), un subpath de GitHub Pages (`https://<org>.github.io/<repo>/`) o file://.
 6. **`.nojekyll` en raíz.** GitHub Pages servirá el sitio sin pasarlo por Jekyll, de modo que los nombres con prefijo `_` (si los hubiera) no se filtren.
 
 ### Revisión de calidad de código aplicada en P3.15
@@ -271,7 +271,7 @@ Antes de implementar se reabrió la discusión, dado que GitHub Pages no procesa
 
 **Pendientes de Fase 5 (despliegue)**
 
-- Dominio personalizado (candidato: `achetiq.org.ar`).
+- ~~Dominio personalizado~~ → resuelto: el sitio oficial es `https://achetiq.github.io` (GitHub Pages de la organización).
 - Nombre de usuario / organización de GitHub para AChETIQ.
 - LinkedIn institucional (mientras tanto la tarjeta queda como «Próximamente»).
 

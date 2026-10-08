@@ -118,7 +118,7 @@ Content is injected client-side from `data/*.json` by `assets/js/loaders.js`.
 - **Contrast** — **≥ 4.5:1** body text, **≥ 3:1** large text (≥ 24px or ≥ 18.66px bold) and UI components.
 - **OWASP Top 10 (2021)** — A01 Broken Access Control … A05 Security Misconfiguration … A06 Vulnerable Components … used as the security lens.
 - **JS/CSS byte budget** — defined in `03-performance.md`, enforced in `06-ci-integration.md`; reconcile with `RENDIMIENTO_Presupuesto.md`.
-- **`BASE_URL`** — single source of truth in `site.config.mjs` (currently `https://ingqcautnfrre-lab.github.io/achetiq-lab`; future `https://achetiq.org.ar`). Never hard-code an origin; read this.
+- **`BASE_URL`** — single source of truth in `site.config.mjs` (build site `https://ingqcautnfrre-lab.github.io/achetiq-lab`; official site `https://achetiq.github.io`). Never hard-code an origin; read this.
 
 ## The files
 

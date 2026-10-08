@@ -8,22 +8,25 @@
    HIPÓTESIS DEL MODELO
      · Mezcla binaria; presión constante.
      · Flujo molar constante (CMO) en cada sección.
-     · Condensador total (x_D = y_1); calderín parcial contado
-       como una etapa de equilibrio.
-     · Eficiencia de Murphree de vapor E_MV uniforme en todas las
-       etapas (simplificación explícita: incluye al calderín).
-     · Alimentación en la etapa óptima.
+     · Condensador total (x_D = y_1); reboiler parcial contado
+       como una etapa de equilibrio (ideal).
+     · Eficiencia de Murphree de vapor E_MV uniforme en los platos;
+       el reboiler se escalona sobre la curva de equilibrio real.
+     · Alimentación en la etapa óptima, especificada por su fracción
+       vaporizada f = 1 − q = (H_F − H_L)/(H_V − H_L).
 
    ECUACIONES
      Equilibrio (α constante):   y* = αx / [1 + (α − 1)x]
      Rectificación:              y = R/(R+1)·x + x_D/(R+1)
-     Recta q:                    y = q/(q−1)·x − x_F/(q−1)
+     Recta de alimentación:      y = −(1−f)/f·x + x_F/f
+                                 (vertical en x = x_F si f = 0)
      Agotamiento:                recta por (x_B, x_B) y por la
                                  intersección de las dos anteriores
      Pseudoequilibrio:           y_ps = y_op + E_MV (y* − y_op)
      Balance global:             D/F = (x_F − x_B)/(x_D − x_B)
      Fenske (α constante):       N_min = ln[(x_D/(1−x_D))·((1−x_B)/x_B)] / ln α
-     Underwood (binario):        Σ α_i x_F,i/(α_i − θ) = 1 − q
+     Caudales de agotamiento:    L̄ = L + (1 − f)F;  V̄ = V − fF
+     Underwood (binario):        Σ α_i x_F,i/(α_i − θ) = f
                                  R_min + 1 = Σ α_i x_D,i/(α_i − θ)
    ============================================================ */
 
@@ -50,7 +53,7 @@ export var DEFAULTS = {
   xF: 0.45,
   xD: 0.98,
   xB: 0.02,
-  q: 0.8,
+  f: 0.2,
   modoR: 'R',
   R: 2,
   rRatio: 1.3,
@@ -130,21 +133,31 @@ export function fenske(alfa, xD, xB) {
 
 /* Escalonamiento desde (x_D, x_D) entre la recta de operación
    op(x) y el pseudoequilibrio. xi = abscisa de cambio de sección
-   (para reflujo total, xi = −∞ y op es la diagonal). */
+   (para reflujo total, xi = −∞ y op es la diagonal).
+   Reboiler ideal: en cada etapa se prueba primero la horizontal
+   hasta la curva de equilibrio REAL; si ya alcanza x_B, esa etapa
+   es el reboiler parcial (etapa de equilibrio) y la construcción
+   termina. Si no, la etapa es un plato y escalona sobre el
+   pseudoequilibrio. Como el pseudoequilibrio queda entre la recta
+   de operación y la curva, x_ps ≥ x_eq: ningún plato puede cruzar
+   x_B antes que el reboiler. Con E = 1 coincide con el
+   escalonamiento clásico. */
 function escalonar(eq, op, xi, xD, xB, E) {
   var ps = function (x) { var o = op(x); return o + E * (eq.y(x) - o); };
   var etapas = [];
   var xPrev = xD, y = xD, alim = null, pinch = false;
   for (var n = 1; n <= MAX_ETAPAS; n++) {
     var yy = y;
-    var xn = raiz(function (x) { return ps(x) - yy; }, 0, xPrev);
+    var xEq = raiz(function (x) { return eq.y(x) - yy; }, 0, xPrev);
+    var esReboiler = xEq != null && xEq <= xB;
+    var xn = esReboiler ? xEq : raiz(function (x) { return ps(x) - yy; }, 0, xPrev);
     if (xn == null || xPrev - xn < 1e-9) { pinch = true; break; }
     var seccion = 'rect';
     if (alim == null && xn < xi) { alim = n; seccion = 'alimentacion'; }
     else if (alim != null) seccion = 'strip';
-    if (xn <= xB) {
+    if (esReboiler) {
       var frac = (xPrev - xB) / (xPrev - xn);
-      etapas.push({ n: n, x0: xPrev, y: y, x: xn, y1: xn, seccion: seccion, ultima: true });
+      etapas.push({ n: n, x0: xPrev, y: y, x: xn, y1: xn, seccion: seccion, ultima: true, ideal: true });
       return { etapas: etapas, nFrac: n - 1 + frac, n: n, alim: alim, pinch: false, tope: false };
     }
     var yNext = op(xn);
@@ -184,7 +197,8 @@ export function construirEquilibrio(cfg) {
 
 export function calcular(p, eqConstruido) {
   var res = { ok: false, errores: [], avisos: [], p: p };
-  var xF = p.xF, xD = p.xD, xB = p.xB, q = p.q, E = p.E;
+  /* La especificación usa f; las rectas se escriben con q = 1 − f. */
+  var xF = p.xF, xD = p.xD, xB = p.xB, q = 1 - p.f, E = p.E;
   var eq = eqConstruido.modelo;
   var lectura = eqConstruido.lectura;
   res.eq = eq;
@@ -193,6 +207,7 @@ export function calcular(p, eqConstruido) {
   if (!(xB > 0 && xB < xF && xF < xD && xD < 1)) {
     res.errores.push('Las composiciones deben cumplir 0 < x_B < x_F < x_D < 1.');
   }
+  if (!isFinite(p.f)) res.errores.push('La fracción vaporizada f debe ser un número.');
   if (!(E > 0 && E <= 1)) res.errores.push('La eficiencia de Murphree debe estar en (0, 1].');
   if (!(p.F > 0)) res.errores.push('El caudal de alimentación F debe ser positivo.');
   if (eq.tipo === 'alfa' && !(eq.alfa > 1)) {
@@ -260,7 +275,7 @@ export function calcular(p, eqConstruido) {
   var D = F * (xF - xB) / (xD - xB);
   var B = F - D;
   var Lr = R * D, V = (R + 1) * D;
-  var Ls = Lr + q * F, Vs = V - (1 - q) * F;
+  var Ls = Lr + (1 - p.f) * F, Vs = V - p.f * F;
   res.balance = {
     F: F, D: D, B: B, L: Lr, V: V, Lb: Ls, Vb: Vs,
     LV: L.s, LVb: Ls / Vs, VbB: Vs / B,
@@ -268,7 +283,7 @@ export function calcular(p, eqConstruido) {
     recB: B * (1 - xB) / (F * (1 - xF))
   };
   if (!(Vs > 0)) {
-    res.errores.push('El caudal de vapor en la sección de agotamiento resulta V̄ ≤ 0: aumentá R o q.');
+    res.errores.push('El caudal de vapor en la sección de agotamiento resulta V̄ ≤ 0: aumentá R o disminuí f.');
     return res;
   }
 
@@ -300,9 +315,9 @@ export function calcular(p, eqConstruido) {
 
   /* ── Resumen de corrientes (esquema del equipo) ──
      Condensador total: el vapor de tope y el reflujo tienen la
-     composición del destilado. Las corrientes del calderín toman las
+     composición del destilado. Las corrientes del reboiler toman las
      composiciones de la construcción: líquido que baja de la etapa
-     N − 1 y vapor que sale de la etapa N (calderín). */
+     N − 1 y vapor que sale de la etapa N (reboiler). */
   var et = real.etapas;
   var finita = isFinite(real.nFrac) && et.length > 0;
   var ultima = finita ? et[et.length - 1] : null;
@@ -313,8 +328,8 @@ export function calcular(p, eqConstruido) {
     { id: 'B', nombre: 'Residuo', caudal: B, x: xB },
     { id: 'L', nombre: 'Reflujo', caudal: Lr, x: xD },
     { id: 'V', nombre: 'Vapor de tope', caudal: V, x: xD },
-    { id: 'Lb', nombre: 'Líquido al calderín', caudal: Ls, x: penultima ? penultima.x : NaN },
-    { id: 'Vb', nombre: 'Vapor del calderín', caudal: Vs, x: ultima ? ultima.y : NaN }
+    { id: 'Lb', nombre: 'Líquido al reboiler', caudal: Ls, x: penultima ? penultima.x : NaN },
+    { id: 'Vb', nombre: 'Vapor del reboiler', caudal: Vs, x: ultima ? ultima.y : NaN }
   ];
 
   res.ok = true;

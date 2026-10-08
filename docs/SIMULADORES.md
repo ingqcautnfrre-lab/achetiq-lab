@@ -90,27 +90,36 @@ con X_N.
 
 **Hipótesis**
 - Flujo molar constante y presión constante.
-- Condensador total (y₁ = x_D) y calderín parcial contado como etapa de equilibrio.
-- Una alimentación, ubicada en la etapa óptima.
-- E_MV uniforme, aplicada también al calderín (simplificación declarada en la página).
+- Condensador total (y₁ = x_D) y reboiler parcial contado como etapa de equilibrio (ideal).
+- Una alimentación, ubicada en la etapa óptima y especificada por su fracción vaporizada
+  f = 1 − q = (H_F − H_L)/(H_V − H_L): f < 0 líquido subenfriado, f = 0 líquido saturado,
+  0 < f < 1 mezcla, f = 1 vapor saturado, f > 1 vapor sobrecalentado. La ficha técnica muestra
+  también q = 1 − f, para la equivalencia con Treybal y Geankoplis.
+- E_MV uniforme en los platos; el reboiler parcial se escalona sobre la curva de equilibrio real.
 
 **Ecuaciones**
 - Equilibrio con α constante: y* = αx/[1 + (α − 1)x]. Alternativamente, datos x–y interpolados; se
   fuerzan los extremos (0, 0) y (1, 1) y se detectan azeótropos (cruces con y = x).
 - Recta de rectificación: y = R/(R + 1)·x + x_D/(R + 1).
-- Recta q: y = q/(q − 1)·x − x_F/(q − 1). Los casos q = 1 (vertical) y q = 0 (horizontal) se
-  tratan aparte.
+- Recta de alimentación: y = −(1 − f)/f·x + x_F/f. Los casos f = 0 (vertical) y f = 1
+  (horizontal) se tratan aparte. El modelo trabaja internamente con q = 1 − f.
 - Recta de agotamiento: pasa por (x_B, x_B) y por la intersección de las dos rectas anteriores.
-  Su pendiente es L̄/V̄, con L̄ = L + qF y V̄ = V − (1 − q)F.
+  Su pendiente es L̄/V̄, con L̄ = L + (1 − f)F y V̄ = V − fF.
 - R_mín general: el menor R con el que ambas rectas quedan por debajo de la curva en [x_B, x_D].
   Se obtiene por bisección sobre R, evaluando la holgura mínima con barrido y sección áurea. Cubre
-  el pinch en la recta q y el pinch tangente.
-- Underwood (binario, α constante): Σ αᵢ x_F,i/(αᵢ − θ) = 1 − q; R_mín + 1 = Σ αᵢ x_D,i/(αᵢ − θ).
+  el pinch en la recta de alimentación y el pinch tangente.
+- Underwood (binario, α constante): Σ αᵢ x_F,i/(αᵢ − θ) = f; R_mín + 1 = Σ αᵢ x_D,i/(αᵢ − θ).
 - N_mín: escalonamiento a reflujo total, contrastado con Fenske:
   N_mín = ln[(x_D/(1 − x_D))((1 − x_B)/x_B)]/ln α.
 - Escalonamiento desde (x_D, x_D) sobre y_ps = y_op + E_MV(y* − y_op). El cambio de sección se hace
   en la etapa óptima, la primera con x_n por debajo de la intersección de las rectas. Si E_MV < 1,
   se calculan en paralelo las etapas teóricas y las reales.
+- **Reboiler ideal.** En cada etapa se prueba primero la horizontal hasta la curva de equilibrio
+  real: si ya alcanza x_B, esa etapa es el reboiler parcial y la construcción termina; si no, es un
+  plato y escalona sobre el pseudoequilibrio. Como el pseudoequilibrio queda entre la recta de
+  operación y la curva, x_ps ≥ x_eq, de modo que ningún plato cruza x_B antes que el reboiler. Con
+  E_MV = 1 coincide con el escalonamiento clásico. El resultado se informa siempre como
+  «N − 1 platos + 1 reboiler».
 
 ### 2.3 Datos de equilibrio precargados
 
@@ -121,15 +130,16 @@ sistema concreto deben reemplazarse por datos de bibliografía o de laboratorio.
 
 ## 3. Validación
 
-Los casos se ejecutan con `npm run test:sim`: 19 pruebas, sin dependencias, con el runner nativo de
+Los casos se ejecutan con `npm run test:sim`: 20 pruebas, sin dependencias, con el runner nativo de
 Node.
 
 | Caso | Resultado del simulador | Referencia / control |
 |---|---|---|
-| Destilación, valores de TLK Energy (α = 2,5; R = 2; q = 0,8; x_F = 0,45; x_D = 0,98; x_B = 0,02) | 17 etapas (16,91 fraccionales); alimentación en la etapa 9 | TLK informa 17 etapas |
-| Ídem: reflujo mínimo | R_mín = 1,5570 (pinch en la recta q) | Underwood: 1,5570 (coincidencia de 1e-6). TLK informa 1,529; véase la nota |
+| Destilación, valores de TLK Energy (α = 2,5; R = 2; f = 0,2, es decir q = 0,8; x_F = 0,45; x_D = 0,98; x_B = 0,02) | 17 etapas (16,91 fraccionales); alimentación en la etapa 9 | TLK informa 17 etapas |
+| Ídem: reflujo mínimo | R_mín = 1,5570 (pinch en la recta de alimentación) | Underwood: 1,5570 (coincidencia de 1e-6). TLK informa 1,529; véase la nota |
 | Ídem: reflujo total | N_mín = 8,60 (gráfico) | Fenske: 8,49 (9 etapas enteras en ambos) |
-| q = 1,3; 1; 0,5; 0; −0,5 con R = 1,5 R_mín | R_mín gráfico = Underwood en todos los casos | R_mín crece al disminuir q |
+| f = −0,3; 0; 0,5; 1; 1,5 con R = 1,5 R_mín | R_mín gráfico = Underwood en todos los casos; V − V̄ = fF | R_mín crece al aumentar f |
+| Caso TLK con E_MV = 0,6 | 28 etapas reales: 27 platos + 1 reboiler; el reboiler cae sobre la curva de equilibrio y cada plato sobre el pseudoequilibrio | Construcción con reboiler ideal |
 | Absorción, valores de Almajose (V′ = 100; y_{N+1} = 0,10; y₁ = 0,015; x₀ = 0; Y* = 1,5 X; L′ = 195; E_MV = 0,70) | L′_mín = 129,44; X_N = 0,049171; recuperación = 86,29 %; 6 etapas | Almajose: 129,441624; 0,0491706; 86,294 %; 6 etapas |
 | Ídem: etapas fraccionales | 5,09 (construcción desde el tope) | Almajose: 5,1005, construyendo desde el fondo; la diferencia proviene solo de la etapa parcial |
 | Ídem: pseudoequilibrio en X_N | Y = 0,0849625 | Almajose: Y₁ = 0,0849625 (su etapa 1, en el fondo) |
@@ -139,7 +149,7 @@ Node.
 | Corrientes de absorción | V′(Y_{N+1} − Y₁) = L′(X_N − X₀) | Balance de soluto con tolerancia 1e-9 |
 
 **Nota de rigor sobre el R_mín de la referencia TLK.** Para los valores por defecto de TLK, la
-intersección de la recta q con la curva de equilibrio está en (0,40503; 0,62989). La recta desde
+intersección de la recta de alimentación con la curva de equilibrio está en (0,40503; 0,62989). La recta desde
 (x_D, x_D) hasta ese punto tiene pendiente 0,60892, lo que da R_mín = 1,5570. Underwood lleva al
 mismo valor. La referencia muestra 1,529; esa discrepancia no pudo explicarse con sus parámetros
 publicados. El simulador adopta el valor analítico.
@@ -156,7 +166,7 @@ publicados. El simulador adopta el valor analítico.
     selector de lo que entra en la imagen, con el bloque **Descargar gráfico** (resolución, PNG,
     SVG). El diagrama se acota por ancho (`.sim-plot`, 44 rem).
   - **Esquema del equipo**, debajo del gráfico (`esquema.js`). Destilación: N − 1 platos y el
-    calderín parcial como etapa N, condensador total con acumulador, reflujo al plato 1 y
+    reboiler parcial como etapa N (rotulado «ideal» si E_MV < 1), condensador total con acumulador, reflujo al plato 1 y
     alimentación en la etapa óptima; platos de rectificación teñidos de violeta y de agotamiento de
     verde (los colores de sus rectas), con llaves que indican platos y L/V de cada sección.
     Absorción: N etapas con la 1 en el tope; solvente y gas tratado arriba, gas de entrada y

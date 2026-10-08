@@ -17,20 +17,28 @@ import { crearArmazon } from './armazon.js';
 import { el, elNotacion, grupo, campo, segmentado, selector, areaDatos, ficha, avisos, boton } from './ui.js';
 import { enHTML } from './notacion.js';
 
+/* Condición térmica de la alimentación según su fracción vaporizada
+   f = 1 − q = (H_F − H_L)/(H_V − H_L). */
 var CONDICIONES = [
-  { valor: 'subenfriado', etiqueta: 'Líquido subenfriado (q > 1)', q: 1.2 },
-  { valor: 'liquido', etiqueta: 'Líquido saturado (q = 1)', q: 1 },
-  { valor: 'mezcla', etiqueta: 'Mezcla líquido–vapor (0 < q < 1)', q: 0.5 },
-  { valor: 'vapor', etiqueta: 'Vapor saturado (q = 0)', q: 0 },
-  { valor: 'sobrecalentado', etiqueta: 'Vapor sobrecalentado (q < 0)', q: -0.3 }
+  { valor: 'subenfriado', etiqueta: 'Líquido subenfriado (f < 0)', f: -0.2 },
+  { valor: 'liquido', etiqueta: 'Líquido saturado (f = 0)', f: 0 },
+  { valor: 'mezcla', etiqueta: 'Mezcla líquido–vapor (0 < f < 1)', f: 0.5 },
+  { valor: 'vapor', etiqueta: 'Vapor saturado (f = 1)', f: 1 },
+  { valor: 'sobrecalentado', etiqueta: 'Vapor sobrecalentado (f > 1)', f: 1.3 }
 ];
 
-function condicionDe(q) {
-  if (q > 1 + 1e-6) return 'subenfriado';
-  if (Math.abs(q - 1) <= 1e-6) return 'liquido';
-  if (q > 1e-6) return 'mezcla';
-  if (Math.abs(q) <= 1e-6) return 'vapor';
+function condicionDe(f) {
+  if (f < -1e-6) return 'subenfriado';
+  if (Math.abs(f) <= 1e-6) return 'liquido';
+  if (f < 1 - 1e-6) return 'mezcla';
+  if (Math.abs(f - 1) <= 1e-6) return 'vapor';
   return 'sobrecalentado';
+}
+
+/* «N platos + 1 reboiler»: la última etapa es el reboiler parcial. */
+function platosMasReboiler(n) {
+  var platos = n - 1;
+  return platos + (platos === 1 ? ' plato' : ' platos') + ' + 1 reboiler';
 }
 
 function copiaDefaults() {
@@ -55,7 +63,7 @@ export function montar(raiz) {
         { id: 'diag', etiqueta: 'Diagonal y = x', clase: 'diag', leyenda: false },
         { id: 'rect', etiqueta: 'Recta de rectificación', clase: 'rect', etiquetaLeyenda: 'Rectificación' },
         { id: 'strip', etiqueta: 'Recta de agotamiento', clase: 'strip', etiquetaLeyenda: 'Agotamiento' },
-        { id: 'q', etiqueta: 'Recta q', clase: 'q' }
+        { id: 'q', etiqueta: 'Recta de alimentación (f)', clase: 'q' }
       ] },
       { grupo: 'Construcción', items: [
         { id: 'etapas', etiqueta: 'Escalones (etapas)', clase: 'etapas', etiquetaLeyenda: 'Etapas' },
@@ -73,7 +81,7 @@ export function montar(raiz) {
       if (!res || !res.ok) return '';
       var eqTxt = p.equilibrio.tipo === 'alfa' ? 'α = ' + fmt(p.equilibrio.alfa, 2) : 'equilibrio tabulado';
       return eqTxt + ' · x_D = ' + fmt(p.xD, 3) + ' · x_F = ' + fmt(p.xF, 3) + ' · x_B = ' + fmt(p.xB, 3) +
-        ' · q = ' + fmt(p.q, 2) + ' · R = ' + fmt(res.R, 3) + ' (R/R_{mín} = ' + fmt(res.rRatio, 2) + ')' +
+        ' · f = ' + fmt(p.f, 2) + ' · R = ' + fmt(res.R, 3) + ' (R/R_{mín} = ' + fmt(res.rRatio, 2) + ')' +
         ' · E_{MV} = ' + fmt(p.E, 2);
     },
     csv: function () {
@@ -81,7 +89,7 @@ export function montar(raiz) {
       var filas = [
         ['McCabe-Thiele — destilación binaria (AChETIQ)'],
         ['Equilibrio', p.equilibrio.tipo === 'alfa' ? 'alfa = ' + p.equilibrio.alfa : 'datos x-y'],
-        ['x_D', p.xD], ['x_F', p.xF], ['x_B', p.xB], ['q', p.q], ['R', res.R], ['R_min', res.Rmin], ['E_MV', p.E],
+        ['x_D', p.xD], ['x_F', p.xF], ['x_B', p.xB], ['f', p.f], ['R', res.R], ['R_min', res.Rmin], ['E_MV', p.E],
         [],
         ['Etapa', 'Sección', 'x_n', 'y_n']
       ];
@@ -90,7 +98,7 @@ export function montar(raiz) {
       });
       return filas;
     },
-    bajadaEsquema: 'Columna con condensador total y calderín parcial. Se redibuja con el número de etapas y el plato de alimentación; pasá el puntero sobre un plato para ubicarlo en el diagrama.',
+    bajadaEsquema: 'Columna con condensador total y reboiler parcial. Se redibuja con el número de etapas y el plato de alimentación; pasá el puntero sobre un plato para ubicarlo en el diagrama.',
     alCambiarCapas: function () { dibujar(); },
     alCambiarPaso: function () { dibujar(); }
   });
@@ -130,19 +138,19 @@ export function montar(raiz) {
   [C.xD.nodo, C.xF.nodo, C.xB.nodo].forEach(function (n) { g2.appendChild(n); });
 
   var g3 = grupo('Alimentación');
-  C.cond = selector({ etiqueta: 'Condición térmica', opciones: CONDICIONES }, condicionDe(p.q), function (v) {
+  C.cond = selector({ etiqueta: 'Condición térmica', opciones: CONDICIONES }, condicionDe(p.f), function (v) {
     var c = CONDICIONES.filter(function (x) { return x.valor === v; })[0];
-    p.q = c.q;
-    C.q.fijar(p.q);
+    p.f = c.f;
+    C.f.fijar(p.f);
     recalcular();
   });
-  C.q = campo({
-    etiqueta: 'Fracción líquida, q', simbolo: 'q', min: -1, max: 2, paso: 0.01, dec: 2, limMin: -10, limMax: 10,
-    ayuda: 'q = (H_V − H_F) / (H_V − H_L): moles de líquido que cada mol de alimentación aporta a la sección de agotamiento.'
-  }, p.q, function (v) { p.q = v; C.cond.fijar(condicionDe(v)); recalcular(); });
+  C.f = campo({
+    etiqueta: 'Fracción vaporizada, f', simbolo: 'f', min: -1, max: 2, paso: 0.01, dec: 2, limMin: -10, limMax: 10,
+    ayuda: 'f = 1 − q = (H_F − H_L) / (H_V − H_L): fracción molar de la alimentación que ingresa como vapor y se suma al vapor de rectificación (V − V̄ = f·F).'
+  }, p.f, function (v) { p.f = v; C.cond.fijar(condicionDe(v)); recalcular(); });
   C.F = campo({ etiqueta: 'Caudal de alimentación, F', unidad: 'kmol/h', simbolo: 'F', min: 1, max: 1000, paso: 1, dec: 1, limMin: 0.001, limMax: 1e6 },
     p.F, function (v) { p.F = v; recalcular(); });
-  [C.cond.nodo, C.q.nodo, C.F.nodo].forEach(function (n) { g3.appendChild(n); });
+  [C.cond.nodo, C.f.nodo, C.F.nodo].forEach(function (n) { g3.appendChild(n); });
 
   var g4 = grupo('Reflujo');
   C.modoR = segmentado({
@@ -165,7 +173,7 @@ export function montar(raiz) {
   var g5 = grupo('Eficiencia de etapa');
   C.E = campo({
     etiqueta: 'Eficiencia de Murphree, E_{MV}', simbolo: 'E_{MV}', min: 0.1, max: 1, paso: 0.01, dec: 2, limMin: 0.01, limMax: 1,
-    ayuda: 'E_{MV} = (y_n − y_{n+1}) / (y^*_n − y_{n+1}). Con E_{MV} < 1 la construcción escalona sobre el pseudoequilibrio.'
+    ayuda: 'E_{MV} = (y_n − y_{n+1}) / (y^*_n − y_{n+1}). Con E_{MV} < 1 los platos escalonan sobre el pseudoequilibrio; el reboiler parcial, etapa ideal, llega a la curva de equilibrio.'
   }, p.E, function (v) { p.E = v; recalcular(); });
   g5.appendChild(C.E.nodo);
 
@@ -174,7 +182,7 @@ export function montar(raiz) {
     p = copiaDefaults();
     C.modoEq.fijar(p.equilibrio.tipo); C.alfa.fijar(p.equilibrio.alfa); C.metodo.fijar(p.equilibrio.metodo);
     C.datos.fijar(p.equilibrio.texto); C.xD.fijar(p.xD); C.xF.fijar(p.xF); C.xB.fijar(p.xB);
-    C.q.fijar(p.q); C.cond.fijar(condicionDe(p.q)); C.F.fijar(p.F); C.modoR.fijar(p.modoR);
+    C.f.fijar(p.f); C.cond.fijar(condicionDe(p.f)); C.F.fijar(p.F); C.modoR.fijar(p.modoR);
     C.R.fijar(p.R); C.ratio.fijar(p.rRatio); C.E.fijar(p.E);
     A.grafico.restablecerVista();
     visibilidad(); recalcular();
@@ -191,7 +199,7 @@ export function montar(raiz) {
   }
 
   function nombreSeccion(e) {
-    if (e.ultima) return 'Calderín';
+    if (e.ultima) return 'Reboiler';
     if (e.seccion === 'alimentacion') return 'Alimentación';
     return e.seccion === 'rect' ? 'Rectificación' : 'Agotamiento';
   }
@@ -258,7 +266,7 @@ export function montar(raiz) {
         var fin = (Math.hypot(L.xi - pp.xF, L.yi - pp.xF) > Math.hypot(qx.x - pp.xF, qx.y - pp.xF)) ? [L.xi, L.yi] : [qx.x, qx.y];
         capas.push({
           tipo: 'linea', clase: 'q', p: [[pp.xF, pp.xF], fin],
-          etiqueta: { texto: 'q', p: [(pp.xF + fin[0]) / 2, (pp.xF + fin[1]) / 2], dx: 8, dy: 4, ancla: 'start' }
+          etiqueta: { texto: 'f', p: [(pp.xF + fin[0]) / 2, (pp.xF + fin[1]) / 2], dx: 8, dy: 4, ancla: 'start' }
         });
       }
       var comp = A.visible('comp');
@@ -313,9 +321,8 @@ export function montar(raiz) {
     if (!isFinite(e.nFrac)) {
       return 'Infinitas etapas: la relación de reflujo no supera el reflujo mínimo (R mínimo = ' + fmt(r.Rmin, 3) + ').';
     }
-    var platos = e.n - 1;
     var base = (r.p.E < 1 ? e.n + ' etapas reales' : e.n + ' etapas teóricas') +
-      ' (' + platos + (platos === 1 ? ' plato' : ' platos') + ' más el calderín), con alimentación en la etapa ' + e.alim;
+      ' (' + platosMasReboiler(e.n) + '), con alimentación en la etapa ' + e.alim;
     if (plano) return 'Se requieren ' + base + '.';
     return base;
   }
@@ -334,14 +341,11 @@ export function montar(raiz) {
     }
     var e = r.escalones;
     var finito = isFinite(e.nFrac);
-    var platos = e.n - 1;
     A.kpis([
       {
         etiqueta: r.p.E < 1 ? 'Etapas reales' : 'Etapas teóricas',
         valor: finito ? String(e.n) : '∞',
-        nota: !finito ? 'R no supera R_{mín}'
-          : (r.p.E < 1 && isFinite(r.teorico.nFrac) ? r.teorico.n + ' teóricas con E_{MV} = 1'
-            : platos + (platos === 1 ? ' plato' : ' platos') + ' + calderín'),
+        nota: finito ? platosMasReboiler(e.n) : 'R no supera R_{mín}',
         destacado: true
       },
       { etiqueta: 'Alimentación', valor: finito && e.alim ? 'Etapa ' + e.alim : '—', nota: 'contada desde el tope' },
@@ -355,12 +359,21 @@ export function montar(raiz) {
     /* Ficha técnica */
     var b = r.balance;
     var items = [
-      { termino: 'Reflujo mínimo, R_{mín}', valor: fmt(r.Rmin, 4), nota: r.pinch.tipo === 'alimentacion' ? 'pinch en la recta q' : 'pinch tangente en x = ' + fmt(r.pinch.x, 3) },
+      { termino: 'Reflujo mínimo, R_{mín}', valor: fmt(r.Rmin, 4), nota: r.pinch.tipo === 'alimentacion' ? 'pinch en la recta de alimentación' : 'pinch tangente en x = ' + fmt(r.pinch.x, 3) },
       { termino: 'Reflujo de operación, R', valor: fmt(r.R, 3), nota: 'R/R_{mín} = ' + fmt(r.rRatio, 3) }
     ];
     if (r.RminUnderwood != null) items.push({ termino: 'R_{mín} por Underwood', valor: fmt(r.RminUnderwood, 4), nota: 'verificación analítica (α constante)' });
-    items.push({ termino: 'Etapas teóricas', valor: fmtEtapas(r.teorico), nota: 'construcción gráfica, incluye el calderín' });
-    if (r.p.E < 1) items.push({ termino: 'Etapas reales (E_{MV} = ' + fmt(r.p.E, 2) + ')', valor: fmtEtapas(e) });
+    items.push({
+      termino: 'Etapas teóricas', valor: fmtEtapas(r.teorico),
+      nota: isFinite(r.teorico.nFrac) ? platosMasReboiler(r.teorico.n) + (r.p.E < 1 ? ' (E_{MV} = 1)' : '') : 'construcción gráfica'
+    });
+    if (r.p.E < 1) {
+      items.push({
+        termino: 'Etapas reales (E_{MV} = ' + fmt(r.p.E, 2) + ')', valor: fmtEtapas(e),
+        nota: finito ? platosMasReboiler(e.n) + ', reboiler ideal' : ''
+      });
+    }
+    items.push({ termino: 'Condición térmica, f', valor: fmt(r.p.f, 2), nota: COND_CORTA[condicionDe(r.p.f)] + ' · q = 1 − f = ' + fmt(1 - r.p.f, 2) });
     items.push({ termino: 'Etapa de alimentación', valor: e.alim ? String(e.alim) : '—', nota: 'contada desde el tope' });
     items.push({ termino: 'Reflujo total, N_{mín}', valor: fmt(r.Nmin, 2), nota: r.NminFenske != null ? 'Fenske: ' + fmt(r.NminFenske, 2) : 'escalonamiento sobre la diagonal' });
     items.push({ termino: 'Intersección de rectas', valor: '(' + fmt(r.rectas.xi, 4) + '; ' + fmt(r.rectas.yi, 4) + ')' });
@@ -389,8 +402,8 @@ export function montar(raiz) {
       A.tbody.appendChild(tr);
     });
     A.notaTabla.replaceChildren();
-    enHTML(A.notaTabla, 'y_n es el vapor que sale de la etapa n y x_n el líquido que la abandona. La etapa 1 está en el tope (condensador total: y_1 = x_D); la última es el calderín parcial.' +
-      (r.p.E < 1 ? ' Con E_{MV} < 1, y_n proviene del pseudoequilibrio.' : ''));
+    enHTML(A.notaTabla, 'y_n es el vapor que sale de la etapa n y x_n el líquido que la abandona. La etapa 1 está en el tope (condensador total: y_1 = x_D); la última es el reboiler parcial.' +
+      (r.p.E < 1 ? ' Con E_{MV} < 1, en los platos y_n proviene del pseudoequilibrio; el reboiler se considera etapa ideal y su vapor está en equilibrio con x_N.' : ''));
 
     pintarLectura(r);
   }
@@ -423,11 +436,12 @@ export function montar(raiz) {
       alim: e.alim,
       titulo: 'Esquema de la columna de destilación',
       descripcion: finito
-        ? 'Columna con ' + (e.n - 1) + ' platos y calderín parcial; alimentación en la etapa ' + e.alim + '. ' +
+        ? 'Columna con ' + platosMasReboiler(e.n) + ' parcial; alimentación en la etapa ' + e.alim + '. ' +
           'Destilado ' + fmt(c.D.caudal, 2) + ' kmol/h con x_D = ' + fmt(r.p.xD, 3) +
           '; residuo ' + fmt(c.B.caudal, 2) + ' kmol/h con x_B = ' + fmt(r.p.xB, 3) + '.'
         : 'Con R menor o igual que el reflujo mínimo se requerirían infinitas etapas.',
-      F: [fmt(c.F.caudal, 1) + kmol, 'x_F = ' + fmt(c.F.x, 3), 'q = ' + fmt(r.p.q, 2), COND_CORTA[condicionDe(r.p.q)]],
+      F: [fmt(c.F.caudal, 1) + kmol, 'x_F = ' + fmt(c.F.x, 3), 'f = ' + fmt(r.p.f, 2), COND_CORTA[condicionDe(r.p.f)]],
+      ideal: r.p.E < 1,
       D: [fmt(c.D.caudal, 2) + kmol, 'x_D = ' + fmt(c.D.x, 3)],
       B: [fmt(c.B.caudal, 2) + kmol, 'x_B = ' + fmt(c.B.x, 3)],
       L: ['L = ' + fmt(c.L.caudal, 1) + kmol, 'R = L/D = ' + fmt(r.R, 2)],
@@ -462,7 +476,7 @@ export function montar(raiz) {
     enHTML(A.notaCorrientes, 'Balance global: F = D + B = ' + fmt(c.D.caudal + c.B.caudal, 2) +
       ' kmol/h; balance del más volátil: F x_F − (D x_D + B x_B) = ' + fmt(cierre, 4) +
       ' kmol/h. Con condensador total, el vapor de tope y el reflujo tienen la composición del destilado; ' +
-      'las corrientes del calderín toman la composición de la construcción (líquido de la etapa N − 1 y vapor de la etapa N).');
+      'las corrientes del reboiler toman la composición de la construcción (líquido de la etapa N − 1 y vapor de la etapa N).');
   }
 
   function fmtEtapas(e) {
@@ -486,7 +500,8 @@ export function montar(raiz) {
     }
     if (e.ultima) {
       var f = (e.x0 - r.p.xB) / (e.x0 - e.x);
-      t += ' Como x_{' + k + '} ≤ x_B, la construcción termina: esta etapa es el calderín y cubre una fracción ' + fmt(f, 2) + ' del escalón.';
+      t += ' Como x_{' + k + '} ≤ x_B, la construcción termina: esta etapa es el reboiler parcial y cubre una fracción ' + fmt(f, 2) + ' del escalón.';
+      if (r.p.E < 1) t += ' El reboiler se considera etapa ideal: su horizontal llega a la curva de equilibrio, no al pseudoequilibrio.';
     } else if (e.seccion === 'alimentacion') {
       t += ' x_{' + k + '} cae por debajo de la intersección de las rectas (x = ' + fmt(r.rectas.xi, 4) +
         '): es la etapa óptima de alimentación y la vertical baja ya hasta la recta de agotamiento, y_{' + (k + 1) + '} = ' + fmt(e.y1, 4) + '.';
@@ -507,24 +522,24 @@ export function montar(raiz) {
     } else if (ratio < 1.1) {
       parrafos.push('R/R_{mín} = ' + fmt(ratio, 2) + ': la columna opera muy cerca del pinch. Los escalones se apiñan en torno a la intersección de las rectas y una pequeña variación de R cambia mucho el número de etapas.');
     } else if (ratio <= 1.5) {
-      parrafos.push('R/R_{mín} = ' + fmt(ratio, 2) + ': dentro del intervalo 1,2–1,5 que la heurística de diseño más difundida asocia al óptimo económico entre costo fijo (etapas) y costo operativo (condensador y calderín).');
+      parrafos.push('R/R_{mín} = ' + fmt(ratio, 2) + ': dentro del intervalo 1,2–1,5 que la heurística de diseño más difundida asocia al óptimo económico entre costo fijo (etapas) y costo operativo (condensador y reboiler).');
     } else {
-      parrafos.push('R/R_{mín} = ' + fmt(ratio, 2) + ': las rectas de operación se acercan a la diagonal y se requieren menos etapas, a costa de mayores caudales internos y, por lo tanto, de más energía en el calderín y el condensador. En el límite R → ∞ (reflujo total) se obtiene N_{mín} = ' + fmt(r.Nmin, 2) + '.');
+      parrafos.push('R/R_{mín} = ' + fmt(ratio, 2) + ': las rectas de operación se acercan a la diagonal y se requieren menos etapas, a costa de mayores caudales internos y, por lo tanto, de más energía en el reboiler y el condensador. En el límite R → ∞ (reflujo total) se obtiene N_{mín} = ' + fmt(r.Nmin, 2) + '.');
     }
-    var cond = condicionDe(pp.q);
-    var textoQ = {
-      subenfriado: 'La alimentación es un líquido subenfriado (q > 1): la recta q tiene pendiente mayor que 1 y se inclina hacia la derecha; parte del vapor ascendente condensa al calentar la alimentación.',
-      liquido: 'La alimentación es líquido saturado (q = 1): la recta q es vertical en x = x_F.',
-      mezcla: 'La alimentación es una mezcla líquido–vapor (0 < q < 1): la recta q tiene pendiente negativa q/(q − 1) = ' + fmt(pp.q / (pp.q - 1), 2) + '.',
-      vapor: 'La alimentación es vapor saturado (q = 0): la recta q es horizontal en y = x_F.',
-      sobrecalentado: 'La alimentación es vapor sobrecalentado (q < 0): la recta q tiene pendiente positiva menor que 1; parte del líquido descendente se evapora al enfriarla.'
+    var cond = condicionDe(pp.f);
+    var textoF = {
+      subenfriado: 'La alimentación es un líquido subenfriado (f < 0): la recta de alimentación tiene pendiente −(1 − f)/f mayor que 1 y se inclina hacia la derecha; parte del vapor ascendente condensa al calentar la alimentación.',
+      liquido: 'La alimentación es líquido saturado (f = 0): la recta de alimentación es vertical en x = x_F.',
+      mezcla: 'La alimentación es una mezcla líquido–vapor (0 < f < 1): la fracción f = ' + fmt(pp.f, 2) + ' ingresa como vapor y la recta de alimentación tiene pendiente negativa −(1 − f)/f = ' + fmt(-(1 - pp.f) / pp.f, 2) + '.',
+      vapor: 'La alimentación es vapor saturado (f = 1): la recta de alimentación es horizontal en y = x_F.',
+      sobrecalentado: 'La alimentación es vapor sobrecalentado (f > 1): la recta de alimentación tiene pendiente positiva menor que 1; parte del líquido descendente se evapora al enfriarla.'
     }[cond];
-    parrafos.push(textoQ + ' Cuanto menor es q, mayor es el reflujo mínimo necesario para la misma separación.');
+    parrafos.push(textoF + ' Cuanto mayor es f, mayor es el reflujo mínimo necesario para la misma separación.');
     parrafos.push(r.pinch.tipo === 'alimentacion'
-      ? 'El reflujo mínimo queda fijado por el punto donde la recta q corta la curva de equilibrio: es el caso habitual con volatilidad relativa constante.'
-      : 'El reflujo mínimo queda fijado por un pinch tangente en x = ' + fmt(r.pinch.x, 3) + ': la recta de operación toca la curva antes de llegar a la recta q, situación típica de sistemas no ideales.');
+      ? 'El reflujo mínimo queda fijado por el punto donde la recta de alimentación corta la curva de equilibrio: es el caso habitual con volatilidad relativa constante.'
+      : 'El reflujo mínimo queda fijado por un pinch tangente en x = ' + fmt(r.pinch.x, 3) + ': la recta de operación toca la curva antes de llegar a la recta de alimentación, situación típica de sistemas no ideales.');
     if (pp.E < 1) {
-      parrafos.push('Con E_{MV} = ' + fmt(pp.E, 2) + ' cada etapa real recorre solo esa fracción de la distancia vertical entre la recta de operación y el equilibrio; por eso el pseudoequilibrio (trazo discontinuo) queda entre ambas curvas y la columna necesita ' + r.escalones.n + ' etapas en lugar de ' + r.teorico.n + '.');
+      parrafos.push('Con E_{MV} = ' + fmt(pp.E, 2) + ' cada plato real recorre solo esa fracción de la distancia vertical entre la recta de operación y el equilibrio; por eso el pseudoequilibrio (trazo discontinuo) queda entre ambas curvas. El reboiler parcial se considera etapa ideal y escalona sobre la curva de equilibrio. La columna necesita ' + platosMasReboiler(r.escalones.n) + ', frente a ' + platosMasReboiler(r.teorico.n) + ' con E_{MV} = 1.');
     }
     parrafos.push('El corte de la recta de rectificación con el eje y, x_D/(R + 1) = ' + fmt(pp.xD / (r.R + 1), 4) + ', es la forma clásica de trazarla a mano.');
     A.lectura.replaceChildren();

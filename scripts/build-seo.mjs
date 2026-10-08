@@ -5,8 +5,9 @@
  *
  *   · robots.txt — permite todo el rastreo y publica la URL absoluta del
  *     sitemap. (En GitHub Pages bajo subpath, robots.txt solo es autoritativo
- *     en el host raíz; se incluye para el dominio propio futuro
- *     —achetiq.org.ar— y es inofensivo en github.io. El sitemap conviene,
+ *     en el host raíz; es autoritativo en el sitio oficial
+ *     —https://achetiq.github.io, servido en la raíz— y es inofensivo en el
+ *     subpath de construcción. El sitemap conviene,
  *     además, enviarlo por Search Console.)
  *
  *   · sitemap.xml — se construye recorriendo el árbol real de páginas (igual

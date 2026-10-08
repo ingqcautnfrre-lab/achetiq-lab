@@ -5,7 +5,7 @@
    se redibuja con el número de etapas y la etapa de alimentación,
    y rotula cada corriente con su caudal y composición.
 
-     · destilación: N − 1 platos + calderín parcial (etapa N),
+     · destilación: N − 1 platos + reboiler parcial (etapa N),
        condensador total con acumulador y reflujo al plato 1,
        alimentación en la etapa óptima; platos teñidos por sección
        con los colores de sus rectas en el diagrama.
@@ -164,7 +164,7 @@ export function crearEsquema(host, opciones) {
     var W = 760;
     var finita = isFinite(d.n) && d.n >= 2;
     var N = finita ? d.n : 14;
-    var nPlatos = N - 1;          /* el calderín es la etapa N */
+    var nPlatos = N - 1;          /* el reboiler es la etapa N */
     var alim = finita ? d.alim : Math.round(nPlatos / 2);
     var y0 = 124;
     var cx = 360, ancho = 100;
@@ -197,16 +197,17 @@ export function crearEsquema(host, opciones) {
     flecha(g, [[40, yF], [c.x0 - 1, yF]], id + '-punta', 'sim-esq__linea--alim');
     rotuloCorriente(g, 40, yF - 16 - INTERLINEA * (d.F || []).length - 18, 'Alimentación, F', d.F, 'start');
 
-    /* Calderín parcial (etapa N). */
+    /* Reboiler parcial (etapa N); con E_MV < 1 se lo considera
+       etapa ideal (d.ideal) y se rotula como tal. */
     var yk = c.y1 + 42;
     nodo('path', { d: 'M' + (cx - 26) + ',' + c.y1 + 'V' + yk, class: 'sim-esq__linea' }, g);
     var reb = nodo('rect', {
       x: cx - 74, y: yk, width: 148, height: 50, rx: 25,
-      class: 'sim-esq__calderin' + (finita ? '' : ' is-inviable')
+      class: 'sim-esq__reboiler' + (finita ? '' : ' is-inviable')
     }, g);
     if (finita) registrar(N, reb);
-    texto(g, cx, yk + 22, 'Calderín parcial', 'sim-esq__equipo-nombre', 'middle');
-    texto(g, cx, yk + 38, finita ? 'etapa ' + N : '—', 'sim-esq__num', 'middle');
+    texto(g, cx, yk + 22, 'Reboiler parcial', 'sim-esq__equipo-nombre', 'middle');
+    texto(g, cx, yk + 38, finita ? 'etapa ' + N + (d.ideal ? ' · ideal' : '') : '—', 'sim-esq__num', 'middle');
     flecha(g, [[cx + 38, yk], [cx + 38, c.y1 - 1]], id + '-punta');
     texto(g, cx - 34, c.y1 + 27, d.Lb, 'sim-esq__dato', 'end');
     texto(g, cx + 46, c.y1 + 27, d.Vb, 'sim-esq__dato', 'start');
@@ -224,7 +225,7 @@ export function crearEsquema(host, opciones) {
         ]);
       }
       llave(590, c.y0 + (alim - 1) * c.paso, c.y1, [
-        'Agotamiento', platosStrip + (platosStrip === 1 ? ' plato' : ' platos') + ' + calderín', d.LVb
+        'Agotamiento', platosStrip + (platosStrip === 1 ? ' plato' : ' platos') + ' + 1 reboiler', d.LVb
       ]);
     } else {
       aviso(cx, c.y0 + (c.y1 - c.y0) / 2);
