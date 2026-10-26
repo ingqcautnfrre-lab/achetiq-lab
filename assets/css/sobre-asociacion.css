@@ -852,9 +852,10 @@
     --tl-gap:  16px;
     --tl-pull: 24px;
   }
-  .timeline {
-    padding-left: 4px;
-  }
+  /* Sin padding lateral en el <ol>: el eje (absoluto) se posiciona
+     sobre su caja de relleno y las entradas sobre su caja de
+     contenido; un padding las desfasaba del tronco (ramas y empalmes
+     corridos 4 px a la derecha). */
   .timeline-root {
     margin-top: var(--space-5);
   }

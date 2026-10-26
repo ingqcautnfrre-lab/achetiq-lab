@@ -18,7 +18,11 @@
                  f no es finita.
      · linea     polilínea por puntos [[x,y], …].
      · escalones construcción por etapas { etapas, hasta, alim,
-                 rotulo:{dx,dy,ancla} } con bandas alternas.
+                 rotulo:{dx,dy,ancla} } con bandas alternas. Cada
+                 etapa { x0, y, x, y1 } admite `cierre`: vértices
+                 [[x,y], …] que la banda recorre desde el pie de la
+                 vertical hasta (x0, y) cuando el camino de vuelta no
+                 es una sola recta (quiebre de la recta de operación).
      · puntos    marcadores { x, y, etiqueta, ancla, dx, dy }.
      · guia      línea punteada desde (x,y) hasta el eje x.
    Las etiquetas directas usan la notación de notacion.js.
@@ -304,9 +308,11 @@ export function crearGrafico(host, opciones) {
         class: 'sim-svg__banda' + (i % 2 ? ' sim-svg__banda--par' : '') +
           (e.seccion ? ' sim-svg__banda--' + (e.seccion === 'rect' ? 'rect' : 'strip') : '') +
           (e.n === c.alim ? ' sim-svg__banda--alim' : ''),
-        /* xc (opcional): cierre de la banda sobre la recta de
-           operación en la última etapa parcial (absorción). */
-        points: [[e.x0, e.y], [e.x, e.y], [e.x, e.y1]].concat(e.xc != null ? [[e.xc, e.y1]] : []).map(function (p) {
+        /* cierre (opcional): la banda vuelve a (x0, y) por los
+           vértices de la recta de operación, no en línea recta; si
+           no, en la etapa que cruza un quiebre el sombreado invade
+           la zona fuera de las rectas. */
+        points: [[e.x0, e.y], [e.x, e.y], [e.x, e.y1]].concat(e.cierre || []).map(function (p) {
           return sx(p[0]).toFixed(2) + ',' + sy(p[1]).toFixed(2);
         }).join(' ')
       }, gb);

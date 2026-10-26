@@ -737,7 +737,22 @@ function setupTimelineMotion(ol) {
     axis.style.bottom = 'auto';
   }
   capTrunkAtGhost();
-  window.addEventListener('resize', capTrunkAtGhost);
+  /* Re-medir cada vez que cambia la caja del <ol>, no sólo en resize:
+     si el árbol se pinta con su panel oculto (p. ej. se entra por
+     #galeria y luego se pasa a #asociacion) la primera medición falla
+     (offsetParent nulo) y el tronco seguía hasta el pie del <ol>; lo
+     mismo con reflujos posteriores (carga de fuentes, cambio de ancho).
+     ResizeObserver dispara al pasar de oculto a visible y en cada
+     reflujo; `relayout` re-sincroniza el relleno cuando hay animación. */
+  let relayout = null;
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(() => {
+      capTrunkAtGhost();
+      if (relayout) relayout();
+    }).observe(ol);
+  } else {
+    window.addEventListener('resize', capTrunkAtGhost);
+  }
 
   /* Prepara el «dibujo» de cada brazo: dasharray = longitud total;
      offset = longitud (oculto) salvo en reduce-motion (visible). La
@@ -818,6 +833,7 @@ function setupTimelineMotion(ol) {
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
+  relayout = onScroll;
   update();
 }
 
