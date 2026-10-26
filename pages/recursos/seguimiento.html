@@ -160,11 +160,31 @@
         </p>
       </div>
 
-      <!-- Plantillas alternativas: la herramienta web vive abajo; estos dos
-           accesos llevan a la misma planilla en formatos descargables, para
-           quien prefiera trabajarla en una hoja de cálculo. Estilo editorial
-           (no botón sólido): superficie blanca, filete de 1 px, acento. -->
-      <aside class="header-resources" aria-label="Plantillas descargables">
+      <!-- Descargas: el Plan de estudios 2023 (Diseño Curricular oficial,
+           Ordenanza UTN) y la misma planilla de la herramienta web en
+           formatos de hoja de cálculo. Desde 1280 px el plan ocupa una
+           columna propia a la altura de las dos plantillas (headers.css
+           §2.2b). Estilo editorial (no botón sólido): superficie blanca,
+           filete de 1 px, acento. -->
+      <aside class="header-resources header-resources--con-plan" aria-label="Descargas">
+        <a class="header-resource header-resource--plan" href="../../docs/Disenio_Curricular_IQ.pdf"
+           download="Plan_2023_Ingenieria_Quimica_UTN.pdf">
+          <span class="header-resource__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.75"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 3v5h5"></path>
+              <path d="M9 13h6"></path>
+              <path d="M9 17h4"></path>
+            </svg>
+          </span>
+          <span class="header-resource__text">
+            <span class="header-resource__title">Plan de estudios 2023</span>
+            <span class="header-resource__meta">Diseño Curricular · PDF</span>
+          </span>
+        </a>
+
         <a class="header-resource" href="../../assets/docs/Seguimiento_de_Carrera.xlsx" download>
           <span class="header-resource__icon" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"

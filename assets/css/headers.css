@@ -326,6 +326,25 @@
   }
 }
 
+/* Con el Plan de estudios (Seguimiento), desde 1280 px: dos columnas.
+   El plan ocupa la primera a la altura de las dos plantillas apiladas
+   en la segunda; su contenido se apila (icono arriba, texto abajo).
+   Entre 1024 y 1279 px no hay ancho para ambas columnas junto a la
+   bajada: las tres tarjetas se apilan en la columna de 19rem. */
+@media (min-width: 1280px) {
+  .page-header--split .header-resources--con-plan {
+    grid-template-columns: 13rem 19rem;
+    width: auto;
+  }
+
+  .header-resources--con-plan .header-resource--plan {
+    grid-row: span 2;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
 /* ── Tarjeta de recurso (editorial, no botón sólido) ──
    Superficie blanca, filete de 1 px del sistema y acento en texto e
    icono. El hover aplica el lavado frío estándar

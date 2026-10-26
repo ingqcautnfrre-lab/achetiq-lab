@@ -1627,6 +1627,18 @@ width: 19rem;
 padding-top: var(--space-1);
 }
 }
+@media (min-width: 1280px) {
+.page-header--split .header-resources--con-plan {
+grid-template-columns: 13rem 19rem;
+width: auto;
+}
+.header-resources--con-plan .header-resource--plan {
+grid-row: span 2;
+flex-direction: column;
+align-items: flex-start;
+justify-content: space-between;
+}
+}
 .header-resource {
 display: flex;
 align-items: center;
