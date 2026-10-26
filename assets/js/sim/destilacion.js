@@ -215,6 +215,20 @@ export function montar(raiz) {
     pintarResultados();
   }
 
+  /* Vértices de cierre de cada banda (ver grafico.js, capa
+     escalones). El camino de vuelta desde el pie de la vertical
+     hasta (x0, y) sigue las rectas reales: en el reboiler, la
+     diagonal hasta (x_B, x_B); en la etapa que cruza x_i, el quiebre
+     entre agotamiento y rectificación en (x_i, y_i). */
+  function conCierre(etapas, L, xB) {
+    return etapas.map(function (e) {
+      var cierre = [];
+      if (e.ultima && e.x < xB) cierre.push([xB, xB]);
+      if (e.x0 > L.xi && e.x < L.xi) cierre.push([L.xi, L.yi]);
+      return cierre.length ? Object.assign({}, e, { cierre: cierre }) : e;
+    });
+  }
+
   /* ── Escena del diagrama ── */
   function dibujar() {
     var r = res;
@@ -275,7 +289,7 @@ export function montar(raiz) {
       capas.push({ tipo: 'guia', x: pp.xD, y: pp.xD, oculta: !comp });
       if (A.visible('etapas')) {
         capas.push({
-          tipo: 'escalones', clase: 'etapas', etapas: r.escalones.etapas,
+          tipo: 'escalones', clase: 'etapas', etapas: conCierre(r.escalones.etapas, L, pp.xB),
           alim: r.escalones.alim, hasta: A.paso.activo ? A.paso.k : null,
           rotulo: { dx: -6, dy: -7, ancla: 'end' }
         });

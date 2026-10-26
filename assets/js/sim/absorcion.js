@@ -212,7 +212,7 @@ export function montar(raiz) {
       return {
         n: e.n, x0: e.X0, y: e.Y, x: e.X,
         y1: e.ultima ? Math.min(e.Y1, Yin) : e.Y1,
-        xc: e.ultima && e.Y1 > Yin ? XN : null,
+        cierre: e.ultima && e.Y1 > Yin ? [[XN, Yin]] : null,
         ultima: e.ultima
       };
     });
