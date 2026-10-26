@@ -2,6 +2,7 @@
   "name": "achetiq-website",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Sitio web oficial de AChETIQ — estático, servido desde GitHub Pages.",
   "scripts": {
     "build:urls": "node scripts/build-urls.mjs",
@@ -9,7 +10,8 @@
     "build:csp": "node scripts/build-csp.mjs",
     "build:css": "node scripts/build-css.mjs",
     "build:seo": "node scripts/build-seo.mjs",
-    "build": "npm run build:urls && npm run build:jsonld && npm run build:csp && npm run build:css && npm run build:seo"
+    "build": "npm run build:urls && npm run build:jsonld && npm run build:csp && npm run build:css && npm run build:seo",
+    "test:sim": "node --test scripts/test-simuladores.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2"

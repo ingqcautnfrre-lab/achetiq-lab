@@ -282,3 +282,35 @@
 [data-loader="recursos"][data-loader-state="loading"] {
   display: block;
 }
+
+
+/* ─────────────────────────────────────────────────────────────
+   4.  SIMULACIONES — GRILLA DE MATERIAS
+   ─────────────────────────────────────────────────────────────
+   Reutiliza la .card-materia de Apuntes (variante --enlace, interna).
+   auto-fill —no auto-fit— conserva las pistas vacías: con una sola
+   materia la tarjeta mantiene el ancho de columna en lugar de
+   estirarse a todo el contenedor. Mismo gap que el grid de Apuntes.
+   ───────────────────────────────────────────────────────────── */
+
+.simulaciones__grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min), 100%), 1fr));
+  gap: var(--space-5);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5.  TEMA «PAPEL» — páginas de Simulaciones
+   ─────────────────────────────────────────────────────────────
+   body.tema-papel redefine las superficies semánticas: fondo papel
+   neutro, paneles blancos y plancha hundida neutra. Como todo el
+   sitio consume tokens semánticos, navbar, migas, tarjetas y
+   controles se adaptan sin reglas propias. Ver tokens.css «Tema
+   papel» (excepción acotada a la Porcelana Fría).
+   ───────────────────────────────────────────────────────────── */
+
+.tema-papel {
+  --color-surface: var(--papel-50);
+  --color-surface-raised: var(--color-surface-white);
+  --color-surface-sunken: var(--papel-150);
+}

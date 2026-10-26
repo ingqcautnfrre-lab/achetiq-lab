@@ -1,0 +1,13 @@
+[
+  {
+    "id": "operaciones-unitarias-ii",
+    "nombre": "Operaciones Unitarias II",
+    "anio": 4,
+    "imagen": "assets/img/materias/operaciones-unitarias-ii.webp",
+    "href": "pages/recursos/simulaciones/operaciones-unitarias-ii",
+    "simuladores": [
+      { "id": "absorcion-gases", "titulo": "McCabe-Thiele para Absorción de Gases" },
+      { "id": "destilacion-binaria", "titulo": "McCabe-Thiele para Destilación Binaria" }
+    ]
+  }
+]
