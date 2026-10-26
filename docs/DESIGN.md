@@ -322,6 +322,27 @@ Cada materia del Plan 2023 se pinta como `.card-materia` con una cubierta colore
 (`--color-materia-anio-1..5`, una rampa de arena → cobalto profundo). Es el componente más
 distintivo del registro utilitario: convierte un índice de 41 materias en una grilla legible por año.
 
+### Signature — Simuladores (`simuladores.css`)
+Los simuladores de Recursos › Simulaciones se listan como desplegables nativos (`<details class="sim">`)
+con la misma gramática del índice editorial: número y título en Fraunces, bajada en Hanken, filetes de
+tinta y lavado cobalto al hover. El registro interior es **producto**: controles en Hanken, datos en
+Geist Mono tabular, y la figura y el esquema del equipo estáticos junto a los parámetros. El diagrama
+usa una **paleta categórica de datos** propia (`--dataviz-azul`, `--dataviz-violeta`,
+`--dataviz-verde`, tokens.css «Series de los simuladores»), validada para visión cromática atípica.
+Los colores de estado no se reutilizan como series. Detalle técnico en `docs/SIMULADORES.md`.
+
+**Excepción registrada — Violeta de datos.** A pedido de la dirección del proyecto, la serie de
+rectificación (y la recta de operación de absorción) usa #702FA0, un violeta vecino de la mauveína.
+Se admite porque es **un trazo de datos**, nunca una superficie de acción: no rellena botones ni
+fondos, aparece siempre acompañado de rótulo directo y leyenda, y su matiz (≈ 307°) queda separado
+del de la mauveína de acción (≈ 322°). La Regla de la Mauveína Escasa sigue rigiendo para la acción.
+
+**Excepción registrada — Tema papel.** A pedido de la dirección del proyecto, las páginas de
+Simulaciones usan un fondo papel neutro (`--papel-50` #F8F7F4, C ≈ 0,004; `body.tema-papel`) con paneles
+blancos, en lugar de la porcelana fría: el gris lavanda competía con los colores de los diagramas. Es
+casi acromático —no crema— y se limita a esa sección; el resto del sitio conserva la Regla de la
+Porcelana Fría.
+
 ### Cierre de página (`.cta-final`)
 El módulo de cierre abre **directo con el titular display** (Fraunces, con su itálica cobalto de
 énfasis) seguido del *lead* en Hanken y los botones; **no lleva eyebrow**. Bajo la doctrina

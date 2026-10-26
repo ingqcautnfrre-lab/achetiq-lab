@@ -45,7 +45,7 @@ unrelated changes into one commit.
 ## 5. Stack-specific guidance
 - **Canonical URLs:** add one `<link rel="canonical" href="…">` per page. Do **not**
   hard-code the origin — generate it from `BASE_URL` via the build script so a domain
-  switch (to `achetiq.org.ar`) stays a one-line change. Put a placeholder token in
+  switch (to the official site, `https://achetiq.github.io`) stays a one-line change. Put a placeholder token in
   `partials/_boilerplate.html` that the script fills, mirroring how og:url is handled.
 - **Per-route metadata:** verify each page has a **unique** `<title>` and
   `<meta name="description">`. The pattern is `Page - AChETIQ`; check for duplicates and

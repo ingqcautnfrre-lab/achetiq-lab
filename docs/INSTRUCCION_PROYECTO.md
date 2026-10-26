@@ -34,7 +34,7 @@ Migrar el sitio web institucional desde **Wix** hacia una plataforma propia desp
 - **JavaScript** vanilla (sin frameworks: nada de React/Vue/Svelte; nada de jQuery).
 - **Sin generadores estáticos** (no Astro, no Eleventy, no Hugo).
 - **Contenido dinámico** mediante archivos **JSON** cargados con `fetch()` y renderizados por componentes JS.
-- **Despliegue:** GitHub Pages, dominio personalizado a definir (candidato: `achetiq.org.ar`).
+- **Despliegue:** GitHub Pages. Sitio oficial: `https://achetiq.github.io`; sitio de construcción: `https://ingqcautnfrre-lab.github.io/achetiq-lab`.
 
 ### 2.2. Patrón de carga dinámica
 - Atributo `data-loader="<nombre>"` en un contenedor HTML marca dónde inyectar contenido.

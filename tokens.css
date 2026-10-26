@@ -340,6 +340,43 @@
   --nivel-v-accent:   #C65A4F;  --nivel-v-fondo-alt:   #FDF0EE;  --nivel-v-texto:   #893830;
   --nivel-x-accent:   #7473D1;  --nivel-x-fondo-alt:   #F2F3FD;  --nivel-x-texto:   #4D4B91;
 
+  /* ── Series de los simuladores (assets/css/simuladores.css) ──
+     Paleta CATEGÓRICA de los diagramas de McCabe-Thiele: identidad
+     de serie, no acción ni estado; los colores de estado no se
+     reutilizan. Violeta y verde son los colores pedidos por la
+     dirección del proyecto (iteración 3); el azul de equilibrio se
+     eligió para separarse del violeta. Validada con la skill dataviz
+     (validate_palette.js, modo claro, superficie blanca, todos los
+     pares — las líneas se cruzan en cualquier punto):
+       serie 1 = azul    (curva de equilibrio, pseudoequilibrio)
+       serie 2 = violeta (rectificación / recta de operación)
+       serie 3 = verde   (agotamiento)
+     ΔE CVD peor par 11,8 (deuteranopía; objetivo ≥ 8) · ΔE visión
+     normal peor par 19,3 (piso 15) · contraste sobre blanco
+     4,4 / 8,1 / 8,4 : 1 (≥ 3:1, WCAG 1.4.11). El verde queda apenas
+     fuera de la banda de luminosidad/croma que el validador pide
+     para RELLENOS (L 0,415; C 0,086): se acepta porque es un trazo
+     fino de alto contraste con rótulo directo y entrada en la
+     leyenda. El cobalto-500 se descartó: frente al violeta, ΔE
+     normal 14,2 (< 15). Codificación redundante: rótulos directos,
+     patrón de trazo y leyenda. */
+
+  --dataviz-azul:    #2E7BC4;   /* oklch(0.572 0.135 251) */
+  --dataviz-violeta: #702FA0;   /* oklch(0.453 0.176 307) */
+  --dataviz-verde:   #365623;   /* oklch(0.415 0.086 135) */
+
+  /* ── Tema «papel» — sección Simulaciones ──────────────────────
+     EXCEPCIÓN ACOTADA a la Regla de la Porcelana Fría, pedida por
+     la dirección del proyecto para las páginas de simuladores: el
+     gris lavanda de la porcelana competía con los colores de los
+     diagramas. Neutro casi acromático (C ≈ 0,004), no crema: sobre
+     él los paneles blancos y las series del diagrama leen limpios.
+     Se aplica solo bajo body.tema-papel (recursos.css §5).
+     Contraste sobre papel-50: texto 16,7:1 · texto-soft 8,4:1 ·
+     texto-faint 6,0:1 · cobalto 8,2:1 (todos AA o AAA). */
+  --papel-50:  #F8F7F4;   /* oklch(0.976 0.004 91) — fondo de página   */
+  --papel-150: #EFEEEA;   /* oklch(0.949 0.005 95) — plancha hundida   */
+
 }
 
 @supports (color: oklch(40% 0 0)) {
@@ -359,6 +396,13 @@
     --nivel-iv-accent:  oklch(0.600 0.115 72);   --nivel-iv-fondo-alt:  oklch(0.965 0.014 75);   --nivel-iv-texto:  oklch(0.450 0.092 70);
     --nivel-v-accent:   oklch(0.600 0.140 28);   --nivel-v-fondo-alt:   oklch(0.965 0.014 28);   --nivel-v-texto:   oklch(0.450 0.112 28);
     --nivel-x-accent:   oklch(0.600 0.140 282);  --nivel-x-fondo-alt:   oklch(0.965 0.014 282);  --nivel-x-texto:   oklch(0.450 0.112 282);
+
+    --dataviz-azul:    oklch(0.572 0.135 251);
+    --dataviz-violeta: oklch(0.453 0.176 307);
+    --dataviz-verde:   oklch(0.415 0.086 135);
+
+    --papel-50:  oklch(0.976 0.004 91);
+    --papel-150: oklch(0.949 0.005 95);
   }
 }
 

@@ -27,9 +27,10 @@ publishes it as an ordinary static text file and ignores its contents.
 
 > Note on HSTS: the `*.github.io` apex is already HSTS-preloaded by GitHub, so
 > the site is HTTPS-only there regardless. The `_headers` HSTS line (with
-> `preload`) is meant for a future **custom domain** (e.g. `achetiq.org.ar`).
-> Only keep `preload` once every subdomain of that domain is HTTPS-only — it is
-> hard to undo.
+> `preload`) only applies to a host that honours `_headers`. The official site
+> is `https://achetiq.github.io` (GitHub Pages, already HTTPS-only); no custom
+> domain is planned. If one is ever adopted, keep `preload` only once every
+> subdomain is HTTPS-only — it is hard to undo.
 
 ## Where/how to apply the full set later
 

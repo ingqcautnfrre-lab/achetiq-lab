@@ -600,14 +600,16 @@ El repositorio contiene simultáneamente carpetas de estilo Jekyll (`_includes/`
 
 ### P5.3 — Configuración del dominio personalizado
 
+> **Resuelto (2026-10-08):** el sitio oficial se publica en `https://achetiq.github.io` (GitHub Pages de la organización AChETIQ), sin dominio personalizado. Esta tarea queda sin efecto; se conserva como referencia por si en el futuro se adoptara un dominio propio.
+
 - **Herramienta:** Claude Cowork (investigación y guía DNS) + Claude Code (archivo CNAME)
-- **Objetivo:** Conectar el dominio personalizado de AChETIQ (posiblemente `achetiq.org.ar`) al sitio de GitHub Pages, configurando el registro DNS en el proveedor del dominio y el archivo `CNAME` en el repositorio, con HTTPS activado. Resultado: el sitio accesible desde el dominio propio con certificado seguro.
-- **Prerrequisitos:** P5.2 completo (sitio en línea en la URL de Pages). Dominio adquirido o por adquirir (decisión pendiente: `achetiq.org.ar` u otro). Acceso al panel de gestión DNS del proveedor del dominio. Para dominios `.ar`, verificar el procedimiento de registro ante NIC Argentina.
+- **Objetivo:** Conectar un eventual dominio personalizado de AChETIQ al sitio de GitHub Pages, configurando el registro DNS en el proveedor del dominio y el archivo `CNAME` en el repositorio, con HTTPS activado. Resultado: el sitio accesible desde el dominio propio con certificado seguro.
+- **Prerrequisitos:** P5.2 completo (sitio en línea en la URL de Pages). Dominio adquirido o por adquirir. Acceso al panel de gestión DNS del proveedor del dominio. Para dominios `.ar`, verificar el procedimiento de registro ante NIC Argentina.
 
 > **Prompt:**
 > Sitio AChETIQ. Quiero conectar el dominio personalizado de la asociación al sitio publicado en GitHub Pages. No tengo experiencia técnica; guiame.
 >
-> Primero, confirmá conmigo cuál es el dominio (la idea es `achetiq.org.ar`, pero confirmalo) y aclarame si ya está adquirido o si hay que registrarlo. Si hay que registrarlo, explicame el procedimiento para un dominio argentino ante el organismo correspondiente, sin dar por ciertos datos que no puedas verificar: si no estás seguro de un paso o de un costo, decímelo y proponé verificarlo en la fuente oficial. Luego: (1) explicame qué registros DNS debo crear en el panel de mi proveedor de dominio para apuntar a GitHub Pages, descritos como pasos concretos; (2) creá el archivo `CNAME` en la raíz del repositorio con el dominio elegido y explicame para qué sirve; (3) indicame cómo activar HTTPS en la configuración de Pages y cómo verificar que el candado de seguridad funciona; (4) advertime de los tiempos de propagación de DNS para que no me preocupe si no funciona de inmediato. No publicites el dominio hasta verificar que resuelve correctamente.
+> Primero, confirmá conmigo cuál es el dominio y aclarame si ya está adquirido o si hay que registrarlo. Si hay que registrarlo, explicame el procedimiento para un dominio argentino ante el organismo correspondiente, sin dar por ciertos datos que no puedas verificar: si no estás seguro de un paso o de un costo, decímelo y proponé verificarlo en la fuente oficial. Luego: (1) explicame qué registros DNS debo crear en el panel de mi proveedor de dominio para apuntar a GitHub Pages, descritos como pasos concretos; (2) creá el archivo `CNAME` en la raíz del repositorio con el dominio elegido y explicame para qué sirve; (3) indicame cómo activar HTTPS en la configuración de Pages y cómo verificar que el candado de seguridad funciona; (4) advertime de los tiempos de propagación de DNS para que no me preocupe si no funciona de inmediato. No publicites el dominio hasta verificar que resuelve correctamente.
 
 ---
 
@@ -800,7 +802,7 @@ Consolidación de todo lo que la comisión directiva debe reunir, definir o subi
 | Planilla Excel de seguimiento de carrera (subir) | P4.3 | A subir por el usuario |
 | Decisión de alojamiento de los apuntes (repo vs externo) | P4.6 | A decidir |
 | Nombre de usuario u organización de GitHub de AChETIQ | P5.2 | Pendiente |
-| Dominio personalizado (p. ej. `achetiq.org.ar`) y acceso DNS | P5.3 | A confirmar/adquirir |
+| Dominio del sitio oficial | P5.3 | Resuelto: `https://achetiq.github.io` |
 | Acceso a la cuenta de Wix e inventario de su contenido | P5.5 | Pendiente |
 | Claim/mensaje para la imagen social | P6.2 | A definir |
 | Cadencia de verificación periódica | P7.4 | A definir |
