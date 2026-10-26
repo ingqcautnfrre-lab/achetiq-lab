@@ -397,6 +397,11 @@ function computeKPIs() {
   const promCon = valoresConAplazos.length
     ? valoresConAplazos.reduce((a, b) => a + b, 0) / valoresConAplazos.length : null;
 
+  /* 6.8 bis Horas de obligatorias aprobadas (sin electivas) */
+  const hsObl = obl
+    .filter((m) => getEstado(m.numero) === 'Aprobada')
+    .reduce((acc, m) => acc + (m.carga_horaria || 0), 0);
+
   /* 6.8 Horas electivas aprobadas */
   const hsElect = ele
     .filter((m) => getEstado(m.numero) === 'Aprobada')
@@ -408,7 +413,7 @@ function computeKPIs() {
 
   return {
     aprobadas, avance, noCursCurs, disponibles, regulares,
-    promSin, promCon, hsElect, porcElect
+    promSin, promCon, hsObl, hsElect, porcElect
   };
 }
 
@@ -439,6 +444,7 @@ const KPI_DEFS = [
   { id: 'regulares',   label: 'Regulares',              hint: 'obligatorias + electivas', unit: null },
   { id: 'promSin',     label: 'Prom. sin aplazos',      hint: 'notas finales ≥ 6',        unit: null },
   { id: 'promCon',     label: 'Prom. con aplazos',      hint: 'intentos y promoción directa', unit: null },
+  { id: 'hsObl',       label: 'Hs. obligatorias aprob.', hint: 'sin electivas',          unit: 'hs' },
   { id: 'hsElect',     label: 'Hs. electivas aprob.',   hint: 'sólo electivas',           unit: 'hs' },
   { id: 'porcElect',   label: '% electivas completadas', hint: 'sobre 24 hs requeridas',  unit: null }
 ];
@@ -487,6 +493,7 @@ function refreshDashboard() {
   setKpi('regulares', String(k.regulares));
   setKpi('promSin', fmtProm(k.promSin));
   setKpi('promCon', fmtProm(k.promCon));
+  setKpi('hsObl', String(k.hsObl));
   setKpi('hsElect', String(k.hsElect));
   setKpi('porcElect', fmtPct(k.porcElect));
 }

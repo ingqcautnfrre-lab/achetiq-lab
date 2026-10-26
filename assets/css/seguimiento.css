@@ -201,6 +201,9 @@
 
   @container (min-width: 860px) {
     .seg-dashboard__grid { grid-template-columns: repeat(3, 1fr); }
+    /* Tarjeta huérfana (10 KPIs en 3 columnas): ocupa la fila entera
+       en lugar de quedar sola en la primera columna. */
+    .seg-kpi:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
   }
 }
 
@@ -213,6 +216,7 @@
      --breakpoint-seguimiento. */
   @media (min-width: 1024px) {
     .seg-dashboard__grid { grid-template-columns: repeat(3, 1fr); }
+    .seg-kpi:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
   }
 }
 
