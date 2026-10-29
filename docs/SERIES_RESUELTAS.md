@@ -52,10 +52,10 @@ mismo archivo (`download="Series_Resueltas_IRQ.html"`) para leer sin conexión.
 `.serie-ejercicios__descarga` con `download="IRQ_Serie_N_Ej_MM.html"` que entrega el HTML parcial del
 ejercicio. En móvil muestra solo el ícono (objetivo de 44 × 44 px) y desde 768 px suma el rótulo
 «Descargar»; el nombre accesible («Descargar el ejercicio M de la Serie N en HTML (tamaño)») contiene
-el rótulo visible (WCAG 2.5.3). Los parciales pesan entre 2,9 y 3,7 MB: cada uno repite la nomenclatura
+el rótulo visible (WCAG 2.5.3). Los parciales pesan entre 3,1 y 3,9 MB: cada uno repite la nomenclatura
 y el formulario del curso para poder estudiarse sin conexión y sin la guía completa.
 
-**Peso.** La guía de IRQ pesa 18,0 MB sin comprimir (≈ 1,5 MB con gzip, que GitHub Pages aplica a
+**Peso.** La guía de IRQ pesa 18,1 MB sin comprimir (≈ 1,5 MB con gzip, que GitHub Pages aplica a
 HTML). Casi todo es marcado de KaTeX preprocesado; no ejecuta cálculos en el navegador.
 
 ## 2. Origen de la guía
@@ -75,15 +75,24 @@ se publica una compilación **acotada a las series completas**, obtenida con el 
    parcial)»). No se toca el estado (`work/state/db.json`): el cumplimiento de cada etapa ya consta allí.
 3. `.claude/guia -m IRQui build` (compilación completa: reejecuta todos los cálculos finales).
 4. `.claude/guia -m IRQui validate-html` (validación estructural y con navegador).
-5. Comparar los artículos con la guía oficial: deben ser idénticos salvo la navegación «siguiente» del
-   último ejercicio y los metadatos de fecha de las figuras SVG que regenera matplotlib.
+5. Comparar el cuerpo de cada ejercicio con la guía oficial: debe ser idéntico (sin contar los envoltorios de
+   etapas y del enunciado que agrega la plantilla, ni los metadatos de fecha de las figuras SVG que regenera
+   matplotlib).
 6. Copiar `IRQui/guia/guia_IRQui.html` de la copia a
    `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas.html`.
 
 Compilación publicada el 2026-10-29: 13 ejercicios (S04-E01 … S04-E10, S05-E01 … S05-E03),
-17 977 812 bytes, motor matemático KaTeX. La plantilla de la guía incluye la corrección del
-desplazamiento inicial a un ancla (`app.js`, repositorio IRQui): al abrir el documento con `#Sxx-Eyy`
-dentro de un grupo plegado, el destino queda a la vista con el grupo ya abierto.
+18 136 168 bytes, motor matemático KaTeX, con la plantilla rediseñada del motor (repositorio IRQui):
+
+- un ejercicio por vez, con anterior y siguiente en la cabecera y al pie; el índice lateral lista
+  «Ejercicio N» por serie;
+- cada ejercicio en tres etapas —Planteo, Resolución y Análisis— con el enunciado en recuadro propio;
+- «Intentarlo primero» activo por defecto: se ve el planteo y la resolución se pide con «Mostrar la
+  resolución» (la preferencia se recuerda en el navegador);
+- carril «En este ejercicio» en pantallas anchas y barra de etapas fija en las demás;
+- columna de lectura de ~65–70 caracteres con Source Serif 4 incrustada (OFL), igual en cualquier sistema.
+
+Los enlaces del sitio a `#Sxx-Eyy` abren la guía directamente en ese ejercicio.
 
 ### 2.1 HTML parcial de cada ejercicio
 
