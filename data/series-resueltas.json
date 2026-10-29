@@ -1,0 +1,13 @@
+[
+  {
+    "id": "ingenieria-de-las-reacciones-quimicas",
+    "nombre": "Ingeniería de las Reacciones Químicas",
+    "anio": 4,
+    "imagen": "assets/img/materias/ingenieria-de-las-reacciones-quimicas.webp",
+    "href": "pages/recursos/series-resueltas/ingenieria-de-las-reacciones-quimicas",
+    "series": [
+      { "numero": 4, "titulo": "Reactores no isotérmicos", "ejercicios": 10 },
+      { "numero": 5, "titulo": "Reactores reales", "ejercicios": 3 }
+    ]
+  }
+]
