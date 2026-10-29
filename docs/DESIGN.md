@@ -343,6 +343,16 @@ blancos, en lugar de la porcelana fría: el gris lavanda competía con los color
 casi acromático —no crema— y se limita a esa sección; el resto del sitio conserva la Regla de la
 Porcelana Fría.
 
+### Signature — Series Resueltas (`series-resueltas.css`)
+Las series de Recursos › Series Resueltas reutilizan la gramática de Simulaciones: hub con la
+`.card-materia` (CTA «Acceder a las series resueltas») y, en la página de cada materia, un desplegable
+nativo por serie (`<details class="serie">`: triángulo cobalto, título Fraunces semibold, cuenta de
+ejercicios en Geist Mono y filete hairline). Los ejercicios se listan como un **sumario de filas-enlace**
+(número en mono, título en Hanken, flecha cobalto, lavado `--color-surface-accent` al hover/foco), no
+como tarjetas. Los accesos a la guía usan la tarjeta de recurso de la cabecera dividida
+(`.header-resources`, headers.css §2.2b). Sin tema propio: rige la Porcelana Fría. Detalle técnico en
+`docs/SERIES_RESUELTAS.md`.
+
 ### Cierre de página (`.cta-final`)
 El módulo de cierre abre **directo con el titular display** (Fraunces, con su itálica cobalto de
 énfasis) seguido del *lead* en Hanken y los botones; **no lleva eyebrow**. Bajo la doctrina

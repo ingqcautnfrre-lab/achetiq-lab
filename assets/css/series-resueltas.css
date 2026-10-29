@@ -1,0 +1,276 @@
+/* ============================================================
+   AChETIQ — Series Resueltas (series-resueltas.css)
+   ------------------------------------------------------------
+   Hoja de PÁGINA (no entra en main.bundle.css): la enlazan solo
+   pages/recursos/series-resueltas.html y las páginas de materia
+   de pages/recursos/series-resueltas/. Precedente:
+   simuladores.css. Sin tema propio: rige la Porcelana Fría.
+
+   Estructura
+     1. Hub: grilla de materias (.series-resueltas__grid)
+     2. Desplegables de serie (.serie) — misma gramática que los
+        de Simulaciones: triángulo cobalto, título serif semibold
+        y filete hairline, sin caja
+     3. Lista de ejercicios (.serie-ejercicios) — filas-enlace con
+        filetes, como el índice editorial de Recursos
+     4. Material de consulta de la guía (.series-consulta)
+     5. Movimiento reducido
+
+   Mobile-first (contrato S3: solo @media min-width). Cero hex y
+   cero familias literales.
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1.  HUB — GRILLA DE MATERIAS
+   Reutiliza la .card-materia de Apuntes (variante --enlace,
+   interna). auto-fill —no auto-fit— conserva las pistas vacías:
+   con una sola materia la tarjeta mantiene el ancho de columna en
+   lugar de estirarse a todo el contenedor (igual que
+   .simulaciones__grid, recursos.css §4).
+   ───────────────────────────────────────────────────────────── */
+
+.series-resueltas__grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min), 100%), 1fr));
+  gap: var(--space-5);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2.  DESPLEGABLES DE SERIE
+   La columna se acota (≈ 60 rem) para que los títulos largos de
+   los ejercicios no superen una medida de lectura razonable.
+   ───────────────────────────────────────────────────────────── */
+
+.series-lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  max-width: 60rem;
+}
+
+/* Retícula triángulo | título (| cuenta desde 768 px). En móvil la
+   cuenta pasa a una segunda fila, bajo el título. */
+.serie__summary {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  padding: var(--space-3) 0 var(--space-4);
+  list-style: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.serie__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Triángulo de apertura (▸ → ▾), centrado en la PRIMERA línea del
+   título aunque este ocupe dos (interlineado 1,3 de .serie__titulo). */
+.serie__summary::before {
+  content: "";
+  grid-row: 1;
+  grid-column: 1;
+  align-self: start;
+  width: 0.45rem;
+  height: 0.55rem;
+  margin-top: calc((var(--text-lead) * 1.3 - 0.55rem) / 2);
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transition: transform var(--dur-normal) var(--ease-out);
+}
+
+.serie[open] > .serie__summary::before {
+  transform: rotate(90deg);
+}
+
+.serie__titulo {
+  grid-column: 2;
+  font-family: var(--font-display);
+  font-size: var(--text-lead);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.005em;
+  color: var(--color-text);
+  text-wrap: balance;
+  transition: color var(--transition-fast);
+}
+
+/* Cantidad de ejercicios: metadato en mono (voz Caption). */
+.serie__cuenta {
+  grid-column: 2;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+}
+
+@media (min-width: 768px) {
+  .serie__summary {
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+  }
+
+  .serie__cuenta {
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
+
+@media (hover: hover) {
+  .serie__summary:hover .serie__titulo {
+    color: var(--color-accent);
+  }
+}
+
+.serie__panel {
+  padding-block: var(--space-5) var(--space-8);
+}
+
+.serie__intro {
+  max-width: var(--measure-prose);
+  margin-bottom: var(--space-5);
+  color: var(--color-text-soft);
+  text-wrap: pretty;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   3.  LISTA DE EJERCICIOS
+   Sumario con filetes hairline (no grilla de tarjetas): cada fila
+   es el destino completo —número | título | flecha—, con el lavado
+   cobalto frío al hover/foco y la flecha que avanza, como en
+   .recursos-index. Afordancia ≫ 24 px (la fila entera).
+   ───────────────────────────────────────────────────────────── */
+
+.serie-ejercicios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--rule);
+}
+
+.serie-ejercicios > li {
+  border-top: var(--rule);
+}
+
+.serie-ejercicios__link {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) max-content;
+  align-items: baseline;
+  column-gap: var(--space-3);
+  padding: var(--space-4) var(--space-2);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.serie-ejercicios__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+.serie-ejercicios__titulo {
+  font-size: var(--text-small);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
+  transition: color var(--transition-fast);
+}
+
+.serie-ejercicios__flecha {
+  color: var(--color-accent);
+  line-height: 1;
+  transition: transform var(--transition-fast);
+}
+
+.serie-ejercicios__link:hover,
+.serie-ejercicios__link:focus-visible {
+  background-color: var(--color-surface-accent);
+}
+
+.serie-ejercicios__link:hover .serie-ejercicios__titulo,
+.serie-ejercicios__link:focus-visible .serie-ejercicios__titulo {
+  color: var(--color-accent);
+}
+
+.serie-ejercicios__link:hover .serie-ejercicios__flecha,
+.serie-ejercicios__link:focus-visible .serie-ejercicios__flecha {
+  transform: translateX(var(--space-1));
+}
+
+@media (min-width: 768px) {
+  .serie-ejercicios__link {
+    grid-template-columns: 4rem minmax(0, 1fr) max-content;
+    column-gap: var(--space-4);
+    padding-inline: var(--space-3);
+  }
+
+  .serie-ejercicios__titulo {
+    font-size: var(--text-body);
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4.  MATERIAL DE CONSULTA DE LA GUÍA
+   Cierre de la página: accesos a las secciones comunes del
+   documento y nota de uso, bajo un filete de tinta.
+   ───────────────────────────────────────────────────────────── */
+
+.series-consulta {
+  max-width: 60rem;
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: var(--rule-ink);
+}
+
+.series-consulta__titulo {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.005em;
+}
+
+.series-consulta__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.series-consulta__lista a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: var(--weight-medium);
+}
+
+.series-consulta__nota {
+  max-width: var(--measure-prose);
+  margin-top: var(--space-4);
+  font-size: var(--text-small);
+  color: var(--color-text-soft);
+  text-wrap: pretty;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5.  MOVIMIENTO REDUCIDO
+   ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .serie__summary::before,
+  .serie-ejercicios__flecha {
+    transition: none;
+  }
+
+  .serie-ejercicios__link:hover .serie-ejercicios__flecha,
+  .serie-ejercicios__link:focus-visible .serie-ejercicios__flecha {
+    transform: none;
+  }
+}
