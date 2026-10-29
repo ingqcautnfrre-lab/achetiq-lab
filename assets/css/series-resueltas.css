@@ -13,6 +13,7 @@
         y filete hairline, sin caja
      3. Lista de ejercicios (.serie-ejercicios) — filas-enlace con
         filetes, como el índice editorial de Recursos
+        3b. Descarga por ejercicio (.serie-ejercicios__descarga)
      4. Material de consulta de la guía (.series-consulta)
      5. Movimiento reducido
 
@@ -51,6 +52,14 @@
 
 /* Retícula triángulo | título (| cuenta desde 768 px). En móvil la
    cuenta pasa a una segunda fila, bajo el título. */
+/* Nota de uso sobre los desplegables (abrir en la guía o descargar). */
+.series-lista__nota {
+  max-width: var(--measure-prose);
+  font-size: var(--text-small);
+  color: var(--color-text-soft);
+  text-wrap: pretty;
+}
+
 .serie__summary {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
@@ -151,15 +160,28 @@
   border-bottom: var(--rule);
 }
 
-.serie-ejercicios > li {
+/* Cada fila: enlace a la resolución en la guía (ocupa el ancho) y,
+   a su derecha, el botón de descarga del ejercicio (§3b). */
+.serie-ejercicios__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  column-gap: var(--space-2);
   border-top: var(--rule);
 }
 
+/* Móvil: el número va sobre el título, que así gana todo el ancho
+   disponible junto al botón de descarga. Desde 768 px, una sola fila
+   número | título | flecha. */
 .serie-ejercicios__link {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr) max-content;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  grid-template-areas:
+    "num    flecha"
+    "titulo flecha";
   align-items: baseline;
   column-gap: var(--space-3);
+  row-gap: var(--space-1);
   padding: var(--space-4) var(--space-2);
   color: var(--color-text);
   text-decoration: none;
@@ -167,6 +189,7 @@
 }
 
 .serie-ejercicios__num {
+  grid-area: num;
   font-family: var(--font-mono);
   font-size: var(--text-caption);
   letter-spacing: 0.04em;
@@ -175,6 +198,7 @@
 }
 
 .serie-ejercicios__titulo {
+  grid-area: titulo;
   font-size: var(--text-small);
   line-height: var(--leading-normal);
   text-wrap: pretty;
@@ -182,6 +206,8 @@
 }
 
 .serie-ejercicios__flecha {
+  grid-area: flecha;
+  align-self: start;
   color: var(--color-accent);
   line-height: 1;
   transition: transform var(--transition-fast);
@@ -205,12 +231,73 @@
 @media (min-width: 768px) {
   .serie-ejercicios__link {
     grid-template-columns: 4rem minmax(0, 1fr) max-content;
+    grid-template-areas: "num titulo flecha";
     column-gap: var(--space-4);
     padding-inline: var(--space-3);
   }
 
   .serie-ejercicios__titulo {
     font-size: var(--text-body);
+  }
+
+  .serie-ejercicios__flecha {
+    align-self: baseline;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   3b. DESCARGA POR EJERCICIO
+   Botón secundario compacto: tinta cobalto sobre filete neutro
+   (el borde cobalto pleno, repetido en cada fila, competiría con
+   los títulos); al hover/foco toma el borde cobalto y el lavado
+   frío. Móvil: solo el ícono (objetivo de 44 × 44 px; el nombre
+   accesible lo da aria-label). Desde 768 px suma el rótulo.
+   ───────────────────────────────────────────────────────────── */
+
+.serie-ejercicios__descarga {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding-inline: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-accent);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.serie-ejercicios__descarga svg {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.serie-ejercicios__descarga:hover,
+.serie-ejercicios__descarga:focus-visible {
+  border-color: var(--color-accent);
+  background-color: var(--color-surface-accent);
+}
+
+.serie-ejercicios__descarga-texto {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .serie-ejercicios__descarga {
+    padding-inline: var(--space-3);
+  }
+
+  .serie-ejercicios__descarga-texto {
+    display: inline;
   }
 }
 
