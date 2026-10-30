@@ -82,10 +82,12 @@ se publica una compilación **acotada a las series completas**, obtenida con el 
    `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas.html`.
 
 Compilación publicada el 2026-10-29: 13 ejercicios (S04-E01 … S04-E10, S05-E01 … S05-E03),
-18 136 168 bytes, motor matemático KaTeX, con la plantilla rediseñada del motor (repositorio IRQui):
+18 145 789 bytes, motor matemático KaTeX, con la plantilla rediseñada del motor (repositorio IRQui):
 
 - un ejercicio por vez, con anterior y siguiente en la cabecera y al pie; el índice lateral lista
   «Ejercicio N» por serie;
+- botón discreto «Descargar» en la cabecera de cada ejercicio, que arma en el navegador el HTML de ese
+  ejercicio (el mismo contenido que los parciales de `assets/docs/series-resueltas/<materia>/`);
 - cada ejercicio en tres etapas —Planteo, Resolución y Análisis— con el enunciado en recuadro propio;
 - «Intentarlo primero» activo por defecto: se ve el planteo y la resolución se pide con «Mostrar la
   resolución» (la preferencia se recuerda en el navegador);
