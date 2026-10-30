@@ -277,9 +277,18 @@ section.grupo { max-width: var(--ancho-ejercicio); }
   padding: 1.6rem clamp(1rem, 3.5vw, 2.75rem) 1.25rem; margin: 0 0 2rem;
 }
 .ejercicio-cabecera { margin-bottom: 1.1rem; }
-.ejercicio-ubicacion { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; }
+.ejercicio-ubicacion { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; }
 .ejercicio-cabecera .antetitulo { letter-spacing: .05em; }
-.nav-sup { display: flex; gap: .25rem; font-family: var(--fuente-ui); font-size: .84rem; margin-left: auto; }
+.ejercicio-herramientas { display: flex; align-items: center; gap: .35rem; margin-left: auto; }
+.nav-sup { display: flex; gap: .25rem; font-family: var(--fuente-ui); font-size: .84rem; }
+/* Descarga del ejercicio, al comienzo de la cabecera: discreta (tinta tenue, sin borde); toma el acento solo al pasar
+   o enfocar. El margen negativo alinea el ícono con el borde del título. */
+.btn-descarga-ej {
+  display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .5rem; margin-left: -.5rem; border: 0; border-radius: 6px;
+  background: none; color: var(--texto-tenue); font-family: var(--fuente-ui); font-size: .8rem; cursor: pointer;
+}
+.btn-descarga-ej[hidden] { display: none; }
+.btn-descarga-ej:hover, .btn-descarga-ej:focus-visible { color: var(--acento); background: var(--acento-suave); }
 .nav-sup a { text-decoration: none; padding: .2rem .5rem; border-radius: 6px; white-space: nowrap; }
 .nav-sup a:hover { background: var(--acento-suave); }
 .ejercicio-cabecera h3 {
@@ -502,7 +511,13 @@ details.desplegable { border-left-color: var(--borde-fuerte); background: var(--
   .temas-linea { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
   .nav-sup-siguiente { font-size: 0; }
   .nav-sup-siguiente [aria-hidden] { font-size: .95rem; }
-  .nav-sup a { padding: .35rem .7rem; }
+  /* Rótulo, descarga y flechas en una sola fila. */
+  .ejercicio-ubicacion { column-gap: .5rem; }
+  .ejercicio-cabecera .antetitulo { font-size: .74rem; letter-spacing: .02em; }
+  .ejercicio-herramientas, .nav-sup { gap: .1rem; }
+  .nav-sup a { padding: .4rem .55rem; }
+  .btn-descarga-ej { padding: .4rem .55rem; }
+  .btn-descarga-ej-texto { display: none; }
   .bloque .cuerpo { padding: .3rem .75rem .55rem; }
   details.bloque > summary { padding-left: 2rem; }
   .katex { font-size: 1.02em; }
@@ -533,7 +548,7 @@ details.desplegable { border-left-color: var(--borde-fuerte); background: var(--
 
 /* ---- Impresión ---- */
 @media print {
-  .barra, .lateral, .velo, .arriba, .nav-ejercicio, .saltar, .rail, .barra-fases, .nav-sup, .intento { display: none !important; }
+  .barra, .lateral, .velo, .arriba, .nav-ejercicio, .saltar, .rail, .barra-fases, .nav-sup, .intento, .btn-descarga-ej { display: none !important; }
   .fase[hidden], .analisis-examen[hidden] { display: block !important; }  /* se imprime el ejercicio completo, aun con «Intentarlo primero» */
   .marco { display: block; }
   body { background: #fff; color: #000; font-size: 11pt; }
@@ -628,7 +643,7 @@ details.desplegable { border-left-color: var(--borde-fuerte); background: var(--
       <li>Atajos: <kbd>/</kbd> enfoca el buscador; <kbd>Esc</kbd> lo cierra.</li>
     </ul>
   </div>
-  <p class="fecha">Generado el 2026-10-29.</p>
+  <p class="fecha">Generado el 2026-10-30.</p>
 </section>
 
 <section class="seccion-indice">
@@ -1641,8 +1656,11 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   <article class="ejercicio" id="S04-E07" aria-labelledby="S04-E07-titulo">
     <header class="ejercicio-cabecera">
       <div class="ejercicio-ubicacion">
+        <button type="button" class="btn-descarga-ej" data-articulo="S04-E07" hidden title="Descargar este ejercicio como HTML autocontenido (se abre sin conexión)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-descarga-ej-texto">Descargar</span><span class="oculto-visual"> este ejercicio</span></button>
         <p class="antetitulo">Ejercicio 7 · <span class="dificultad">dificultad intermedia</span></p>
+        <div class="ejercicio-herramientas">
         
+        </div>
       </div>
       <h3 id="S04-E07-titulo">Redimensionamiento de un CSTR isotérmico para una reacción reversible exotérmica de primer orden en fase gaseosa al aumentar la temperatura de operación</h3>
       <p class="temas-linea"><span class="temas-rotulo">Temas:</span> <a href="#tema-cstr">Reactor de mezcla completa (CSTR)</a><span class="sep" aria-hidden="true"> · </span><a href="#tema-reacciones_reversibles">Reacciones reversibles</a><span class="sep" aria-hidden="true"> · </span><a href="#tema-equilibrio_temperatura">Equilibrio químico y su dependencia con la temperatura</a><span class="sep" aria-hidden="true"> · </span><a href="#tema-arrhenius_temperatura">Dependencia de k con la temperatura (Arrhenius)</a><span class="sep" aria-hidden="true"> · </span><a href="#tema-volumen_variable">Sistemas de densidad variable</a></p>
@@ -2734,17 +2752,16 @@ temperatura libre, se acoplan ambos balances.</p>
     }
   }
 
-  /* ---- Descarga de una guía (serie o modelo de examen) como HTML autocontenido ----
+  /* ---- Descarga de una guía (serie o modelo de examen) o de un ejercicio como HTML autocontenido ----
      Se arma en el navegador a partir de este mismo documento (estilos, fuentes, figuras y scripts incluidos), sin
-     duplicar el tamaño del archivo: solo los ejercicios del grupo, sus entradas de índice y de búsqueda, la
-     nomenclatura y el formulario. Los enlaces a ejercicios de otros grupos quedan como texto. */
+     duplicar el tamaño del archivo: solo los ejercicios elegidos, sus entradas de índice y de búsqueda, la nomenclatura y
+     el formulario. Los enlaces a ejercicios que quedan fuera se convierten en texto. */
   function porId(r, id) { return r.querySelector('[id="' + String(id).replace(/["\\]/g, "\\$&") + '"]'); }
-  function fragmentoGrupo(gid) {
+  function armarFragmento(gid, conservar, titulo) {
     var original = document.querySelector('section.grupo[data-grupo="' + gid + '"]');
     if (!original) return null;
-    var titulo = original.getAttribute("data-titulo") || gid;
     var ids = {};
-    original.querySelectorAll("article.ejercicio").forEach(function (a) { ids[a.id] = true; });
+    original.querySelectorAll("article.ejercicio").forEach(function (a) { if (!conservar || conservar[a.id]) ids[a.id] = true; });
     var c = raiz.cloneNode(true);
     // Estado de la vista actual: el documento descargado arma el suyo al abrirse (sin JavaScript, se lee completo).
     c.classList.remove("js-guia");
@@ -2755,6 +2772,9 @@ temperatura libre, se acoplan ambos balances.</p>
     c.querySelectorAll("[data-grupo]").forEach(function (el) {
       if (el.classList.contains("btn-descarga") || el.getAttribute("data-grupo") !== gid) el.remove();
     });
+    if (conservar) c.querySelectorAll("article.ejercicio").forEach(function (a) { if (!ids[a.id]) a.remove(); });
+    // Botones de descarga por ejercicio: los muestra app.js al abrir el documento (si tiene más de un ejercicio).
+    c.querySelectorAll(".btn-descarga-ej").forEach(function (b) { b.hidden = true; });
     var seccion = c.querySelector("section.grupo > details.plegable");
     if (seccion) seccion.setAttribute("open", "");
     var busq = c.querySelector("#indice-busqueda");
@@ -2774,7 +2794,7 @@ temperatura libre, se acoplan ambos balances.</p>
     if (sub) sub.textContent = titulo;
     var tit = c.querySelector("title");
     if (tit) tit.textContent = titulo + " — " + tit.textContent;
-    // Secciones que quedaron vacías (modelos de examen de otros grupos, temas sin ejercicios de este grupo)
+    // Secciones que quedaron vacías (modelos de examen de otros grupos, temas sin ejercicios conservados)
     var anc = porId(c, "examenes");
     if (anc && !anc.closest("section").querySelector("details.examen")) anc.closest("section").remove();
     c.querySelectorAll(".tarjeta").forEach(function (t) {
@@ -2784,36 +2804,56 @@ temperatura libre, se acoplan ambos balances.</p>
       });
       if (!t.querySelector("li")) t.remove();
     });
-    // Enlaces internos sin destino en el fragmento
+    // Enlaces internos sin destino en el fragmento (anterior/siguiente quedan vacíos; el resto, como texto)
     c.querySelectorAll('a[href^="#"]').forEach(function (a) {
       var id = decodeURIComponent(a.getAttribute("href").slice(1));
       if (!id || porId(c, id)) return;
       var li = a.closest("li");
       if (li && !li.closest(".ejercicio-cuerpo")) { li.remove(); return; }
       var s = document.createElement("span");
-      if (!a.closest(".nav-ejercicio")) s.textContent = a.textContent;
+      if (!a.closest(".nav-ejercicio, .nav-sup")) s.textContent = a.textContent;
       a.replaceWith(s);
     });
     return "<!doctype html>\n" + c.outerHTML;
   }
+  function fragmentoGrupo(gid) {
+    var s = document.querySelector('section.grupo[data-grupo="' + gid + '"]');
+    return s ? armarFragmento(gid, null, s.getAttribute("data-titulo") || gid) : null;
+  }
+  function fragmentoEjercicio(id) {
+    var art = document.getElementById(id), s = art && art.closest("section.grupo");
+    if (!s) return null;
+    var conservar = {}; conservar[id] = true;
+    var etq = art.querySelector(".ejercicio-cabecera .antetitulo");
+    var nombre = etq ? etq.textContent.split("·")[0].trim() : id;
+    return armarFragmento(s.getAttribute("data-grupo"), conservar, (s.getAttribute("data-titulo") || "") + " · " + nombre);
+  }
   window.guiaFragmento = fragmentoGrupo;
-  document.querySelectorAll(".btn-descarga").forEach(function (b) { b.hidden = false; });
-  document.addEventListener("click", function (e) {
-    var b = e.target.closest(".btn-descarga");
-    if (!b) return;
-    e.preventDefault();  // el botón está dentro del <summary>: no pliega ni despliega la sección
-    e.stopPropagation();
-    var gid = b.getAttribute("data-grupo");
-    var html = fragmentoGrupo(gid);
+  window.guiaFragmentoEjercicio = fragmentoEjercicio;
+  function descargar(html, sufijo) {
     if (!html) return;
     var url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
     var a = document.createElement("a");
     a.href = url;
-    a.download = (raiz.getAttribute("data-archivo") || "guia") + "_" + gid + ".html";
+    a.download = (raiz.getAttribute("data-archivo") || "guia") + "_" + sufijo + ".html";
     document.body.appendChild(a);
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+  }
+  document.querySelectorAll(".btn-descarga").forEach(function (b) { b.hidden = false; });
+  // Un documento de un solo ejercicio ya es esa descarga: no se ofrece de nuevo.
+  if (articulos.length > 1) document.querySelectorAll(".btn-descarga-ej").forEach(function (b) { b.hidden = false; });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".btn-descarga");
+    if (b) {
+      e.preventDefault();  // el botón está dentro del <summary>: no pliega ni despliega la sección
+      e.stopPropagation();
+      descargar(fragmentoGrupo(b.getAttribute("data-grupo")), b.getAttribute("data-grupo"));
+      return;
+    }
+    var be = e.target.closest(".btn-descarga-ej");
+    if (be) descargar(fragmentoEjercicio(be.getAttribute("data-articulo")), be.getAttribute("data-articulo"));
   });
 
   /* ---- Desplegar / plegar todo dentro de un ejercicio ---- */

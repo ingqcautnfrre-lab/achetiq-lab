@@ -48,7 +48,7 @@ a descargar el documento. Las anclas son los identificadores que asigna la rutin
 (`#S04-E01` … `#S05-E03`, `#temas`, `#nomenclatura`, `#formulario`). «Descargar la guía» entrega el
 mismo archivo (`download="Series_Resueltas_IRQ.html"`) para leer sin conexión.
 
-**Descarga por ejercicio.** Cada fila de la lista suma, a la derecha del enlace, un botón
+**Descarga por ejercicio.** Cada fila de la lista empieza con un botón
 `.serie-ejercicios__descarga` con `download="IRQ_Serie_N_Ej_MM.html"` que entrega el HTML parcial del
 ejercicio. En móvil muestra solo el ícono (objetivo de 44 × 44 px) y desde 768 px suma el rótulo
 «Descargar»; el nombre accesible («Descargar el ejercicio M de la Serie N en HTML (tamaño)») contiene
@@ -82,10 +82,12 @@ se publica una compilación **acotada a las series completas**, obtenida con el 
    `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas.html`.
 
 Compilación publicada el 2026-10-29: 13 ejercicios (S04-E01 … S04-E10, S05-E01 … S05-E03),
-18 136 168 bytes, motor matemático KaTeX, con la plantilla rediseñada del motor (repositorio IRQui):
+18 145 871 bytes, motor matemático KaTeX, con la plantilla rediseñada del motor (repositorio IRQui):
 
 - un ejercicio por vez, con anterior y siguiente en la cabecera y al pie; el índice lateral lista
   «Ejercicio N» por serie;
+- botón discreto «Descargar» al comienzo de la cabecera de cada ejercicio, que arma en el navegador el HTML de ese
+  ejercicio (el mismo contenido que los parciales de `assets/docs/series-resueltas/<materia>/`);
 - cada ejercicio en tres etapas —Planteo, Resolución y Análisis— con el enunciado en recuadro propio;
 - «Intentarlo primero» activo por defecto: se ve el planteo y la resolución se pide con «Mostrar la
   resolución» (la preferencia se recuerda en el navegador);
