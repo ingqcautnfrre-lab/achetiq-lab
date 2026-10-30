@@ -160,12 +160,12 @@
   border-bottom: var(--rule);
 }
 
-/* Cada fila: enlace a la resolución en la guía (ocupa el ancho) y,
-   a su derecha, el botón de descarga del ejercicio (§3b). */
+/* Cada fila: al comienzo, el botón de descarga del ejercicio (§3b);
+   luego, el enlace a la resolución en la guía (ocupa el resto). */
 .serie-ejercicios__item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  align-items: center;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: start;
   column-gap: var(--space-2);
   border-top: var(--rule);
 }
@@ -256,6 +256,8 @@
    ───────────────────────────────────────────────────────────── */
 
 .serie-ejercicios__descarga {
+  /* Alineado con la primera línea de la fila (padding de la fila: --space-4). */
+  margin-top: var(--space-2);
   display: inline-flex;
   align-items: center;
   justify-content: center;

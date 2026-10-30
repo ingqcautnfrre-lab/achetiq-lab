@@ -277,13 +277,14 @@ section.grupo { max-width: var(--ancho-ejercicio); }
   padding: 1.6rem clamp(1rem, 3.5vw, 2.75rem) 1.25rem; margin: 0 0 2rem;
 }
 .ejercicio-cabecera { margin-bottom: 1.1rem; }
-.ejercicio-ubicacion { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; }
+.ejercicio-ubicacion { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; }
 .ejercicio-cabecera .antetitulo { letter-spacing: .05em; }
 .ejercicio-herramientas { display: flex; align-items: center; gap: .35rem; margin-left: auto; }
 .nav-sup { display: flex; gap: .25rem; font-family: var(--fuente-ui); font-size: .84rem; }
-/* Descarga del ejercicio: discreta (tinta tenue, sin borde); toma el acento solo al pasar o enfocar. */
+/* Descarga del ejercicio, al comienzo de la cabecera: discreta (tinta tenue, sin borde); toma el acento solo al pasar
+   o enfocar. El margen negativo alinea el ícono con el borde del título. */
 .btn-descarga-ej {
-  display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .5rem; border: 0; border-radius: 6px;
+  display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .5rem; margin-left: -.5rem; border: 0; border-radius: 6px;
   background: none; color: var(--texto-tenue); font-family: var(--fuente-ui); font-size: .8rem; cursor: pointer;
 }
 .btn-descarga-ej[hidden] { display: none; }
@@ -1655,9 +1656,9 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   <article class="ejercicio" id="S04-E07" aria-labelledby="S04-E07-titulo">
     <header class="ejercicio-cabecera">
       <div class="ejercicio-ubicacion">
+        <button type="button" class="btn-descarga-ej" data-articulo="S04-E07" hidden title="Descargar este ejercicio como HTML autocontenido (se abre sin conexión)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-descarga-ej-texto">Descargar</span><span class="oculto-visual"> este ejercicio</span></button>
         <p class="antetitulo">Ejercicio 7 · <span class="dificultad">dificultad intermedia</span></p>
         <div class="ejercicio-herramientas">
-        <button type="button" class="btn-descarga-ej" data-articulo="S04-E07" hidden title="Descargar este ejercicio como HTML autocontenido (se abre sin conexión)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-descarga-ej-texto">Descargar</span><span class="oculto-visual"> este ejercicio</span></button>
         
         </div>
       </div>
