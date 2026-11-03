@@ -7,7 +7,8 @@
     "href": "pages/recursos/series-resueltas/ingenieria-de-las-reacciones-quimicas",
     "series": [
       { "numero": 4, "titulo": "Reactores no isotérmicos", "ejercicios": 10 },
-      { "numero": 5, "titulo": "Reactores reales", "ejercicios": 3 }
+      { "numero": 5, "titulo": "Reactores reales", "ejercicios": 3 },
+      { "numero": 6, "titulo": "Cinética de las reacciones catalíticas heterogéneas. Reactores catalíticos", "ejercicios": 14 }
     ]
   }
 ]
