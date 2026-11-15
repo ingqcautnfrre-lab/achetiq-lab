@@ -13,7 +13,7 @@
         y filete hairline, sin caja
      3. Lista de ejercicios (.serie-ejercicios) — filas-enlace con
         filetes, como el índice editorial de Recursos
-        3b. Descarga por ejercicio (.serie-ejercicios__descarga)
+        3b. Descarga por ejercicio: menú PDF / IA (.serie-ejercicios__descarga)
      4. Material de consulta de la guía (.series-consulta)
      5. Movimiento reducido
 
@@ -249,14 +249,24 @@
 
 /* ─────────────────────────────────────────────────────────────
    3b. DESCARGA POR EJERCICIO
-   Botón secundario compacto: tinta cobalto sobre filete neutro
-   (el borde cobalto pleno, repetido en cada fila, competiría con
-   los títulos); al hover/foco toma el borde cobalto y el lavado
-   frío. Móvil: solo el ícono (objetivo de 44 × 44 px; el nombre
-   accesible lo da aria-label). Desde 768 px suma el rótulo.
+   Menú nativo (<details>) con dos formatos del ejercicio: «Descargar
+   PDF» (versión completa) y «Óptimo para IA» (Markdown con LaTeX).
+   El botón (summary) es secundario y compacto: tinta cobalto sobre
+   filete neutro (el borde cobalto pleno, repetido en cada fila,
+   competiría con los títulos); al hover/foco o abierto toma el borde
+   cobalto y el lavado frío. Móvil: ícono y flecha (objetivo de
+   44 × 44 px; el nombre accesible lo da aria-label, que contiene el
+   rótulo visible). Desde 768 px suma el rótulo. El panel flota bajo
+   el botón, alineado a su borde izquierdo, sin exceder el ancho de
+   la pantalla. assets/js/series-descargas.js solo lo cierra al hacer
+   clic fuera, con Esc o al elegir un formato.
    ───────────────────────────────────────────────────────────── */
 
 .serie-ejercicios__descarga {
+  position: relative;
+}
+
+.serie-ejercicios__descarga > summary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -270,10 +280,15 @@
   color: var(--color-accent);
   font-size: var(--text-small);
   font-weight: var(--weight-medium);
-  text-decoration: none;
+  list-style: none;
+  cursor: pointer;
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast);
+}
+
+.serie-ejercicios__descarga > summary::-webkit-details-marker {
+  display: none;
 }
 
 .serie-ejercicios__descarga svg {
@@ -282,8 +297,20 @@
   height: 1.125rem;
 }
 
-.serie-ejercicios__descarga:hover,
-.serie-ejercicios__descarga:focus-visible {
+.serie-ejercicios__descarga .serie-ejercicios__descarga-flecha {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-inline-start: calc(-1 * var(--space-1));
+  transition: transform var(--transition-fast);
+}
+
+.serie-ejercicios__descarga[open] .serie-ejercicios__descarga-flecha {
+  transform: rotate(180deg);
+}
+
+.serie-ejercicios__descarga > summary:hover,
+.serie-ejercicios__descarga > summary:focus-visible,
+.serie-ejercicios__descarga[open] > summary {
   border-color: var(--color-accent);
   background-color: var(--color-surface-accent);
 }
@@ -292,8 +319,54 @@
   display: none;
 }
 
+.serie-ejercicios__formatos {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  z-index: var(--z-raised);
+  display: grid;
+  gap: var(--space-1);
+  width: min(20rem, calc(100vw - var(--space-8)));
+  margin: 0;
+  padding: var(--space-1);
+  list-style: none;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.serie-ejercicios__formatos a {
+  display: grid;
+  gap: 2px;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.serie-ejercicios__formatos a:hover,
+.serie-ejercicios__formatos a:focus-visible {
+  background-color: var(--color-surface-accent);
+}
+
+.serie-ejercicios__formato-titulo {
+  font-size: var(--text-small);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+}
+
+.serie-ejercicios__formato-detalle {
+  font-size: var(--text-caption);
+  line-height: var(--leading-normal);
+  color: var(--color-text-soft);
+  text-wrap: pretty;
+}
+
 @media (min-width: 768px) {
-  .serie-ejercicios__descarga {
+  .serie-ejercicios__descarga > summary {
     padding-inline: var(--space-3);
   }
 
@@ -353,7 +426,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .serie__summary::before,
-  .serie-ejercicios__flecha {
+  .serie-ejercicios__flecha,
+  .serie-ejercicios__descarga .serie-ejercicios__descarga-flecha {
     transition: none;
   }
 

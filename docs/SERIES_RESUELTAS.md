@@ -8,9 +8,10 @@ por materia del Plan 2023. Primera entrega: **Ingeniería de las Reacciones Quí
 | Ruta | Contenido |
 |---|---|
 | `pages/recursos/series-resueltas` | Hub: una `.card-materia` por materia con series resueltas (CTA «Acceder a las series resueltas»). |
-| `pages/recursos/series-resueltas/ingenieria-de-las-reacciones-quimicas` | Página de la materia: accesos «Abrir la guía» y «Descargar la guía» en la cabecera, un desplegable por serie (`#serie-4`, `#serie-5`, `#serie-6`) con la lista de ejercicios —cada fila abre el ejercicio en la guía y ofrece «Descargar» su HTML parcial— y, al pie, accesos al índice por tema, la nomenclatura y el formulario de la guía. |
+| `pages/recursos/series-resueltas/ingenieria-de-las-reacciones-quimicas` | Página de la materia: accesos «Abrir la guía» y «Descargar la guía» en la cabecera, un desplegable por serie (`#serie-4`, `#serie-5`, `#serie-6`) con la lista de ejercicios —cada fila abre el ejercicio en la guía y ofrece el menú «Descargar» con dos formatos: PDF y «Óptimo para IA»— y, al pie, accesos al índice por tema, la nomenclatura y el formulario de la guía. |
 | `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas.html` | La guía de ejercicios resueltos: documento HTML autocontenido (estilos, scripts, fuentes y figuras embebidos). |
-| `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas/Sxx-Eyy.html` | HTML parcial de cada ejercicio (27 archivos): la misma plantilla de la guía con un único ejercicio, su índice por tema, la nomenclatura y el formulario del curso. |
+| `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas/Sxx-Eyy.pdf` | PDF de cada ejercicio (27 archivos): la versión completa, tal como la imprime la guía, con número de página al pie. |
+| `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas/Sxx-Eyy.md` | «Óptimo para IA» de cada ejercicio (27 archivos): Markdown con todo el ejercicio, las ecuaciones en LaTeX y los valores de cada figura. |
 
 Las páginas usan el tema general del sitio (Porcelana Fría); el tema papel queda reservado a
 Simulaciones.
@@ -21,9 +22,11 @@ Simulaciones.
 data/series-resueltas.json        catálogo de materias con series resueltas (hub)
 assets/js/series-resueltas.js     loader «series-resueltas» del hub
 assets/js/materia-card.js         tarjeta de materia compartida (Apuntes, Simulaciones)
+assets/js/series-descargas.js     cierre del menú «Descargar» de cada ejercicio (página de materia)
 assets/css/series-resueltas.css   hoja de PÁGINA (no entra en main.bundle.css)
 assets/docs/series-resueltas/     guías de ejercicios resueltos, una por materia,
-  <materia>/Sxx-Eyy.html          y el HTML parcial de cada ejercicio
+  <materia>/Sxx-Eyy.pdf · .md     y el PDF y el Markdown de cada ejercicio
+scripts/series-descargas.mjs      genera esos PDF y Markdown desde la guía publicada
 ```
 
 Esquema de `data/series-resueltas.json`:
@@ -33,7 +36,8 @@ Esquema de `data/series-resueltas.json`:
 ```
 
 `series` alimenta el nombre accesible de la tarjeta («… (Series 4, 5 y 6)»); la página de la materia es
-HTML estático y no requiere JavaScript.
+HTML estático y no requiere JavaScript (el menú de descarga es un `<details>` nativo;
+`series-descargas.js` solo agrega su cierre al hacer clic fuera, con Esc o al elegir un formato).
 
 **La guía vive fuera de `pages/`.** Los scripts de compilación (`build-csp`, `build-urls`,
 `build-jsonld`, `build-seo`) recorren `pages/**` e inyectarían la CSP del sitio, que prohíbe estilos y
@@ -51,16 +55,25 @@ en la guía el sufijo del año de la serie (`#S06-E01-2024` … `#S06-E08-2024`)
 (`#S06-E09` … `#S06-E14`). «Descargar la guía» entrega el
 mismo archivo (`download="Series_Resueltas_IRQ.html"`) para leer sin conexión.
 
-**Descarga por ejercicio.** Cada fila de la lista empieza con un botón
-`.serie-ejercicios__descarga` con `download="IRQ_Serie_N_Ej_MM.html"` que entrega el HTML parcial del
-ejercicio. En móvil muestra solo el ícono (objetivo de 44 × 44 px) y desde 768 px suma el rótulo
-«Descargar»; el nombre accesible («Descargar el ejercicio M de la Serie N en HTML (tamaño)») contiene
-el rótulo visible (WCAG 2.5.3). Los parciales pesan entre 3,3 y 4,9 MB: cada uno repite la nomenclatura
-y el formulario del curso para poder estudiarse sin conexión y sin la guía completa. Los parciales se publican
-siempre con el nombre corto `Sxx-Eyy.html`, también cuando el id de la guía lleva sufijo
-(`S06-E01-2024` → `S06-E01.html`).
+**Descarga por ejercicio** (decisión del usuario, 2026-11-15: los mismos dos formatos que el menú
+«Descargar» de cada ejercicio dentro de la guía). Cada fila de la lista empieza con un menú nativo
+`<details class="serie-ejercicios__descarga" name="descarga-ejercicio">` (abrir uno cierra el anterior)
+con dos enlaces:
 
-**Peso.** La guía de IRQ pesa 36,2 MB sin comprimir (≈ 2,7 MB con gzip, que GitHub Pages aplica a
+- **«Descargar PDF»** (`download="IRQ_Serie_N_Ej_MM.pdf"`): la versión completa del ejercicio, tal como
+  la imprime la guía (solo ese ejercicio, desplegables abiertos, paleta clara, A4), con número de página
+  al pie; entre 0,36 y 0,76 MB.
+- **«Óptimo para IA»** (`download="IRQ_Serie_N_Ej_MM.md"`): Markdown con metadatos, enunciado, versión
+  resumida (si la tiene), versión completa, ecuaciones en LaTeX y, por figura, sus textos y tablas con los
+  valores con que se trazó; entre 35 y 99 KB.
+
+Los rótulos de cada enlace indican el tamaño del archivo. En móvil el botón muestra el ícono y la flecha
+(objetivo de 44 × 44 px) y desde 768 px suma el rótulo «Descargar»; el nombre accesible («Descargar el
+ejercicio M de la Serie N») contiene el rótulo visible (WCAG 2.5.3). El panel flota bajo el botón sin
+exceder el ancho de la pantalla. Los archivos se publican con el nombre corto (`S06-E01-2024` →
+`S06-E01.pdf`). Reemplazan a los HTML parciales (3,3–4,9 MB cada uno), que dejaron de publicarse.
+
+**Peso.** La guía de IRQ pesa 37,0 MB sin comprimir (≈ 2,7 MB con gzip, que GitHub Pages aplica a
 HTML). Casi todo es marcado de KaTeX preprocesado; no ejecuta cálculos en el navegador.
 
 ## 2. Origen de la guía
@@ -78,7 +91,7 @@ segunda ronda sobre las capturas que cambiaron y el cierre formal de la etapa (`
 publicó a pedido del usuario, una vez resuelta; antes se verificó en Chromium (375 y 1280 px), sobre los 27
 ejercicios con todos los desplegables abiertos, que no hay errores de consola, enlaces internos rotos, recursos
 externos ni desplazamiento horizontal de la página, y que la barra de etapas queda completa en el teléfono. Si
-la ronda pendiente introduce cambios, regenerar la guía (§2) y los parciales afectados (§2.1).
+la ronda pendiente introduce cambios, regenerar la guía (§2) y las descargas por ejercicio (§2.1).
 
 La guía oficial de IRQui incluye además los ejercicios ya terminados de la serie en curso. Para el sitio
 se publica una compilación **acotada a las series completas**, obtenida con el mismo motor:
@@ -89,7 +102,8 @@ se publica una compilación **acotada a las series completas**, obtenida con el 
    parcial)»). No se toca el estado (`work/state/db.json`): el cumplimiento de cada etapa ya consta allí.
    En la publicación del 2026-11-03 se dejaron las etapas de las series 4, 5 y 6 (la de la Serie 6 sigue
    vigente en la rutina; ver el estado de la QA visual más arriba), con el subtítulo «Series 4, 5 y 6
-   (versión parcial)».
+   (versión parcial)». Desde que la rutina compila los modelos de examen en un HTML aparte, en la copia se
+   quita además `salida_modelos`: el sitio publica solo la guía de series.
 3. `.claude/guia -m IRQui build` (compilación completa: reejecuta todos los cálculos finales).
 4. `.claude/guia -m IRQui validate-html` (validación estructural y con navegador).
 5. Comparar el cuerpo de cada ejercicio con la guía oficial: debe ser idéntico (sin contar los envoltorios de
@@ -97,6 +111,14 @@ se publica una compilación **acotada a las series completas**, obtenida con el 
    matplotlib).
 6. Copiar `IRQui/guia/guia_IRQui.html` de la copia a
    `assets/docs/series-resueltas/ingenieria-de-las-reacciones-quimicas.html`.
+7. Generar las descargas por ejercicio (§2.1).
+
+Compilación publicada el 2026-11-15: los mismos 27 ejercicios, 37 035 790 bytes, motor KaTeX, con la plantilla
+del motor que agrega el menú «Descargar» de cada ejercicio con dos opciones —«Descargar PDF» (la versión a la
+vista, por la impresión del navegador) y «Óptimo para IA» (Markdown con LaTeX y las tablas de valores de cada
+figura)—, la versión resumida de S04-E02 y S04-E04 y los epígrafes de figuras con la notación como fórmula. La
+impresión usa siempre la paleta clara. En el sitio oficial se conserva, además, el índice lateral con las series
+plegadas (sin el atributo `open` en `details.lateral-grupo`), como en su publicación anterior.
 
 Compilación publicada el 2026-11-03: 27 ejercicios (S04-E01 … S04-E10, S05-E01 … S05-E03,
 S06-E01-2024 … S06-E08-2024, S06-E09 … S06-E14), 36 214 978 bytes, motor matemático KaTeX. Reemplaza la del
@@ -114,8 +136,8 @@ Características de la plantilla (sin cambios respecto de la publicación anteri
 
 - un ejercicio por vez, con anterior y siguiente en la cabecera y al pie; el índice lateral lista
   «Ejercicio N» por serie;
-- botón discreto «Descargar» al comienzo de la cabecera de cada ejercicio, que arma en el navegador el HTML de ese
-  ejercicio (el mismo contenido que los parciales de `assets/docs/series-resueltas/<materia>/`);
+- botón discreto «Descargar» al comienzo de la cabecera de cada ejercicio (desde la publicación del 2026-11-15,
+  un menú con «Descargar PDF» y «Óptimo para IA»);
 - cada ejercicio en tres etapas —Planteo, Resolución y Análisis— con el enunciado en recuadro propio;
 - «Intentarlo primero» activo por defecto: se ve el planteo y la resolución se pide con «Mostrar la
   resolución» (la preferencia se recuerda en el navegador);
@@ -124,16 +146,21 @@ Características de la plantilla (sin cambios respecto de la publicación anteri
 
 Los enlaces del sitio a `#Sxx-Eyy` abren la guía directamente en ese ejercicio.
 
-### 2.1 HTML parcial de cada ejercicio
+### 2.1 Descargas por ejercicio (PDF y «Óptimo para IA»)
 
-Se compila con el mismo motor, un ejercicio por vez, en la copia del §2: en `IRQui/materia.json` se
-deja `alcance_por_etapas` vacío, `alcance_ejercicios` con el id exacto (`"S04-E05$"`), `subtitulo`
-con la serie y el número («Serie 4 — Reactores no isotérmicos · Ejercicio 5») y `salida_html` propia
-(`guia/IRQ_S04-E05.html`). Cada compilación es completa (reejecuta el cálculo del ejercicio) y se
-valida con `validate-html --sin-navegador`. Para la Serie 6 el subtítulo es «Serie 6 — Cinética de las
-reacciones catalíticas heterogéneas. Reactores catalíticos · Ejercicio N». El artículo de cada parcial coincide con el de la guía
-completa salvo la navegación «anterior / siguiente», que en un documento de un solo ejercicio no
-existe. El resultado se copia como `assets/docs/series-resueltas/<materia>/Sxx-Eyy.html`.
+Se generan desde la guía ya copiada en `assets/docs/series-resueltas/` (requiere Playwright, como
+`scripts/shoot.mjs`):
+
+```
+node scripts/series-descargas.mjs ingenieria-de-las-reacciones-quimicas
+```
+
+El script usa las funciones de la propia guía —`guiaPrepararPdf` (vista de impresión del ejercicio) y
+`guiaMarkdownEjercicio` (exportación «Óptimo para IA»)— y escribe `Sxx-Eyy.pdf` (versión completa, A4,
+número de página al pie, título del documento «Serie N · Ejercicio M — título») y `Sxx-Eyy.md` en
+`assets/docs/series-resueltas/<materia>/`; imprime un JSON con el tamaño de cada archivo para los rótulos
+de la página. Falla si la guía no trae esas funciones (guía compilada con un motor anterior). Los PDF y los
+Markdown deben regenerarse cada vez que se reemplaza la guía.
 
 ## 3. Sumar una serie o una materia
 
@@ -142,12 +169,11 @@ IRQ, cuando su etapa esté cumplida):
 
 1. Regenerar la guía acotada (§2) incluyendo la nueva etapa y reemplazar el archivo de
    `assets/docs/series-resueltas/`.
-2. Compilar el HTML parcial de cada ejercicio nuevo (§2.1). Si la plantilla del motor o el contenido de
-   ejercicios ya publicados cambiaron desde la última publicación (p. ej. por la QA visual), recompilar
-   también sus parciales y actualizar los tamaños de la lista.
+2. Regenerar las descargas por ejercicio (§2.1): el script recorre todos los ejercicios de la guía, de modo
+   que los ya publicados quedan al día con la guía nueva; actualizar los tamaños de los rótulos.
 3. En la página de la materia, agregar el desplegable `<details class="serie" id="serie-N">` con su
-   bajada y la lista de ejercicios (títulos tomados del índice de la guía, cada fila con su botón de
-   descarga), y actualizar los
+   bajada y la lista de ejercicios (títulos tomados del índice de la guía, cada fila con su menú de
+   descarga, como las existentes), y actualizar los
    metadatos de «Abrir la guía» («Series …» · «N ejercicios»), el tamaño de «Descargar la guía» y la
    `<meta name="description">`.
 4. Agregar la serie a `series` en `data/series-resueltas.json`.
@@ -164,6 +190,7 @@ con nombre, p. ej. `target="guia-<materia>"`), publicar su guía en
 - Navegador (Chromium, 1280 px y 375 px): sin errores de consola ni recursos fallidos y sin
   desplazamiento horizontal en Recursos, el hub y la página de la materia.
 - Enlaces: el primer clic abre la pestaña `guia-irq` en el ejercicio; los siguientes la reutilizan y
-  solo cambian el ancla; «Descargar la guía» entrega `Series_Resueltas_IRQ.html` y cada «Descargar»
-  de la lista, el HTML parcial de su ejercicio.
+  solo cambian el ancla; «Descargar la guía» entrega `Series_Resueltas_IRQ.html` y el menú «Descargar»
+  de cada fila, el PDF y el Markdown de su ejercicio (los 54 enlaces responden 200 con `application/pdf` y
+  `text/markdown`); el menú se cierra al hacer clic fuera, con Esc (el foco vuelve al botón) y al elegir.
 - `node scripts/verify-csp.mjs`: sin violaciones en las páginas servidas.
