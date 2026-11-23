@@ -1,0 +1,5 @@
+# Artefactos locales de HyperFrames (snapshots, checks, estado del preview)
+.hyperframes/
+# Renders: se entregan aparte; no se versionan videos en el repositorio del sitio
+renders/
+node_modules/

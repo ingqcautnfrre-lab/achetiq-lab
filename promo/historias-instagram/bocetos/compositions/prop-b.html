@@ -1,0 +1,340 @@
+<template>
+  <style>
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;background:#F2F4F8;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.part{position:absolute;inset:0;background:#F2F4F8;overflow:hidden}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.blabel{position:absolute;z-index:40;left:60px;top:1680px;padding:8px 12px;border-radius:8px;background:rgba(242,244,248,.92);font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#5B5F69}
+.tap{position:absolute;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;background:rgba(19,23,32,.28);box-shadow:0 6px 18px rgba(11,41,100,.25);opacity:0;pointer-events:none;z-index:20}
+/* tarjeta de título */
+.tc{position:absolute;left:72px;top:380px;width:936px;display:flex;flex-direction:column;gap:26px}
+.tc-letter{font-size:300px;line-height:.9;color:#1344A5}
+.tc-name{font-size:96px;line-height:1.05}
+.tc-desc{font-size:44px;line-height:1.35;color:#444953}
+.tc-label{margin-top:36px;font-size:28px;letter-spacing:.08em;color:#5B5F69}
+/* gancho */
+.hook{left:72px;top:300px;width:936px}
+.hook-day{font-size:46px;color:#444953}
+.hook-time{font-size:270px;line-height:.95;margin-top:6px}
+.hook-need{font-size:54px;font-weight:500;margin-top:18px}
+.bubbles{left:72px;top:840px;width:936px;display:flex;flex-direction:column;gap:22px}
+.bubble{align-self:flex-start;max-width:780px;padding:26px 36px;border-radius:36px 36px 36px 10px;background:#FFFFFF;border:2px solid #E1E4E9;font-size:42px;line-height:1.3;opacity:0}
+.bubble.me{align-self:flex-end;background:#1344A5;color:#F9FAFC;border-color:#1344A5;border-radius:36px 36px 10px 36px}
+.q{left:72px;top:820px;width:936px;font-size:92px;line-height:1.05}
+.tok{font-size:38px;color:#444953;white-space:nowrap;opacity:0}
+.tok b{color:#131720;font-weight:500}
+.chip{left:72px;top:262px;height:66px;padding:0 28px;border-radius:999px;background:#FFFFFF;border:2px solid #CED2D9;font-size:34px;display:flex;align-items:center;gap:14px;opacity:0;z-index:15}
+.chip-dot{width:14px;height:14px;border-radius:50%;background:#1344A5}
+.chip-win{position:relative;width:104px;height:42px;overflow:hidden}
+.chip-win span{position:absolute;left:0;top:0;line-height:42px}
+/* página de apuntes */
+.page{left:72px;top:350px;width:936px}
+.crumbs{font-size:32px;color:#444953;margin-bottom:14px}
+.page-h1{font-size:116px;line-height:1.02;margin:0 0 34px}
+.pills{display:flex;flex-wrap:wrap;gap:16px}
+.pill{position:relative;height:76px;padding:0 34px;border-radius:999px;border:2px solid #CED2D9;background:#F9FAFC;font-size:34px;display:flex;align-items:center}
+.pill.on{background:#1344A5;border-color:#1344A5;color:#FFFFFF}
+.card{left:72px;top:900px;width:936px;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px;overflow:hidden}
+.card-cover{height:380px;overflow:hidden}
+.card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.card-body{position:relative;padding:32px 40px 36px}
+.card-year{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.12em;color:#5B5F69}
+.card-name{font-size:46px;font-weight:500;line-height:1.2;margin:10px 0 14px}
+.card-cta{font-family:'Geist Mono',monospace;font-size:30px;color:#1344A5;display:flex;gap:12px}
+.card-cta span{display:inline-block}
+.zoom{left:74px;top:902px;width:932px;height:380px;overflow:hidden;opacity:0;z-index:12}
+.zoom img{width:100%;height:100%;object-fit:cover;display:block}
+/* Drive simulado */
+.drive{left:0;top:0;width:1080px;height:1920px;background:#FFFFFF;padding:350px 72px 0;opacity:0;z-index:13}
+.drv-search{height:96px;border-radius:999px;background:#EEF1F6;font-size:36px;color:#5B5F69;padding:0 40px;display:flex;align-items:center;gap:22px}
+.drv-crumb{margin-top:44px;font-size:34px;color:#5B5F69;line-height:1.3}
+.drv-title{margin-top:10px;font-size:56px;font-weight:600;line-height:1.18}
+.drv-head{margin-top:38px;padding-bottom:16px;border-bottom:2px solid #E1E4E9;font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#5B5F69}
+.drv-row{position:relative;height:124px;display:flex;align-items:center;gap:30px;border-bottom:2px solid #EEF0F3;font-size:40px;padding:0 12px}
+.drv-row .ic{flex:0 0 64px;display:flex;justify-content:center}
+.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
+.hl{position:absolute;inset:0;background:#E3ECFB;opacity:0;z-index:0}
+.drv-row > *:not(.hl){position:relative;z-index:1}
+.drv-row > .tap{position:absolute;z-index:20}
+.viewer{left:0;top:0;width:1080px;height:1920px;background:#E3E6EC;opacity:0;z-index:14}
+.viewer-bar{position:absolute;left:0;top:250px;width:1080px;height:116px;background:#FFFFFF;display:flex;align-items:center;gap:26px;padding:0 72px;font-size:36px;border-bottom:2px solid #E1E4E9}
+.viewer-page{position:absolute;left:130px;top:430px;width:820px;height:1080px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:80px 70px}
+.ln{height:22px;border-radius:6px;background:#E1E4E9;margin-bottom:26px}
+.ln.t{height:40px;width:62%;background:#CED2D9;margin-bottom:52px}
+/* cierre */
+.flood{left:0;top:0;width:1080px;height:1920px;background:#F2F4F8;opacity:0;z-index:16}
+.claim{left:72px;top:560px;width:936px;font-size:104px;line-height:1.06;opacity:0;z-index:17}
+.claim-sub{left:72px;top:1010px;width:936px;font-size:44px;line-height:1.35;color:#444953;opacity:0;z-index:17}
+.endcard{left:72px;top:470px;width:936px;display:flex;flex-direction:column;align-items:center;gap:22px;opacity:0;z-index:18}
+.end-logo{width:300px;height:300px}
+.end-name{font-size:92px}
+.end-url{font-size:38px;color:#1344A5}
+.end-sticker{margin-top:56px;width:640px;height:150px;border:3px dashed #9AA1AD;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#5B5F69;font-family:'Geist Mono',monospace}
+/* seguimiento */
+.tool{left:72px;top:340px;width:936px}
+.tool-h1{font-size:96px;line-height:1.04;margin:0}
+.kpis{display:flex;gap:24px;margin-top:30px}
+.kpi{flex:1;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px;padding:24px 30px}
+.kpi-l{font-family:'Geist Mono',monospace;font-size:26px;letter-spacing:.1em;color:#5B5F69}
+.kpi-v{font-size:96px;line-height:1.08}
+.kpi-h{font-family:'Geist Mono',monospace;font-size:23px;color:#5B5F69}
+.tbl{margin-top:30px;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px}
+.lvl{height:64px;padding:0 28px;display:flex;align-items:center;font-size:32px;font-weight:500}
+.trow{position:relative;height:96px;display:flex;align-items:center;padding:0 28px;gap:22px;border-top:1px solid #E1E4E9;font-size:36px}
+.trow .n{font-family:'Geist Mono',monospace;font-size:30px;width:56px;color:#444953}
+.trow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tint{position:absolute;inset:0;background:#EBF3EE;opacity:0;z-index:0}
+.trow > *:not(.tint){position:relative;z-index:1}
+.trow .sel .tap{position:absolute}
+.sel{position:relative;height:64px;width:270px;padding:0 20px;border:2px solid #CED2D9;border-radius:12px;font-size:30px;display:flex;align-items:center;justify-content:space-between;background:#FFFFFF}
+.sel-win{position:relative;width:200px;height:40px;overflow:hidden}
+.sel-win span{position:absolute;left:0;top:0;line-height:40px;white-space:nowrap}
+.dd{position:absolute;right:0;top:72px;width:300px;background:#FFFFFF;border:2px solid #CED2D9;border-radius:14px;box-shadow:0 18px 40px rgba(11,41,100,.18);opacity:0;z-index:30;overflow:hidden}
+.dd div{position:relative;height:70px;display:flex;align-items:center;padding:0 24px;font-size:30px}
+.bwrap{position:relative;width:290px;height:58px}
+.badge{position:absolute;right:0;top:0;height:58px;padding:0 22px;border-radius:999px;font-size:28px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.b-no{color:#9B171F;background:#F8ECEC;border:2px solid rgba(155,23,31,.3)}
+.b-si{color:#165E2E;background:#EAF3ED;border:2px solid rgba(22,94,46,.35);opacity:0}
+.b-ok{color:#165E2E;background:#EAF3ED;border:2px solid rgba(22,94,46,.35)}
+.note{left:72px;top:1480px;width:936px;font-family:'Geist Mono',monospace;font-size:28px;color:#5B5F69;opacity:0}
+/* grilla de portadas */
+.cam{left:0;top:0;width:1080px;height:3400px}
+.grid2{position:absolute;left:72px;top:300px;width:936px;display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:28px}
+.gcell{position:relative}
+.gimg{height:256px;border-radius:16px;overflow:hidden;background:#E7CDAA}
+.gimg img{width:100%;height:100%;object-fit:cover;display:block}
+.gname{margin-top:12px;height:76px;font-size:30px;font-weight:500;line-height:1.25}
+/* banda de KPI fija y ventana de la tabla */
+.kband{left:72px;top:262px;width:936px;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px;padding:22px 30px 26px;z-index:6}
+.kband-row{display:flex;justify-content:space-between;align-items:flex-end}
+.bar{margin-top:16px;height:14px;border-radius:7px;background:#E1E4E9;overflow:hidden}
+.bar-fill{height:100%;width:100%;background:#1344A5}
+.win{left:72px;top:540px;width:936px;height:1040px;overflow:hidden;border:2px solid #E1E4E9;border-radius:20px;background:#F9FAFC}
+.strip{position:absolute;left:0;top:0;width:100%}
+.srow{position:relative;height:84px;display:flex;align-items:center;gap:20px;padding:0 24px;border-top:1px solid #E1E4E9;font-size:33px}
+.srow .n{font-family:'Geist Mono',monospace;font-size:28px;width:52px;color:#444953}
+.srow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st{position:relative;flex:0 0 280px;width:280px;height:52px}
+.st span{position:absolute;right:0;top:0;height:52px;padding:0 18px;border-radius:999px;font-size:26px;font-weight:500;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.st-gray{color:#444953;background:#FFFFFF;border:2px solid #CED2D9}
+.readline{left:72px;top:1080px;width:936px;height:4px;background:#1344A5;opacity:0;z-index:7}
+.pop{left:300px;top:1220px;width:708px;background:#FFFFFF;border:2px solid #CED2D9;border-radius:18px;box-shadow:0 18px 40px rgba(11,41,100,.18);padding:26px 30px;font-size:34px;line-height:1.35;opacity:0;z-index:9}
+/* tabla periódica */
+.ptitle{left:72px;top:330px;width:936px;font-size:88px;line-height:1.05}
+.psub{left:72px;top:444px;width:936px;font-size:28px;letter-spacing:.04em;color:#5B5F69}
+.cell{position:absolute;width:90px;height:104px;border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between}
+.cell .cn{font-family:'Geist Mono',monospace;font-size:20px;line-height:1}
+.cell .ca{font-family:'Fraunces',serif;font-size:36px;line-height:1;text-align:center;letter-spacing:-0.02em}
+.cell .cf{position:absolute;right:6px;top:6px;width:20px;height:16px;opacity:0}
+.plegend{left:72px;top:1210px;width:936px;font-size:27px;line-height:1.5;color:#5B5F69}
+.hero{width:90px;height:104px;border-radius:10px;background:#922FA1;color:#FFFFFF;padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between;opacity:0;z-index:12}
+.hero .cn{font-family:'Geist Mono',monospace;font-size:20px;line-height:1}
+.hero .ca{font-family:'Fraunces',serif;font-size:36px;line-height:1;text-align:center}
+.bigfolder{left:360px;top:800px;width:360px;height:300px;opacity:0;z-index:12}
+.cnt{left:72px;top:1300px;width:936px;opacity:0}
+.cnt-l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.1em;color:#5B5F69}
+.cnt-v{font-size:150px;line-height:1}
+.bonds{left:0;top:0;width:1080px;height:1920px;z-index:9;pointer-events:none}
+</style>
+  <div id="root" data-composition-id="prop-b" data-width="1080" data-height="1920">
+    <div id="b-title" class="clip part" data-start="0" data-duration="2.8" data-track-index="1">
+      <div id="b-tc" class="tc">
+        <div id="b-tc-letter" class="serif tc-letter">B</div>
+        <div id="b-tc-name" class="serif tc-name">Un toque abre la materia</div>
+        <div id="b-tc-desc" class="tc-desc">Sin introducción: la cámara entra en la materia sin cortes.</div>
+        <div id="b-tc-label" class="mono tc-label">PROPUESTA 2 DE 4</div>
+      </div>
+    </div>
+    <div id="b-ap" class="clip part" data-start="2.8" data-duration="9.4" data-track-index="1">
+      <div id="b-cam" class="abs cam"><div class="grid2"><div class="gcell"><div class="gimg"><img src="assets/img/introduccion-a-la-ingenieria-quimica.webp" alt=""></div><div class="gname">Introducción a la Ingeniería Química</div></div><div class="gcell"><div class="gimg"><img src="assets/img/quimica.webp" alt=""></div><div class="gname">Química</div></div><div class="gcell"><div class="gimg"><img src="assets/img/analisis-matematico-i.webp" alt=""></div><div class="gname">Análisis Matemático I</div></div><div class="gcell"><div class="gimg"><img src="assets/img/fisica-i.webp" alt=""></div><div class="gname">Física I</div></div><div class="gcell"><div class="gimg"><img src="assets/img/quimica-inorganica.webp" alt=""></div><div class="gname">Química Inorgánica</div></div><div class="gcell"><div class="gimg"><img src="assets/img/quimica-organica.webp" alt=""></div><div class="gname">Química Orgánica</div></div><div class="gcell"><div class="gimg"><img src="assets/img/fisicoquimica.webp" alt=""></div><div class="gname">Fisicoquímica</div></div><div class="gcell"><div class="gimg"><img src="assets/img/ingenieria-de-las-reacciones-quimicas.webp" alt=""></div><div class="gname">Ingeniería de las Reacciones Químicas</div><div id="b-gtap" class="tap" style="left:50%;top:128px"></div></div><div class="gcell"><div class="gimg"><img src="assets/img/fenomenos-de-transporte.webp" alt=""></div><div class="gname">Fenómenos de Transporte</div></div><div class="gcell"><div class="gimg"><img src="assets/img/operaciones-unitarias-i.webp" alt=""></div><div class="gname">Operaciones Unitarias I</div></div><div class="gcell"><div class="gimg"><img src="assets/img/operaciones-unitarias-ii.webp" alt=""></div><div class="gname">Operaciones Unitarias II</div></div><div class="gcell"><div class="gimg"><img src="assets/img/tecnologia-de-la-energia-termica.webp" alt=""></div><div class="gname">Tecnología de la Energía Térmica</div></div><div class="gcell"><div class="gimg"><img src="assets/img/control-automatico-de-procesos.webp" alt=""></div><div class="gname">Control Automático de Procesos</div></div><div class="gcell"><div class="gimg"><img src="assets/img/calidad-y-control-estadistico-de-procesos.webp" alt=""></div><div class="gname">Calidad y Control Estadístico</div></div><div class="gcell"><div class="gimg"><img src="assets/img/organizacion-industrial.webp" alt=""></div><div class="gname">Organización Industrial</div></div><div class="gcell"><div class="gimg"><img src="assets/img/diseno-simulacion-optimizacion-y-seguridad-de-procesos.webp" alt=""></div><div class="gname">Diseño, Simulación y Seguridad</div></div></div></div>
+      
+      <div id="b-drv1" class="abs drive ">
+        <div class="drv-search"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5B5F69" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><span>Buscar en Drive</span></div>
+        <div class="drv-crumb">Compartidos conmigo › AChETIQ</div>
+        <div class="drv-title">Ingeniería de las Reacciones Químicas</div>
+        <div class="drv-head">Nombre</div>
+        <div id="b-r-prac" class="drv-row"><div id="b-r-prac-hl" class="hl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><span>03. Práctica</span><div id="b-r-prac-tap" class="tap" style="left:60%;top:50%"></div></div><div id="b-r-pres" class="drv-row"><div id="b-r-pres-hl" class="hl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><span>05. Presentaciones</span><div id="b-r-pres-tap" class="tap" style="left:60%;top:50%"></div></div>
+      </div>
+      
+      <div id="b-drv2" class="abs drive ">
+        <div class="drv-search"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5B5F69" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><span>Buscar en Drive</span></div>
+        <div class="drv-crumb">… › Ingeniería de las Reacciones Químicas</div>
+        <div class="drv-title">03. Práctica</div>
+        <div class="drv-head">Nombre</div>
+        <div id="b-r-guias" class="drv-row"><div id="b-r-guias-hl" class="hl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><span>Guías de Estudio</span><div id="b-r-guias-tap" class="tap" style="left:60%;top:50%"></div></div><div id="b-r-s07" class="drv-row"><div id="b-r-s07-hl" class="hl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><span>2024 - GS - Resolución Serie 07.pdf</span><div id="b-r-s07-tap" class="tap" style="left:60%;top:50%"></div></div><div id="b-r-smr" class="drv-row"><div id="b-r-smr-hl" class="hl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><span>2024 - SMR - Resolución Series.pdf</span><div id="b-r-smr-tap" class="tap" style="left:60%;top:50%"></div></div>
+      </div>
+      
+      <div id="b-view" class="abs viewer">
+        <div class="viewer-bar"><div class="pdf" data-layout-ignore>PDF</div><span>2024 - GS - Resolución Serie 07.pdf</span></div>
+        <div class="viewer-page"><div class="ln t"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:98%"></div><div class="ln" style="width:72%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:96%"></div><div class="ln" style="width:60%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:91%"></div><div class="ln" style="width:97%"></div><div class="ln" style="width:83%"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:55%"></div></div>
+      </div>
+      
+      <div id="b-flood" class="abs flood"></div>
+      <div id="b-claim" class="abs claim serif">38 materias.<br>Una carpeta cada una.</div>
+      <div class="blabel">BOCETO B · HISTORIA 1: APUNTES</div>
+    </div>
+    <div id="b-sg" class="clip part" data-start="12.2" data-duration="9.2" data-track-index="1">
+      
+      <div id="bg-kband" class="abs kband" data-layout-allow-occlusion style="top:262px">
+        <div class="kband-row">
+          <div><div class="kpi-l">AVANCE</div><div class="serif kpi-v"><span id="bg-av">0,0</span> %</div></div>
+          <div style="text-align:right"><div class="kpi-l">APROBADAS</div><div id="bg-ap" class="serif kpi-v">0</div></div>
+        </div>
+        <div class="bar"><div id="bg-fill" class="bar-fill"></div></div>
+      </div>
+      <div id="bg-win" class="abs win" style="top:540px;height:1040px"><div id="bg-strip" class="strip"><div class="lvl" style="height:64px;border-top:5px solid #507ED3;background:#EEF4FD;color:#315393">Nivel I</div><div id="bg-s1" class="srow"><div class="n">1</div><div class="nm">Introducción a la Ingeniería Química</div><div class="st"><span id="bg-s1-a" class="st-gray">No Cursada</span><span id="bg-s1-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s2" class="srow"><div class="n">2</div><div class="nm">Ingeniería y Sociedad</div><div class="st"><span id="bg-s2-a" class="st-gray">No Cursada</span><span id="bg-s2-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s3" class="srow"><div class="n">3</div><div class="nm">Álgebra y Geometría Analítica</div><div class="st"><span id="bg-s3-a" class="st-gray">No Cursada</span><span id="bg-s3-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s4" class="srow"><div class="n">4</div><div class="nm">Análisis Matemático I</div><div class="st"><span id="bg-s4-a" class="st-gray">No Cursada</span><span id="bg-s4-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s5" class="srow"><div class="n">5</div><div class="nm">Física I</div><div class="st"><span id="bg-s5-a" class="st-gray">No Cursada</span><span id="bg-s5-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s6" class="srow"><div class="n">6</div><div class="nm">Química</div><div class="st"><span id="bg-s6-a" class="st-gray">No Cursada</span><span id="bg-s6-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s7" class="srow"><div class="n">7</div><div class="nm">Sistemas de Representación</div><div class="st"><span id="bg-s7-a" class="st-gray">No Cursada</span><span id="bg-s7-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s8" class="srow"><div class="n">8</div><div class="nm">Fundamentos de Informática</div><div class="st"><span id="bg-s8-a" class="st-gray">No Cursada</span><span id="bg-s8-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div class="lvl" style="height:64px;border-top:5px solid #8E6AC7;background:#F5F2FC;color:#5F4489">Nivel II</div><div id="bg-s9" class="srow"><div class="n">9</div><div class="nm">Introducción a Equipos y Procesos</div><div class="st"><span id="bg-s9-a" class="st-gray">No Cursada</span><span id="bg-s9-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s10" class="srow"><div class="n">10</div><div class="nm">Probabilidad y Estadística</div><div class="st"><span id="bg-s10-a" class="st-gray">No Cursada</span><span id="bg-s10-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s11" class="srow"><div class="n">11</div><div class="nm">Química Inorgánica</div><div class="st"><span id="bg-s11-a" class="st-gray">No Cursada</span><span id="bg-s11-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s12" class="srow"><div class="n">12</div><div class="nm">Análisis Matemático II</div><div class="st"><span id="bg-s12-a" class="st-gray">No Cursada</span><span id="bg-s12-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s13" class="srow"><div class="n">13</div><div class="nm">Física II</div><div class="st"><span id="bg-s13-a" class="st-gray">No Cursada</span><span id="bg-s13-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s14" class="srow"><div class="n">14</div><div class="nm">Química Orgánica</div><div class="st"><span id="bg-s14-a" class="st-gray">No Cursada</span><span id="bg-s14-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s15" class="srow"><div class="n">15</div><div class="nm">Legislación</div><div class="st"><span id="bg-s15-a" class="st-gray">No Cursada</span><span id="bg-s15-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div id="bg-s40" class="srow"><div class="n">40</div><div class="nm">Inglés I</div><div class="st"><span id="bg-s40-a" class="st-gray">No Cursada</span><span id="bg-s40-b" class="b-ok" style="opacity:0">✓ Aprobada</span></div></div><div class="lvl" style="height:64px;border-top:5px solid #039585;background:#EAF7F4;color:#006459">Nivel III</div><div id="bg-s16" class="srow"><div class="n">16</div><div class="nm">Balances de Masa y Energía</div><div class="st"><span id="bg-s16-a" class="b-no">✕ No disponible</span><span id="bg-s16-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s17" class="srow"><div class="n">17</div><div class="nm">Termodinámica</div><div class="st"><span id="bg-s17-a" class="b-no">✕ No disponible</span><span id="bg-s17-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s18" class="srow"><div class="n">18</div><div class="nm">Matemática Superior Aplicada</div><div class="st"><span id="bg-s18-a" class="b-no">✕ No disponible</span><span id="bg-s18-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s19" class="srow"><div class="n">19</div><div class="nm">Ciencia de los Materiales</div><div class="st"><span id="bg-s19-a" class="b-no">✕ No disponible</span><span id="bg-s19-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s20" class="srow"><div class="n">20</div><div class="nm">Fisicoquímica</div><div class="st"><span id="bg-s20-a" class="b-no">✕ No disponible</span><span id="bg-s20-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s21" class="srow"><div class="n">21</div><div class="nm">Fenómenos de Transporte</div><div class="st"><span id="bg-s21-a" class="b-no">✕ No disponible</span><span id="bg-s21-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s22" class="srow"><div class="n">22</div><div class="nm">Química Analítica</div><div class="st"><span id="bg-s22-a" class="b-no">✕ No disponible</span><span id="bg-s22-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s23" class="srow"><div class="n">23</div><div class="nm">Microbiología y Química Biológica</div><div class="st"><span id="bg-s23-a" class="b-no">✕ No disponible</span><span id="bg-s23-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s24" class="srow"><div class="n">24</div><div class="nm">Química Aplicada</div><div class="st"><span id="bg-s24-a" class="b-no">✕ No disponible</span><span id="bg-s24-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s41" class="srow"><div class="n">41</div><div class="nm">Inglés II</div><div class="st"><span id="bg-s41-a" class="b-no">✕ No disponible</span><span id="bg-s41-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div class="lvl" style="height:64px;border-top:5px solid #AA7323;background:#FAF2E9;color:#744B0A">Nivel IV</div><div id="bg-s25" class="srow"><div class="n">25</div><div class="nm">Diseño, simulación, optimización y seguridad de procesos</div><div class="st"><span id="bg-s25-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s26" class="srow"><div class="n">26</div><div class="nm">Operaciones Unitarias I</div><div class="st"><span id="bg-s26-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s27" class="srow"><div class="n">27</div><div class="nm">Tecnología de la Energía Térmica</div><div class="st"><span id="bg-s27-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s28" class="srow"><div class="n">28</div><div class="nm">Economía</div><div class="st"><span id="bg-s28-a" class="b-no">✕ No disponible</span><span id="bg-s28-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s29" class="srow"><div class="n">29</div><div class="nm">Operaciones Unitarias II</div><div class="st"><span id="bg-s29-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s30" class="srow"><div class="n">30</div><div class="nm">Ingeniería de las Reacciones Químicas</div><div class="st"><span id="bg-s30-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s31" class="srow"><div class="n">31</div><div class="nm">Calidad y Control Estadístico de Procesos</div><div class="st"><span id="bg-s31-a" class="b-no">✕ No disponible</span><span id="bg-s31-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div id="bg-s32" class="srow"><div class="n">32</div><div class="nm">Organización Industrial</div><div class="st"><span id="bg-s32-a" class="b-no">✕ No disponible</span><span id="bg-s32-b" class="b-ok" style="opacity:0">✓ Disponible</span></div></div><div class="lvl" style="height:64px;border-top:5px solid #C65A4F;background:#FDF0EE;color:#893830">Nivel V</div><div id="bg-s33" class="srow"><div class="n">33</div><div class="nm">Control Automático de Procesos</div><div class="st"><span id="bg-s33-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s34" class="srow"><div class="n">34</div><div class="nm">Mecánica Industrial</div><div class="st"><span id="bg-s34-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s35" class="srow"><div class="n">35</div><div class="nm">Ingeniería Ambiental</div><div class="st"><span id="bg-s35-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s36" class="srow"><div class="n">36</div><div class="nm">Procesos Biotecnológicos</div><div class="st"><span id="bg-s36-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s37" class="srow"><div class="n">37</div><div class="nm">Higiene y Seguridad en el Trabajo</div><div class="st"><span id="bg-s37-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s38" class="srow"><div class="n">38</div><div class="nm">Máquinas e Instalaciones Eléctricas</div><div class="st"><span id="bg-s38-a" class="b-no">✕ No disponible</span></div></div><div id="bg-s39" class="srow"><div class="n">39</div><div class="nm">Proyecto Final</div><div class="st"><span id="bg-s39-a" class="b-no">✕ No disponible</span></div></div></div></div>
+      <div id="bg-pop" class="abs pop" data-layout-allow-occlusion data-layout-allow-overlap><b>39 · Proyecto Final</b><br><span style="color:#9B171F">✕ No disponible</span> · faltan 11 materias<br><span class="mono" style="font-size:26px;color:#5B5F69">regulares: 25, 26, 27, 29, 30, 32 · aprobadas: 16, 20, 21, 24, 28</span></div>
+      
+      <div id="bg-flood" class="abs flood"></div>
+      <div id="bg-claim" class="abs claim serif">Marcá tus materias.<br>La planilla calcula el resto.</div><div id="bg-claimsub" class="abs claim-sub">Tus datos quedan en tu dispositivo.</div>
+      <div class="blabel">BOCETO B · HISTORIA 2: SEGUIMIENTO</div>
+    </div>
+  </div>
+  <script>
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d = 0.22) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d = 0.18) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d, ease: 'power2.in' }, t);
+  const popIn = (s, t) => tl.fromTo(s, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, t);
+  const tap = (s, t) => {
+    tl.fromTo(s, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.to(s, { scale: 0.78, duration: 0.08, ease: 'power2.in' }, t + 0.14);
+    tl.to(s, { scale: 1.08, opacity: 0, duration: 0.24, ease: 'power2.out' }, t + 0.24);
+  };
+  const press = (s, t) => { tl.to(s, { scale: 0.965, duration: 0.09, ease: 'power2.in' }, t + 0.12); tl.to(s, { scale: 1, duration: 0.2, ease: 'power3.out' }, t + 0.22); };
+  const roll = (a, b, t, h) => { tl.to(a, { y: -h, opacity: 0, duration: 0.22, ease: 'power3.in' }, t); tl.fromTo(b, { y: h, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, t + 0.12); };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+
+  blurIn('#b-tc-letter', 0.05, 0.26);
+  blurIn('#b-tc-name', 0.22);
+  blurIn('#b-tc-desc', 0.38);
+  blurIn('#b-tc-label', 0.5);
+  blurOut('#b-tc', 2.56, 0.2);
+  tl.set('#b-cam', { transformOrigin: '780px 1544px' }, 0);
+  tl.fromTo('#b-cam', { y: 260 }, { y: -584, duration: 1.0, ease: 'power2.out' }, 2.80);
+  tap('#b-gtap', 3.85);
+  tl.to('#b-cam', { scale: 8, x: -240, duration: 0.7, ease: 'power3.in' }, 4.10);
+  tl.fromTo('#b-drv1', { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 4.65);
+  tl.set('#b-cam', { opacity: 0 }, 5.10);
+  tap('#b-r-prac-tap', 5.55);
+  tl.set('#b-drv1', { transformOrigin: '116px 852px' }, 5.70);
+  tl.to('#b-drv1', { scale: 7, x: 424, y: 108, duration: 0.6, ease: 'power3.in' }, 5.75);
+  tl.fromTo('#b-drv2', { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 6.20);
+  tl.set('#b-drv1', { opacity: 0 }, 6.60);
+  tap('#b-r-s07-tap', 7.05);
+  tl.to('#b-r-s07-hl', { opacity: 1, duration: 0.12 }, 7.15);
+  tl.set('#b-drv2', { transformOrigin: '116px 976px' }, 7.20);
+  tl.to('#b-drv2', { scale: 7, x: 424, y: -16, duration: 0.6, ease: 'power3.in' }, 7.25);
+  tl.fromTo('#b-view', { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 7.70);
+  tl.set('#b-drv2', { opacity: 0 }, 8.10);
+  tl.to('#b-view', { scale: 0.08, opacity: 0, duration: 0.45, ease: 'power3.in' }, 8.80);
+  tl.set('#b-cam', { opacity: 1 }, 9.00);
+  tl.to('#b-cam', { scale: 1, x: 0, duration: 0.6, ease: 'power3.out' }, 9.00);
+  tl.fromTo('#b-flood', { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 9.60);
+  tl.set('#b-cam', { opacity: 0 }, 9.92);
+  blurIn('#b-claim', 9.75, 0.26);
+  tl.fromTo('#bg-kband', { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'expo.out' }, 12.20);
+  tl.fromTo('#bg-win', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, 12.30);
+  tl.fromTo('#bg-fill', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 0, duration: 0.01 }, 0);
+  tl.fromTo('#bg-strip', { y: 0 }, { y: -2724, duration: 4.4, ease: 'none' }, 12.80);
+  tl.to('#bg-s1-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 12.95);
+  tl.fromTo('#bg-s1-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.03);
+  tl.set('#bg-av', { innerHTML: '2,4' }, 13.03); tl.set('#bg-ap', { innerHTML: '1' }, 13.03);
+  tl.to('#bg-fill', { scaleX: 0.0244, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.03);
+  tl.to('#bg-s2-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.03);
+  tl.fromTo('#bg-s2-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.11);
+  tl.set('#bg-av', { innerHTML: '4,9' }, 13.11); tl.set('#bg-ap', { innerHTML: '2' }, 13.11);
+  tl.to('#bg-fill', { scaleX: 0.0488, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.11);
+  tl.to('#bg-s3-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.11);
+  tl.fromTo('#bg-s3-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.19);
+  tl.set('#bg-av', { innerHTML: '7,3' }, 13.19); tl.set('#bg-ap', { innerHTML: '3' }, 13.19);
+  tl.to('#bg-fill', { scaleX: 0.0732, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.19);
+  tl.to('#bg-s4-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.19);
+  tl.fromTo('#bg-s4-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.27);
+  tl.set('#bg-av', { innerHTML: '9,8' }, 13.27); tl.set('#bg-ap', { innerHTML: '4' }, 13.27);
+  tl.to('#bg-fill', { scaleX: 0.0976, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.27);
+  tl.to('#bg-s5-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.28);
+  tl.fromTo('#bg-s5-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.36);
+  tl.set('#bg-av', { innerHTML: '12,2' }, 13.36); tl.set('#bg-ap', { innerHTML: '5' }, 13.36);
+  tl.to('#bg-fill', { scaleX: 0.1220, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.36);
+  tl.to('#bg-s6-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.34);
+  tl.fromTo('#bg-s6-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.42);
+  tl.set('#bg-av', { innerHTML: '14,6' }, 13.42); tl.set('#bg-ap', { innerHTML: '6' }, 13.42);
+  tl.to('#bg-fill', { scaleX: 0.1463, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.42);
+  tl.to('#bg-s7-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.40);
+  tl.fromTo('#bg-s7-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.48);
+  tl.set('#bg-av', { innerHTML: '17,1' }, 13.48); tl.set('#bg-ap', { innerHTML: '7' }, 13.48);
+  tl.to('#bg-fill', { scaleX: 0.1707, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.48);
+  tl.to('#bg-s8-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.46);
+  tl.fromTo('#bg-s8-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.54);
+  tl.set('#bg-av', { innerHTML: '19,5' }, 13.54); tl.set('#bg-ap', { innerHTML: '8' }, 13.54);
+  tl.to('#bg-fill', { scaleX: 0.1951, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.54);
+  tl.to('#bg-s9-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.52);
+  tl.fromTo('#bg-s9-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.60);
+  tl.set('#bg-av', { innerHTML: '22,0' }, 13.60); tl.set('#bg-ap', { innerHTML: '9' }, 13.60);
+  tl.to('#bg-fill', { scaleX: 0.2195, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.60);
+  tl.to('#bg-s10-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.58);
+  tl.fromTo('#bg-s10-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.66);
+  tl.set('#bg-av', { innerHTML: '24,4' }, 13.66); tl.set('#bg-ap', { innerHTML: '10' }, 13.66);
+  tl.to('#bg-fill', { scaleX: 0.2439, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.66);
+  tl.to('#bg-s11-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.64);
+  tl.fromTo('#bg-s11-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.72);
+  tl.set('#bg-av', { innerHTML: '26,8' }, 13.72); tl.set('#bg-ap', { innerHTML: '11' }, 13.72);
+  tl.to('#bg-fill', { scaleX: 0.2683, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.72);
+  tl.to('#bg-s12-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.73);
+  tl.fromTo('#bg-s12-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.81);
+  tl.set('#bg-av', { innerHTML: '29,3' }, 13.81); tl.set('#bg-ap', { innerHTML: '12' }, 13.81);
+  tl.to('#bg-fill', { scaleX: 0.2927, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.81);
+  tl.to('#bg-s13-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 13.86);
+  tl.fromTo('#bg-s13-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 13.94);
+  tl.set('#bg-av', { innerHTML: '31,7' }, 13.94); tl.set('#bg-ap', { innerHTML: '13' }, 13.94);
+  tl.to('#bg-fill', { scaleX: 0.3171, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 13.94);
+  tl.to('#bg-s14-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.00);
+  tl.fromTo('#bg-s14-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 14.08);
+  tl.set('#bg-av', { innerHTML: '34,1' }, 14.08); tl.set('#bg-ap', { innerHTML: '14' }, 14.08);
+  tl.to('#bg-fill', { scaleX: 0.3415, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 14.08);
+  tl.to('#bg-s15-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.13);
+  tl.fromTo('#bg-s15-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 14.21);
+  tl.set('#bg-av', { innerHTML: '36,6' }, 14.21); tl.set('#bg-ap', { innerHTML: '15' }, 14.21);
+  tl.to('#bg-fill', { scaleX: 0.3659, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 14.21);
+  tl.to('#bg-s40-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.27);
+  tl.fromTo('#bg-s40-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 14.35);
+  tl.set('#bg-av', { innerHTML: '39,0' }, 14.35); tl.set('#bg-ap', { innerHTML: '16' }, 14.35);
+  tl.to('#bg-fill', { scaleX: 0.3902, duration: 0.2, ease: 'power2.out', overwrite: 'auto' }, 14.35);
+  tl.to('#bg-s16-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.51);
+  tl.fromTo('#bg-s16-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 14.59);
+  tl.to('#bg-s17-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.64);
+  tl.fromTo('#bg-s17-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 14.72);
+  tl.to('#bg-s18-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.78);
+  tl.fromTo('#bg-s18-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 14.86);
+  tl.to('#bg-s19-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 14.92);
+  tl.fromTo('#bg-s19-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.00);
+  tl.to('#bg-s20-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 15.05);
+  tl.fromTo('#bg-s20-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.13);
+  tl.to('#bg-s21-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 15.19);
+  tl.fromTo('#bg-s21-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.27);
+  tl.to('#bg-s22-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 15.32);
+  tl.fromTo('#bg-s22-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.40);
+  tl.to('#bg-s23-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 15.46);
+  tl.fromTo('#bg-s23-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.54);
+  tl.to('#bg-s24-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 15.59);
+  tl.fromTo('#bg-s24-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.67);
+  tl.to('#bg-s41-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 15.73);
+  tl.fromTo('#bg-s41-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 15.81);
+  tl.to('#bg-s28-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 16.38);
+  tl.fromTo('#bg-s28-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 16.46);
+  tl.to('#bg-s31-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 16.78);
+  tl.fromTo('#bg-s31-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 16.86);
+  tl.to('#bg-s32-a', { opacity: 0, scale: 0.8, duration: 0.14, ease: 'power2.in' }, 16.92);
+  tl.fromTo('#bg-s32-b', { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }, 17.00);
+  tl.fromTo('#bg-pop', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: 'expo.out' }, 17.30);
+  tl.fromTo('#bg-flood', { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 18.60);
+  tl.set('#bg-kband, #bg-win, #bg-pop', { opacity: 0 }, 18.92);
+  blurIn('#bg-claim', 18.80, 0.26);
+  blurIn('#bg-claimsub', 19.15, 0.22);
+  window.__timelines["prop-b"] = tl;
+  </script>
+</template>

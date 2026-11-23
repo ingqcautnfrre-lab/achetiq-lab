@@ -20,7 +20,7 @@ Ambos videos comparten mundo, lenguaje de animación, tipografía y sonido: se p
 
 **Apuntes** (`pages/recursos/apuntes.html`, `data/recursos.json`):
 
-- 39 materias del Plan 2023 publicadas; las 39 tienen carpeta de Drive (`drive_url`).
+- 38 materias del Plan 2023 publicadas, cada una con su carpeta de Drive (`drive_url`), más una carpeta general «Respaldo». Las obligatorias sin carpeta son Inglés I, Inglés II y Economía.
 - Filtro por año: «Todos», «1º año» … «5º año». Rótulo de cada tarjeta: «Acceder al repositorio →».
 - Texto de la página: «Cada materia del Plan 2023 enlaza a su carpeta de Google Drive, donde la comisión reúne apuntes, guías de ejercicios y bibliografía aportados por la comunidad estudiantil».
 - Contenido real de la carpeta de **Ingeniería de las Reacciones Químicas** (leído con el conector de Drive el 23/11/2026): `03. Práctica`, `05. Presentaciones`; dentro de Práctica: `Guías de Estudio`, `2024 - GS - Resolución Serie 07.pdf`, `2024 - SMR - Resolución Series.pdf`.
@@ -57,7 +57,7 @@ Ambos videos parten de una situación que cualquier estudiante de la carrera rec
 **Video 1 — Apuntes (≈ 18 s)**
 
 - *Primeros 2 s:* el cuadro 0 ya muestra la hora «23:47» en Fraunces a 300 px sobre porcelana y, debajo, «Parcial de Reacciones mañana». A los 0,6 s cae la primera burbuja de chat: «¿alguien tiene la Serie 7 resuelta?».
-- *Beats:* gancho (hora + necesidad) → tensión (burbujas de chat se apilan sin respuesta útil: «creo que estaba en un drive viejo», «a mí me lo pasaron por mail») → revelación (las burbujas se barren; entra la cabecera real «Apuntes Académicos») → prueba (toque en «4º año» → la grilla se filtra → toque en la tarjeta «Ingeniería de las Reacciones Químicas» → la flecha «→» avanza) → resultado (la portada de la tarjeta crece hasta ocupar el cuadro y se convierte en la carpeta de Drive simulada: `03. Práctica` → `2024 - GS - Resolución Serie 07.pdf`) → afirmación («39 materias. Una carpeta cada una», el reloj marca 23:48) → cierre (logo, «achetiq.github.io», espacio para el sticker de enlace).
+- *Beats:* gancho (hora + necesidad) → tensión (burbujas de chat se apilan sin respuesta útil: «creo que estaba en un drive viejo», «a mí me lo pasaron por mail») → revelación (las burbujas se barren; entra la cabecera real «Apuntes Académicos») → prueba (toque en «4º año» → la grilla se filtra → toque en la tarjeta «Ingeniería de las Reacciones Químicas» → la flecha «→» avanza) → resultado (la portada de la tarjeta crece hasta ocupar el cuadro y se convierte en la carpeta de Drive simulada: `03. Práctica` → `2024 - GS - Resolución Serie 07.pdf`) → afirmación («38 materias. Una carpeta cada una», el reloj marca 23:48) → cierre (logo, «achetiq.github.io», espacio para el sticker de enlace).
 - *Momento de mayor impacto:* la tarjeta que se transforma en la carpeta de Drive (≈ 60–75 % del video).
 
 **Video 2 — Seguimiento (≈ 18 s)**
@@ -94,6 +94,17 @@ El plan de estudios se presenta como una tabla periódica: cada materia es un el
 - *Beats (Seguimiento):* gancho → la tabla se enciende por niveles, con enlaces → interfaz real: selector y badges → el porcentaje se vuelve físico (llena la tabla) → afirmación → cierre.
 - *Look:* porcelana fría con celdas en cobalto de dos intensidades; Geist Mono para los números atómicos, Fraunces para los nombres; mauveína solo en la celda activa.
 - *Sonido:* percusión seca a ≈ 120 BPM; los cambios de layout caen en cada compás.
+
+### A+B · combinación
+
+*Dispositivo:* el momento del estudiante de A. *Forma:* el zoom continuo de B.
+
+- *Apuntes:* el gancho de A («23:47 · Parcial de Reacciones mañana» y las burbujas de chat); las burbujas salen hacia arriba y entra desde abajo la grilla de portadas reales; un toque en Ingeniería de las Reacciones Químicas y la cámara entra en la carpeta, luego en `03. Práctica`; se resalta `2024 - GS - Resolución Serie 07.pdf`, el reloj pasa a 23:48; afirmación y cierre.
+- *Seguimiento:* el gancho de A («Lunes 08:10 · ¿Qué puedo cursar?» con las correlativas enredadas) y luego la cámara de B, que recorre la tabla del Nivel I al V con el avance fijo arriba; termina en Proyecto Final con sus faltantes; afirmación.
+
+### Bocetos
+
+Los cuatro bocetos (A, B, C, A+B) están en `bocetos/` como proyecto HyperFrames, generado por `bocetos/generar_bocetos.py`. Son bocetos de idea, sin sonido ni ajuste fino; el render se entrega por separado.
 
 **Recomendación:** A, porque parte de una situación que el estudiante reconoce en el primer segundo y la resuelve con la interfaz real, que es exactamente lo que se quiere promocionar.
 
