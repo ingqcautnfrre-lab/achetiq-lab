@@ -115,7 +115,11 @@ Los cuatro bocetos (A, B, C, A+B) están en `bocetos/` como proyecto HyperFrames
 - Sonido: solo efectos incorporados; la música se agrega desde la biblioteca de Instagram al publicar.
 - Cierre: se reserva una zona libre para el sticker de enlace de Instagram y se muestra «achetiq.github.io» como texto.
 - Simulación de Drive: nombres de archivo reales, tal como figuran en la carpeta (iniciales incluidas).
-- Línea argumental: pendiente de elección.
+- Línea argumental (elegida tras los bocetos): Apuntes = B con una introducción breve;
+  Seguimiento = A sin horarios, con finales, correlativas, los diez indicadores y la tabla de
+  exámenes finales. Fondo crema #FCF7F0 para ambas historias.
+- Versiones finales: `apuntes/` y `seguimiento/` (cada una con `SPEC.md` y `REVIEW.md`),
+  generadas por `generar_historias.py`.
 
 ## 5. Supuestos de producción
 

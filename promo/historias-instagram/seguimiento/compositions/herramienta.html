@@ -1,0 +1,226 @@
+<template>
+  <style>
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;background:#FCF7F0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.soft{color:#4A4F59}
+.tap{position:absolute;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;background:rgba(19,23,32,.26);box-shadow:0 6px 18px rgba(11,41,100,.22);opacity:0;pointer-events:none;z-index:20}
+.chip{display:flex;align-items:center;gap:16px;padding:18px 26px;border-radius:16px;background:#FFFFFF;border:2px solid #E7DFD3;font-size:34px;white-space:nowrap;opacity:0}
+.frag{white-space:nowrap;opacity:0}
+.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;flex:0 0 52px}
+.pdf.s{width:36px;height:44px;font-size:12px;padding-bottom:6px;flex:0 0 36px;border-radius:5px}
+/* página de apuntes */
+.crumbs{font-size:32px;color:#4A4F59}
+.h1{font-size:116px;line-height:1.02}
+.lead{font-size:40px;line-height:1.4;color:#4A4F59}
+.pills{display:flex;flex-wrap:wrap;gap:16px}
+.pill{height:76px;padding:0 34px;border-radius:999px;border:2px solid #DCD3C6;background:#FFFFFF;font-size:34px;display:flex;align-items:center}
+.pill.on{background:#1344A5;border-color:#1344A5;color:#FFFFFF}
+.grid2{position:absolute;left:72px;width:936px;display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:28px}
+.gcell{position:relative}
+.gimg{height:256px;border-radius:16px;overflow:hidden;background:#E7CDAA}
+.gimg img{width:100%;height:100%;object-fit:cover;display:block}
+.gname{margin-top:12px;height:76px;font-size:30px;font-weight:500;line-height:1.25}
+/* Drive simulado */
+.drive{left:0;top:0;width:1080px;height:1920px;background:#FFFFFF;padding:350px 72px 0;opacity:0}
+.drv-search{height:96px;border-radius:999px;background:#F1EEE8;font-size:36px;color:#4A4F59;padding:0 40px;display:flex;align-items:center;gap:22px}
+.drv-crumb{margin-top:44px;font-size:34px;color:#4A4F59;line-height:1.3}
+.drv-title{margin-top:10px;font-size:56px;font-weight:600;line-height:1.18}
+.drv-head{margin-top:38px;padding-bottom:16px;border-bottom:2px solid #E7DFD3;font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#4A4F59}
+.drv-row{position:relative;height:124px;display:flex;align-items:center;gap:30px;border-bottom:2px solid #F0EBE3;font-size:40px;padding:0 12px}
+.drv-row > *:not(.hl):not(.tap){position:relative;z-index:1}
+.drv-row .ic{flex:0 0 64px;display:flex;justify-content:center}
+.hl{position:absolute;inset:0;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0;z-index:0}
+.viewer{left:0;top:0;width:1080px;height:1920px;background:#E9E3D9;opacity:0}
+.viewer-bar{position:absolute;left:0;top:250px;width:1080px;height:116px;background:#FFFFFF;display:flex;align-items:center;gap:26px;padding:0 72px;font-size:36px;border-bottom:2px solid #E7DFD3}
+.viewer-page{position:absolute;left:100px;top:420px;width:880px;height:1150px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:64px 64px}
+.pg-head{display:flex;justify-content:space-between;font-size:28px;color:#4A4F59;border-bottom:2px solid #131720;padding-bottom:14px}
+.pg-title{margin-top:34px;font-size:36px;font-weight:600;line-height:1.3}
+.pg-text{margin-top:26px;font-size:30px;line-height:1.45}
+/* cierre */
+.flood{left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
+.claim{left:72px;width:936px;font-size:100px;line-height:1.04;opacity:0}
+.claim-sub{left:72px;width:900px;font-size:46px;line-height:1.35;color:#4A4F59;opacity:0}
+.end{left:72px;top:400px;width:936px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0}
+.end-logo{width:280px;height:280px}
+.end-name{font-size:96px;margin-top:18px;display:flex}
+.end-name span{display:inline-block;opacity:0}
+.end-url{font-size:42px;color:#1344A5;margin-top:14px}
+.end-sec{font-size:38px;color:#4A4F59;margin-top:18px;line-height:1.3}
+.end-extra{font-size:34px;color:#4A4F59;margin-top:10px}
+/* seguimiento */
+.qwin{left:72px;top:330px;width:936px;height:250px;overflow:hidden}
+.q{position:absolute;left:0;top:0;font-size:112px;line-height:1.02;white-space:nowrap}
+.tok{font-size:36px;color:#4A4F59;white-space:nowrap;opacity:0}
+.tok b{color:#131720;font-weight:500}
+.pillb{height:62px;padding:0 24px;border-radius:999px;font-size:32px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap;opacity:0}
+.b-no{color:#9B171F;background:#FBEFEF;border:2px solid rgba(155,23,31,.3)}
+.b-si{color:#165E2E;background:#EDF6F0;border:2px solid rgba(22,94,46,.35)}
+.b-reg{color:#1344A5;background:#EEF3FC;border:2px solid rgba(19,68,165,.3)}
+.b-lvl{color:#006459;background:#EAF7F4;border:2px solid rgba(3,149,133,.4)}
+.nota{display:flex;align-items:baseline;gap:14px;padding:14px 24px;border-radius:16px;white-space:nowrap;opacity:0}
+.nota .k{font-family:'Geist Mono',monospace;font-size:30px}
+.nota .v{font-family:'Fraunces',serif;font-size:60px;line-height:1}
+.n-mal{background:#FBEFEF;border:2px solid #EBC3C5;color:#9B171F}
+.n-bien{background:#EDF6F0;border:2px solid #BFDCC9;color:#165E2E}
+.hh1{left:72px;top:300px;width:936px;font-size:96px;line-height:1.02}
+.kcard{position:absolute;width:456px;height:180px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:22px 26px}
+.kl{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.05em;color:#4A4F59;white-space:nowrap}
+.kv{font-family:'Fraunces',serif;font-size:84px;line-height:1.1;margin-top:8px;white-space:nowrap}
+.kv small{font-family:'Hanken Grotesk',sans-serif;font-size:34px;color:#4A4F59;margin-left:8px}
+.tbl{left:72px;top:750px;width:936px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px}
+.lvl{height:64px;padding:0 28px;display:flex;align-items:center;font-size:32px;font-weight:500}
+.trow{position:relative;height:96px;display:flex;align-items:center;padding:0 28px;gap:22px;border-top:1px solid #EFE8DE;font-size:36px}
+.trow .n{font-family:'Geist Mono',monospace;font-size:30px;width:56px;color:#4A4F59}
+.trow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tint{position:absolute;inset:0;background:#EDF6F0;opacity:0;z-index:0}
+.trow > *:not(.tint){position:relative;z-index:1}
+.sel{position:relative;height:64px;width:270px;padding:0 20px;border:2px solid #DCD3C6;border-radius:12px;font-size:30px;display:flex;align-items:center;justify-content:space-between;background:#FFFFFF}
+.sel-ring{position:absolute;inset:-6px;border:4px solid #922FA1;border-radius:16px;opacity:0}
+.sel-win{position:relative;width:200px;height:40px;overflow:hidden}
+.sel-win span{position:absolute;left:0;top:0;line-height:40px;white-space:nowrap}
+.sel .tap{position:absolute}
+.dd{position:absolute;right:0;top:72px;width:300px;background:#FFFFFF;border:2px solid #DCD3C6;border-radius:14px;box-shadow:0 18px 40px rgba(11,41,100,.16);opacity:0;z-index:30;overflow:hidden}
+.dd div{position:relative;height:70px;display:flex;align-items:center;padding:0 24px;font-size:30px}
+.bwrap{position:relative;width:290px;height:58px}
+.badge{position:absolute;right:0;top:0;height:58px;padding:0 22px;border-radius:999px;font-size:28px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.note{left:72px;width:936px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;opacity:0}
+.tabs{left:72px;top:300px;width:936px;height:76px;display:flex;gap:44px;border-bottom:2px solid #E7DFD3;font-size:36px}
+.tabs div{padding-top:10px;white-space:nowrap}
+.tab-ul{left:72px;top:370px;height:5px;background:#1344A5;width:200px}
+.fcard{position:absolute;left:72px;width:936px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:24px 28px;opacity:0}
+.fhead{display:flex;align-items:baseline;gap:18px;height:52px}
+.fhead .n{font-family:'Geist Mono',monospace;font-size:30px;color:#4A4F59}
+.fhead .nm{font-size:40px;font-weight:500;white-space:nowrap}
+.ffin{position:absolute;right:28px;top:14px;display:flex;align-items:baseline;gap:14px}
+.ffin .k{font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;letter-spacing:.05em}
+.ffin .v{font-family:'Fraunces',serif;font-size:64px;line-height:1;color:#165E2E;opacity:0}
+.atts{display:flex;gap:12px;margin-top:26px}
+.att{width:284px;height:132px;border-radius:16px;padding:14px 15px;opacity:0}
+.att .d{font-family:'Geist Mono',monospace;font-size:28px;white-space:nowrap}
+.att .g{display:flex;align-items:baseline;gap:12px;margin-top:4px}
+.att .g b{font-family:'Fraunces',serif;font-weight:400;font-size:64px;line-height:1;opacity:0}
+.att .g i{font-style:normal;font-family:'Geist Mono',monospace;font-size:28px;opacity:0}
+.a-mal{background:#FBEFEF;border:2px solid #EBC3C5;color:#9B171F}
+.a-bien{background:#EDF6F0;border:2px solid #BFDCC9;color:#165E2E}
+.prom{position:absolute;top:1430px;width:456px;height:140px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:18px 26px;opacity:0}
+</style>
+  <div id="root" data-composition-id="herramienta" data-width="1080" data-height="1920">
+    <div id="herramienta-all" class="clip" data-start="0" data-duration="15.9" data-track-index="1" style="position:absolute;inset:0">
+      <div id="h-head" class="abs serif hh1">Seguimiento de<br>Carrera</div>
+      <div id="h-cards"><div id="h-k0" class="kcard" style="left:72px;top:540px"><div class="kl">APROBADAS</div><div class="kv"><span id="h-v0">0</span></div></div><div id="h-k1" class="kcard" style="left:552px;top:540px"><div class="kl">AVANCE</div><div class="kv"><span id="h-v1">0,0 %</span></div></div><div id="h-k2" class="kcard" style="opacity:0;left:72px;top:738px"><div class="kl">NO CURSADAS / CURSANDO</div><div class="kv"><span id="h-v2">22</span></div></div><div id="h-k3" class="kcard" style="opacity:0;left:552px;top:738px"><div class="kl">DISPONIBLES</div><div class="kv"><span id="h-v3">9</span></div></div><div id="h-k4" class="kcard" style="opacity:0;left:72px;top:936px"><div class="kl">REGULARES</div><div class="kv"><span id="h-v4">3</span></div></div><div id="h-k5" class="kcard" style="opacity:0;left:552px;top:936px"><div class="kl">PROM. SIN APLAZOS</div><div class="kv"><span id="h-v5">7,76</span></div></div><div id="h-k6" class="kcard" style="opacity:0;left:72px;top:1134px"><div class="kl">PROM. CON APLAZOS</div><div class="kv"><span id="h-v6">6,95</span></div></div><div id="h-k7" class="kcard" style="opacity:0;left:552px;top:1134px"><div class="kl">HS. OBLIGATORIAS APROB.</div><div class="kv"><span id="h-v7">58</span><small>hs</small></div></div><div id="h-k8" class="kcard" style="opacity:0;left:72px;top:1332px"><div class="kl">HS. ELECTIVAS APROB.</div><div class="kv"><span id="h-v8">5</span><small>hs</small></div></div><div id="h-k9" class="kcard" style="opacity:0;left:552px;top:1332px"><div class="kl">% ELECTIVAS COMPLETADAS</div><div class="kv"><span id="h-v9">20,8 %</span></div></div></div>
+      <div id="h-tbl" class="abs tbl">
+        <div class="lvl" style="border-top:5px solid #507ED3;background:#EEF4FD;color:#315393;border-radius:18px 18px 0 0">Nivel I</div>
+        <div id="h-r4" class="trow" style=""><div id="h-r4-tint" class="tint"></div><div class="n">4</div><div class="nm">Análisis Matemático I</div><div id="h-r4-sel" class="sel"><div id="h-r4-ring" class="sel-ring"></div><div class="sel-win"><span id="h-r4-s0">No Cursada</span><span id="h-r4-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span></div></div>
+        <div id="h-r5" class="trow" style=""><div id="h-r5-tint" class="tint"></div><div class="n">5</div><div class="nm">Física I</div><div id="h-r5-sel" class="sel"><div id="h-r5-ring" class="sel-ring"></div><div class="sel-win"><span id="h-r5-s0">No Cursada</span><span id="h-r5-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span></div></div>
+        <div id="h-r6" class="trow" style="z-index:5"><div id="h-r6-tint" class="tint"></div><div class="n">6</div><div class="nm">Química</div><div id="h-r6-sel" class="sel"><div id="h-r6-ring" class="sel-ring"></div><div class="sel-win"><span id="h-r6-s0">No Cursada</span><span id="h-r6-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span><div id="h-tap-sel" class="tap" style="left:40%;top:50%"></div><div id="h-dd" class="dd" data-layout-allow-overlap data-layout-allow-occlusion><div id="h-dd0">No Cursada</div><div id="h-dd1">Cursando</div><div id="h-dd2">Regular</div><div id="h-dd3">Aprobada<div id="h-tap-dd" class="tap" style="left:40%;top:50%"></div></div></div></div></div>
+        <div class="lvl" style="border-top:5px solid #8E6AC7;background:#F5F2FC;color:#5F4489">Nivel II</div>
+        <div id="h-r11" class="trow"><div class="n">11</div><div class="nm">Química Inorgánica</div><div class="bwrap"><div id="h-r11-no" class="badge b-no">✕ No disponible</div><div id="h-r11-si" class="badge b-si" style="opacity:0">✓ Disponible</div></div></div>
+        <div id="h-r14" class="trow"><div class="n">14</div><div class="nm">Química Orgánica</div><div class="bwrap"><div id="h-r14-no" class="badge b-no">✕ No disponible</div><div id="h-r14-si" class="badge b-si" style="opacity:0">✓ Disponible</div></div></div>
+      </div>
+      <div id="h-note1" class="abs note" style="top:1400px">Ejemplo: Niveles I y II aprobados</div>
+      <div id="h-note2" class="abs note" style="top:1530px">Ejemplo · valores calculados por la planilla</div>
+      <div id="h-fin" class="abs" style="left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0">
+        <div class="abs tabs"><div id="h-tb0">Seguimiento</div><div id="h-tb1">Exámenes finales</div><div id="h-tb2" class="soft">Nota al estudiante</div></div>
+        <div id="h-ul" class="abs tab-ul" style="left:72px;width:196px"></div>
+        <div id="h-intro" class="abs soft" style="left:72px;top:420px;width:936px;font-size:40px;line-height:1.35;opacity:0">Se aprueba con 6. Máximo 4 instancias en condición regular.</div>
+        <div id="h-f0" class="fcard" style="top:560px"><div class="fhead"><span class="n">3</span><span class="nm">Álgebra y Geometría Analítica</span></div><div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f0v" class="v">7</div></div><div class="atts"><div id="h-a00" class="att a-mal"><div class="d">1° · 20/02/2024</div><div class="g"><b id="h-a00g">4</b><i id="h-a00i">aplazo</i></div></div><div id="h-a01" class="att a-bien"><div class="d">2° · 05/03/2024</div><div class="g"><b id="h-a01g">7</b><i id="h-a01i">aprobado</i></div></div></div></div><div id="h-f1" class="fcard" style="top:846px"><div class="fhead"><span class="n">5</span><span class="nm">Física I</span></div><div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f1v" class="v">8</div></div><div class="atts"><div id="h-a10" class="att a-mal"><div class="d">1° · 24/07/2024</div><div class="g"><b id="h-a10g">2</b><i id="h-a10i">aplazo</i></div></div><div id="h-a11" class="att a-mal"><div class="d">2° · 11/12/2024</div><div class="g"><b id="h-a11g">5</b><i id="h-a11i">aplazo</i></div></div><div id="h-a12" class="att a-bien"><div class="d">3° · 19/02/2025</div><div class="g"><b id="h-a12g">8</b><i id="h-a12i">aprobado</i></div></div></div></div><div id="h-f2" class="fcard" style="top:1132px"><div class="fhead"><span class="n">12</span><span class="nm">Análisis Matemático II</span></div><div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f2v" class="v">7</div></div><div class="atts"><div id="h-a20" class="att a-mal"><div class="d">1° · 16/07/2025</div><div class="g"><b id="h-a20g">3</b><i id="h-a20i">aplazo</i></div></div><div id="h-a21" class="att a-bien"><div class="d">2° · 03/12/2025</div><div class="g"><b id="h-a21g">7</b><i id="h-a21i">aprobado</i></div></div></div></div>
+        <div id="h-p0" class="prom" style="left:72px"><div class="kl">PROM. SIN APLAZOS</div><div class="kv" style="font-size:64px">7,76</div></div>
+        <div id="h-p1" class="prom" style="left:552px"><div class="kl">PROM. CON APLAZOS</div><div class="kv" style="font-size:64px">6,95</div></div>
+      </div>
+    </div>
+  </div>
+  <script>
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d = 0.24) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d = 0.2) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d, ease: 'power2.in' }, t);
+  const tap = (s, t) => {
+    tl.fromTo(s, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.to(s, { scale: 0.78, duration: 0.08, ease: 'power2.in' }, t + 0.14);
+    tl.to(s, { scale: 1.08, opacity: 0, duration: 0.24, ease: 'power2.out' }, t + 0.24);
+  };
+  const press = (s, t) => { tl.to(s, { scale: 0.965, duration: 0.09, ease: 'power2.in' }, t + 0.12); tl.to(s, { scale: 1, duration: 0.22, ease: 'power3.out' }, t + 0.22); };
+  const roll = (a, b, t, h) => { tl.to(a, { y: -h, opacity: 0, filter: 'blur(6px)', duration: 0.22, ease: 'power3.in' }, t); tl.fromTo(b, { y: h, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.32, ease: 'expo.out' }, t + 0.12); };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+  const spring = (s, t, from) => tl.fromTo(s, Object.assign({ opacity: 0, scale: 0.6 }, from || {}), { opacity: 1, scale: 1, rotation: (from && from.rot) || 0, duration: 0.42, ease: 'back.out(1.6)' }, t);
+
+  blurIn('#h-head', 0.00, 0.28);
+  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out', stagger: 0.08 }, 0.15);
+  tl.fromTo('#h-tbl', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 0.30);
+  tl.fromTo('#h-tbl .trow', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.06 }, 0.40);
+  tap('#h-tap-sel', 1.20);
+  tl.to('#h-r6-ring', { opacity: 1, duration: 0.12 }, 1.32);
+  tl.fromTo('#h-dd', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.22, ease: 'expo.out' }, 1.40);
+  tap('#h-tap-dd', 1.90);
+  tl.to('#h-dd3', { backgroundColor: 'rgba(146,47,161,.12)', duration: 0.1 }, 2.02);
+  tl.to('#h-dd', { opacity: 0, duration: 0.15 }, 2.22);
+  tl.to('#h-r6-ring', { opacity: 0, duration: 0.2 }, 2.30);
+  roll('#h-r6-s0', '#h-r6-s1', 2.25, 40);
+  tl.to('#h-r6-tint', { opacity: 1, duration: 0.25 }, 2.30);
+  steps('#h-v1', 2.30, ['0,8 %', '1,6 %', '2,4 %'], 0.067); tl.set('#h-v0', { innerHTML: '1' }, 2.30);
+  tl.to('#h-r11-no, #h-r14-no', { opacity: 0, scale: 0.8, duration: 0.14, stagger: 0.12 }, 2.60);
+  tl.fromTo('#h-r11-si, #h-r14-si', { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)', stagger: 0.12 }, 2.68);
+  roll('#h-r4-s0', '#h-r4-s1', 3.25, 40); tl.to('#h-r4-tint', { opacity: 1, duration: 0.2 }, 3.30);
+  roll('#h-r5-s0', '#h-r5-s1', 3.40, 40); tl.to('#h-r5-tint', { opacity: 1, duration: 0.2 }, 3.45);
+  steps('#h-v1', 3.35, ['4,9 %', '7,3 %', '9,8 %', '12,2 %', '14,6 %', '17,1 %', '19,5 %', '22,0 %', '24,4 %', '26,8 %', '29,3 %', '31,7 %', '34,1 %', '36,6 %', '39,0 %'], 0.067);
+  steps('#h-v0', 3.35, ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'], 0.067); tl.set('#h-v0', { innerHTML: '17' }, 4.36);
+  blurIn('#h-note1', 3.45);
+  // el tablero se rearma con los diez indicadores
+  tl.to('#h-tbl', { y: 120, opacity: 0, filter: 'blur(8px)', duration: 0.38, ease: 'power3.in' }, 5.00);
+  blurOut('#h-note1', 5.00);
+  tl.fromTo('#h-k2', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.35);
+  tl.fromTo('#h-k3', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.44);
+  tl.fromTo('#h-k4', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.53);
+  tl.fromTo('#h-k5', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.62);
+  tl.fromTo('#h-k6', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.71);
+  tl.fromTo('#h-k7', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.80);
+  tl.fromTo('#h-k8', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.89);
+  tl.fromTo('#h-k9', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.98);
+  blurIn('#h-note2', 6.20);
+  // foco en «Prom. con aplazos» y paso a la pestaña de finales
+  tl.to('#h-k0, #h-k1, #h-k2, #h-k3, #h-k4, #h-k5, #h-k7, #h-k8, #h-k9, #h-head, #h-note2', { opacity: 0.25, duration: 0.3 }, 8.40);
+  tl.to('#h-k6', { borderColor: '#1344A5', scale: 1.05, duration: 0.3, ease: 'power2.out' }, 8.40);
+  tl.set('#h-k6', { transformOrigin: '228px 90px' }, 0.00);
+  tl.to('#h-k6', { scale: 7, x: 240, y: -264, opacity: 0, duration: 0.6, ease: 'power3.in' }, 9.00);
+  tl.fromTo('#h-fin', { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 9.35);
+  tl.set('#h-cards, #h-head, #h-note2', { opacity: 0 }, 9.80);
+  tl.set('#h-ul', { transformOrigin: '0% 50%' }, 0.00);
+  tl.to('#h-ul', { x: 240, scaleX: 1.414, duration: 0.4, ease: 'power3.inOut' }, 9.90);
+  tl.to('#h-tb1', { color: '#1344A5', duration: 0.2 }, 10.00);
+  tl.to('#h-tb0', { color: '#4A4F59', duration: 0.2 }, 10.00);
+  blurIn('#h-intro', 10.15);
+  tl.fromTo('#h-f0', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }, 10.60);
+  tl.fromTo('#h-a00', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 10.75);
+  tl.fromTo('#h-a00g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 10.91);
+  blurIn('#h-a00i', 10.99, 0.18);
+  tl.fromTo('#h-a01', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 11.09);
+  tl.fromTo('#h-a01g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 11.25);
+  blurIn('#h-a01i', 11.33, 0.18);
+  tl.fromTo('#h-f0v', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }, 11.48);
+  tl.fromTo('#h-f1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }, 11.63);
+  tl.fromTo('#h-a10', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 11.78);
+  tl.fromTo('#h-a10g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 11.94);
+  blurIn('#h-a10i', 12.02, 0.18);
+  tl.fromTo('#h-a11', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 12.12);
+  tl.fromTo('#h-a11g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 12.28);
+  blurIn('#h-a11i', 12.36, 0.18);
+  tl.fromTo('#h-a12', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 12.46);
+  tl.fromTo('#h-a12g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 12.62);
+  blurIn('#h-a12i', 12.70, 0.18);
+  tl.fromTo('#h-f1v', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }, 12.85);
+  tl.fromTo('#h-f2', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }, 13.00);
+  tl.fromTo('#h-a20', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 13.15);
+  tl.fromTo('#h-a20g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 13.31);
+  blurIn('#h-a20i', 13.39, 0.18);
+  tl.fromTo('#h-a21', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 13.49);
+  tl.fromTo('#h-a21g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 13.65);
+  blurIn('#h-a21i', 13.73, 0.18);
+  tl.fromTo('#h-f2v', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }, 13.88);
+  tl.fromTo('#h-p0, #h-p1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.1 }, 14.18);
+  window.__timelines["herramienta"] = tl;
+  </script>
+</template>

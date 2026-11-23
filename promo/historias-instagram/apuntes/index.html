@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es-AR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Apuntes Académicos — historia</title>
+    <script src="assets/lib/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #FCF7F0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="19.7" data-width="1080" data-height="1920">
+      <div id="toma" data-composition-id="toma" data-composition-src="compositions/toma.html" data-start="0" data-duration="13.6" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:1"></div>
+      <div id="cierre" data-composition-id="cierre" data-composition-src="compositions/cierre.html" data-start="13.4" data-duration="6.3" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:2"></div>
+      <audio id="sfx-00" class="clip" src="assets/sfx/pop-a.wav" data-start="0.16" data-duration="0.07" data-track-index="5" data-volume="0.45"></audio>
+      <audio id="sfx-01" class="clip" src="assets/sfx/pop-b.wav" data-start="0.42" data-duration="0.07" data-track-index="6" data-volume="0.45"></audio>
+      <audio id="sfx-02" class="clip" src="assets/sfx/pop-c.wav" data-start="0.68" data-duration="0.07" data-track-index="5" data-volume="0.45"></audio>
+      <audio id="sfx-03" class="clip" src="assets/sfx/pop-a.wav" data-start="0.94" data-duration="0.07" data-track-index="6" data-volume="0.4"></audio>
+      <audio id="sfx-04" class="clip" src="assets/sfx/barrido-a.wav" data-start="2.28" data-duration="0.55" data-track-index="5" data-volume="0.55"></audio>
+      <audio id="sfx-05" class="clip" src="assets/sfx/barrido-c.wav" data-start="4.35" data-duration="0.55" data-track-index="6" data-volume="0.3"></audio>
+      <audio id="sfx-06" class="clip" src="assets/sfx/toque-a.wav" data-start="5.73" data-duration="0.09" data-track-index="5" data-volume="0.8"></audio>
+      <audio id="sfx-07" class="clip" src="assets/sfx/barrido-b.wav" data-start="5.85" data-duration="0.55" data-track-index="6" data-volume="0.6"></audio>
+      <audio id="sfx-08" class="clip" src="assets/sfx/toque-b.wav" data-start="7.68" data-duration="0.09" data-track-index="5" data-volume="0.8"></audio>
+      <audio id="sfx-09" class="clip" src="assets/sfx/barrido-a.wav" data-start="7.78" data-duration="0.55" data-track-index="6" data-volume="0.6"></audio>
+      <audio id="sfx-10" class="clip" src="assets/sfx/toque-a.wav" data-start="9.18" data-duration="0.09" data-track-index="5" data-volume="0.8"></audio>
+      <audio id="sfx-11" class="clip" src="assets/sfx/barrido-c.wav" data-start="9.38" data-duration="0.55" data-track-index="6" data-volume="0.6"></audio>
+      <audio id="sfx-12" class="clip" src="assets/sfx/barrido-inv.wav" data-start="11.80" data-duration="0.70" data-track-index="5" data-volume="0.6"></audio>
+      <audio id="sfx-13" class="clip" src="assets/sfx/barrido-b.wav" data-start="13.35" data-duration="0.55" data-track-index="6" data-volume="0.3"></audio>
+      <audio id="sfx-14" class="clip" src="assets/sfx/impacto.wav" data-start="16.25" data-duration="1.40" data-track-index="5" data-volume="0.75"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>
