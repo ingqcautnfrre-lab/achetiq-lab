@@ -99,7 +99,14 @@ El plan de estudios se presenta como una tabla periódica: cada materia es un el
 
 ---
 
-## 4. Supuestos de producción
+## 4. Decisiones confirmadas (23/11/2026)
+
+- Sonido: solo efectos incorporados; la música se agrega desde la biblioteca de Instagram al publicar.
+- Cierre: se reserva una zona libre para el sticker de enlace de Instagram y se muestra «achetiq.github.io» como texto.
+- Simulación de Drive: nombres de archivo reales, tal como figuran en la carpeta (iniciales incluidas).
+- Línea argumental: pendiente de elección.
+
+## 5. Supuestos de producción
 
 - Formato 1080 × 1920 (9:16), 30 fps, 15–20 s por video (una sola historia cada uno, por debajo del límite de 60 s).
 - Sin locución ni subtítulos; el texto en pantalla y la propia interfaz cargan el mensaje (muchas historias se miran sin sonido).
