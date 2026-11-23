@@ -1,34 +1,42 @@
-# REVIEW — Historia 2: Seguimiento de Carrera (versión 3)
+# REVIEW — Historia 2: Seguimiento de Carrera (versión 4)
 
 ## Decisiones
 
-- Fidelidad: la herramienta real (DOM y CSS del sitio) se incrusta en un iframe; selectores,
-  insignias, pestañas, campos de la tabla de finales y tarjetas del tablero son los del sitio. Se
-  muestran las columnas que la especificación define para móvil y un subconjunto real de filas.
+- Introducción: las tres preguntas forman una lista compacta en la mitad superior, cada una con su
+  indicio (correlativas de Balances, barra de 41 obligatorias, notas sueltas); luego se atenúan y
+  queda la respuesta, «Una planilla lo calcula por vos.», en negro.
+- Vista web: la herramienta real a 1200 px CSS (escritorio) dentro de una ventana de navegador que
+  sube desde abajo; la cámara acerca la cabecera, la nota de privacidad, la tabla (de N° a
+  Disponible), la tabla de finales y el tablero, sin que la ventana suba por encima del título.
 - Correlativas: tres acciones habilitan cinco materias; cada habilitación se dibuja como un arco
-  desde la materia marcada y se resalta la fila, con el texto «Se habilitan sus correlativas».
-- Enlace con la planilla: al tipear cada nota se actualizan las tarjetas de promedios (valores
-  leídos de la herramienta real para cada paso) y aparece la nota final en la tabla.
-- Cierre: la pantalla se aleja y la rodean las funciones reales de la página.
+  desde la materia marcada y se resalta la fila.
+- Finales: al tipear cada nota cambian las tarjetas de promedios (valores leídos de la herramienta
+  real en cada paso) y aparece la nota final en verde.
+- Coherencia: los estados de los finales parten de las cuatro materias marcadas en el video; al
+  volver a Seguimiento, Álgebra y Física I figuran aprobadas con 7 y 8, y el tablero muestra
+  4 aprobadas, 9,8 % de avance y promedios de 7,50 y 5,20, con anillos sobre los promedios.
+- Cierre: logo animado por capas, igual que la historia 1.
 
 ## Medido y observado
 
-- `hyperframes check`: sin errores. Se corrigió que las insignias y valores aparecieran agrandados
-  antes de animarse (renderizado inmediato de GSAP) y que las superposiciones cayeran una fila más
-  arriba (ahora se miden dentro del iframe).
-- Audio: medido, no escuchado.
+- `hyperframes check`: sin errores. Cuadros del render final revisados en todo el recorrido.
+- Se corrigió un acercamiento inválido al tablero (las tarjetas de promedios están en filas
+  distintas de la grilla de tres columnas) y se reemplazó por anillos sobre ambas tarjetas.
+- Audio (ffmpeg, EBU R128): −40,4 LUFS integrados, pico −16,5 dBFS; medido, no escuchado.
 
 ## Plano más débil
 
-- 14,9-24,2 s: la carga de finales dura 9 s; es el tramo más largo. Si la historia se siente
-  extensa, se puede dejar solo Física I (3 intentos), con lo que el video baja a unos 30 s.
+- 16,8-22,5 s: la carga de finales sigue siendo el tramo más largo (5,7 s). Si la historia se
+  siente extensa, puede dejarse solo Física I (tres intentos), con lo que baja a unos 30 s.
 
 ## Advertencias que se mantienen
 
-- `outside_safe_zone` (riel de TikTok/Shorts) y una superposición breve de dos toques consecutivos
-  (`gsap_tween_tail`, 0,04 s, sin efecto visible).
+- `outside_safe_zone` (rieles de TikTok/Shorts) y `container_overflow` del desplazador interno de
+  la ventana, que es intencional.
+- `line_unread` en las preguntas de la introducción: se atenúan pero siguen visibles hasta la
+  salida.
 
 ## Uso en Instagram
 
-- Sticker de enlace debajo del bloque final (aprox. y = 1350-1550 px), hacia
+- Sticker de enlace debajo del bloque final (aprox. y = 1400-1600 px), hacia
   `achetiq.github.io/pages/recursos/seguimiento`.
