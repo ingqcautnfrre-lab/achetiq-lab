@@ -355,7 +355,7 @@ def build_apuntes():
     ZF = WW / W
 
     # ───── escena 1 · gancho (chat) ─────
-    G_DUR = 4.45
+    G_DUR = 5.2
     msgs = [('me', '', '¿Alguien tiene la Serie 7 de Reacciones resuelta?'),
             ('', 'Paraguayo', 'creo que estaba en un drive viejo'),
             ('', 'Ele P', 'a mí me la pasaron por mail y no la encuentro'),
@@ -389,30 +389,30 @@ def build_apuntes():
     tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
     tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
   };
-  reveal(0, 0.15); reveal(1, 0.6); reveal(2, 1.05); reveal(3, 1.5);
-  reveal(4, 2.05);
-  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.15);
-  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 2.48);
-  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 2.5);
-  tl.set('#g-typ', { display: 'none' }, 2.5);
-  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 2.5);
-  capSwap('#g-q', '#g-ok', 2.8);
+  reveal(0, 0.2); reveal(1, 0.85); reveal(2, 1.5); reveal(3, 2.15);
+  reveal(4, 2.80);
+  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.90);
+  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 3.23);
+  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 3.25);
+  tl.set('#g-typ', { display: 'none' }, 3.25);
+  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 3.25);
+  capSwap('#g-q', '#g-ok', 3.55);
   const pr = document.querySelector('#g-prev').getBoundingClientRect();
   const rr = document.querySelector('#gancho-all').getBoundingClientRect();
   const sx = 1080 / rr.width;
   const px = (pr.left - rr.left) * sx, py = (pr.top - rr.top) * sx, pw = pr.width * sx, ph = pr.height * sx;
-  tap(px + pw * 0.5, py + ph * 0.45, 3.3);
-  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 3.42);
+  tap(px + pw * 0.5, py + ph * 0.45, 4.05);
+  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 4.17);
   // la vista previa del enlace se convierte en la ventana del sitio
-  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px - $WX, y: py - $WT, scaleX: pw / $WW, scaleY: ph / $WH, opacity: 1 }, 3.58);
-  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.62, ease: 'power3.inOut' }, 3.58);
-  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 3.6);
-  blurOut('#g-ok', 3.95, 0.2);
+  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px - $WX, y: py - $WT, scaleX: pw / $WW, scaleY: ph / $WH, opacity: 1 }, 4.33);
+  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.62, ease: 'power3.inOut' }, 4.33);
+  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 4.35);
+  blurOut('#g-ok', 4.70, 0.2);
 """).substitute(WX=WX, WT=WT, WW=WW, WH=WH)
     gancho = scene('gancho', gb, gj, G_DUR, fonts=True)
 
     # ───── escena 2 · recorrido ─────
-    R0 = 3.95
+    R0 = 4.7
     R = json.load(open(os.path.join(REPO, 'data/recursos.json')))
     mats = [m for m in R if m.get('anio')]
     irq_i = next(i for i, m in enumerate(mats) if m['id'] == 'ingenieria-de-las-reacciones-quimicas')
@@ -584,8 +584,8 @@ $CONV
     cierre_html = scene('cierre', cb, cj, C_DUR)
     total = round(C0 + C_DUR, 2)
 
-    sfx = [('pop-a', 0.17, 0.14), ('pop-b', 0.62, 0.14), ('pop-a', 1.07, 0.14), ('pop-b', 1.52, 0.16), ('pop-b', 2.52, 0.18),
-           ('toque', 3.43, 0.26), ('barrido-a', 3.58, 0.12)]
+    sfx = [('pop-a', 0.22, 0.14), ('pop-b', 0.87, 0.14), ('pop-a', 1.52, 0.14), ('pop-b', 2.17, 0.16), ('pop-b', 3.27, 0.18),
+           ('toque', 4.18, 0.26), ('barrido-a', 4.33, 0.12)]
     sfx += [('toque', R0 + 2.88, 0.24), ('barrido-b', R0 + 3.3, 0.08), ('toque', R0 + 5.58, 0.24), ('barrido-a', R0 + 5.8, 0.14),
             ('toque', R0 + 7.83, 0.22), ('toque', R0 + 9.58, 0.22),
             ('barrido-b', R0 + 11.45, 0.12), ('cierre', C0 + 1.1 - 0.8, 0.3)]

@@ -11,7 +11,7 @@ intro de los videos de Series Resueltas.
 ```text
 GOAL:    el estudiante se reconoce en la búsqueda de apuntes y ve que en la página de AChETIQ cada
          materia lo lleva a su carpeta de Drive.
-OUTPUT:  HyperFrames, 1080 x 1920 (historia de Instagram), 30 fps, MP4. Duración: 24,1 s.
+OUTPUT:  HyperFrames, 1080 x 1920 (historia de Instagram), 30 fps, MP4. Duración: 24,8 s.
 LOOK:    fondo crema #FCF7F0; la página real del sitio (DOM, CSS, tipografías e imágenes) en un
          iframe de 1200 px CSS (vista de escritorio), escala 0,85, dentro de una ventana de
          navegador de 1020 x 1100 px (barra con la dirección). Una cámara acerca cada zona; la
@@ -22,7 +22,8 @@ MOTION:  toma continua: chat -> la vista previa del enlace crece hasta ser la ve
          Drive -> carpeta -> PDF -> la ventana vuelve a ser una portada del muro de 38 materias ->
          el muro se reúne -> logo por capas.
 SOUND:   efectos sintetizados sin tono, picos a −6 dBFS y volúmenes 0,08-0,30.
-SHOTS:   0,0-4,4    Gancho: «¿Otra vez buscando apuntes?»; chat «IQ · 4º año» (dramatización):
+SHOTS:   (desde la versión 6, los planos posteriores al gancho van 0,75 s más tarde)
+         0,0-5,2    Gancho: «¿Otra vez buscando apuntes?»; chat «IQ · 4º año» (dramatización):
                     Paraguayo y Ele P no la encuentran; Vicki G responde con el enlace (vista previa
                     real: título y og-image). «Está todo acá.» Toque en la vista previa.
          4,2-5,9    «Apuntes de cada materia»: la ventana con la página real; acercamiento a la

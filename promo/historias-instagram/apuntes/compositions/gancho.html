@@ -91,7 +91,7 @@
 .feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
 </style>
   <div id="root" data-composition-id="gancho" data-width="1080" data-height="1920">
-    <div id="gancho-all" class="clip" data-start="0" data-duration="4.45" data-track-index="1" style="position:absolute;inset:0">
+    <div id="gancho-all" class="clip" data-start="0" data-duration="5.2" data-track-index="1" style="position:absolute;inset:0">
       <div class="abs" style="inset:0;background:#FCF7F0"></div>
       <div id="g-q" class="cap" style="white-space:normal;font-size:96px;opacity:1">¿Otra vez buscando<br>apuntes?</div>
       <div id="g-ok" class="cap" style="font-size:96px">Está todo acá.</div>
@@ -137,25 +137,25 @@
     tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
     tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
   };
-  reveal(0, 0.15); reveal(1, 0.6); reveal(2, 1.05); reveal(3, 1.5);
-  reveal(4, 2.05);
-  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.15);
-  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 2.48);
-  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 2.5);
-  tl.set('#g-typ', { display: 'none' }, 2.5);
-  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 2.5);
-  capSwap('#g-q', '#g-ok', 2.8);
+  reveal(0, 0.2); reveal(1, 0.85); reveal(2, 1.5); reveal(3, 2.15);
+  reveal(4, 2.80);
+  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.90);
+  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 3.23);
+  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 3.25);
+  tl.set('#g-typ', { display: 'none' }, 3.25);
+  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 3.25);
+  capSwap('#g-q', '#g-ok', 3.55);
   const pr = document.querySelector('#g-prev').getBoundingClientRect();
   const rr = document.querySelector('#gancho-all').getBoundingClientRect();
   const sx = 1080 / rr.width;
   const px = (pr.left - rr.left) * sx, py = (pr.top - rr.top) * sx, pw = pr.width * sx, ph = pr.height * sx;
-  tap(px + pw * 0.5, py + ph * 0.45, 3.3);
-  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 3.42);
+  tap(px + pw * 0.5, py + ph * 0.45, 4.05);
+  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 4.17);
   // la vista previa del enlace se convierte en la ventana del sitio
-  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px - 30, y: py - 430, scaleX: pw / 1020, scaleY: ph / 1100, opacity: 1 }, 3.58);
-  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.62, ease: 'power3.inOut' }, 3.58);
-  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 3.6);
-  blurOut('#g-ok', 3.95, 0.2);
+  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px - 30, y: py - 430, scaleX: pw / 1020, scaleY: ph / 1100, opacity: 1 }, 4.33);
+  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.62, ease: 'power3.inOut' }, 4.33);
+  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 4.35);
+  blurOut('#g-ok', 4.70, 0.2);
 
   window.__timelines['gancho'] = tl;
   });

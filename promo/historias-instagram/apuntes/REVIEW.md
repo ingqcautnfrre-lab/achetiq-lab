@@ -37,6 +37,12 @@
   con el nombre) crece hasta 3,3 veces mientras se desenfoca y se desvanece, sin recortarse.
 - Audio: −38,4 LUFS integrados, pico −16,6 dBFS.
 
+## Ajuste de la versión 6
+
+- Ritmo del chat: los mensajes entran desde el propio con 0,65 s entre uno y otro (el intervalo de
+  la versión 4), para que se puedan leer; el gancho dura 0,75 s más y la historia, 24,8 s.
+- Audio: −38,5 LUFS integrados, pico −16,5 dBFS.
+
 ## Uso en Instagram
 
 - Sticker de enlace debajo del bloque final (aprox. y = 1400-1600 px), hacia
