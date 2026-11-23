@@ -5,8 +5,8 @@
 - Vista web: la página real se muestra a 1200 px CSS (escritorio) dentro de una ventana de
   navegador; una cámara acerca la cabecera, el filtro y la tarjeta de la materia. La ventana nunca
   sube por encima del título del paso, de modo que el título y la interfaz no se superponen.
-- Entrada a la materia: el texto de la tarjeta se retira y solo la portada crece (×7,5) mientras se
-  desenfoca y se desvanece; la ventana de Drive aparece en su lugar.
+- Entrada a la materia: la tarjeta completa crece y se desvanece (detalle en «Ajustes
+  posteriores»); la ventana de Drive aparece en su lugar.
 - Drive: la ventana empieza debajo del título, mide lo que su contenido (470 px con las dos
   carpetas, 850 px con la carpeta abierta) y crece al entrar a «03. Práctica».
 - Muro: las 38 portadas reales; la de Termodinámica ya se carga correctamente.
