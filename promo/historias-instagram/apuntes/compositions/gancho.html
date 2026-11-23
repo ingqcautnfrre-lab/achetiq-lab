@@ -133,12 +133,11 @@
   const AV = 1110 - 150 - 30;
   const upto = (k) => { let h = 0; for (let j = 0; j <= k; j++) { if (j === 4 && k === 5) continue; h += hs[j]; } return -Math.max(0, h - AV); };
   tl.set('#g-msgs', { y: 0 }, 0);
-  tl.set('#g-m0, #g-m1', { opacity: 1 }, 0);
   const reveal = (k, t) => {
     tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
     tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
   };
-  reveal(2, 0.7); reveal(3, 1.35);
+  reveal(0, 0.15); reveal(1, 0.6); reveal(2, 1.05); reveal(3, 1.5);
   reveal(4, 2.05);
   tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.15);
   tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 2.48);

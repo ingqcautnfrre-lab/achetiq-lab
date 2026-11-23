@@ -1,4 +1,4 @@
-# REVIEW — Historia 2: Seguimiento de Carrera (versión 4)
+# REVIEW — Historia 2: Seguimiento de Carrera (versión 4 y 5)
 
 ## Decisiones
 
@@ -35,6 +35,13 @@
   la ventana, que es intencional.
 - `line_unread` en las preguntas de la introducción: se atenúan pero siguen visibles hasta la
   salida.
+
+## Ajustes posteriores (versión 5)
+
+- Los recuadros de las materias habilitadas se miden con el diseño de la tabla de cada paso: al
+  cambiar el texto de «materias faltantes» cambia la altura de las filas de Nivel II, y antes los
+  recuadros quedaban desplazados. Los conectores se actualizan en el mismo instante.
+- Las tarjetas de promedios de la carga de finales bajan 85 px y quedan separadas de la planilla.
 
 ## Uso en Instagram
 

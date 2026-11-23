@@ -1,4 +1,4 @@
-# REVIEW — Historia 1: Apuntes Académicos (versión 4)
+# REVIEW — Historia 1: Apuntes Académicos (versión 4 y 5)
 
 ## Decisiones
 
@@ -29,6 +29,13 @@
 - `text_below_floor` / `line_unread`: textos de la interfaz real (tarjetas, filas de Drive) que se
   ven de pasada; los títulos de cada paso cumplen el tamaño mínimo.
 - `content_overlap` breve (0,2 s) mientras el visor del PDF cubre la carpeta.
+
+## Ajustes posteriores (versión 5)
+
+- El chat empieza vacío y los mensajes entran en orden desde el primero, el propio.
+- Entrada a la materia: las demás tarjetas se retiran y la tarjeta completa (portada y recuadro
+  con el nombre) crece hasta 3,3 veces mientras se desenfoca y se desvanece, sin recortarse.
+- Audio: −38,4 LUFS integrados, pico −16,6 dBFS.
 
 ## Uso en Instagram
 

@@ -188,11 +188,13 @@
   tl.to(card, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' }, 5.57);
   // 4) se entra a la materia: la portada se agranda y desaparece
   blurOut('#r-c3', 5.7, 0.16);
-  tl.to(card.querySelector('.card-materia__body'), { opacity: 0, duration: 0.14 }, 5.72);
-  tl.to(card, { borderColor: 'rgba(0,0,0,0)', boxShadow: 'none', backgroundColor: 'rgba(0,0,0,0)', duration: 0.14 }, 5.72);
-  const kd = 7.5;
-  cam('#r-cam', 5.75, 0.72, { scale: kd, x: 540 - kd * cc[0], y: 960 - kd * cc[1], ease: 'power2.in' });
-  tl.to('#r-cam', { opacity: 0, filter: 'blur(14px)', duration: 0.26, ease: 'power1.in' }, 6.22);
+  const vecinas = QA('.apuntes__grid > *').filter((c) => c !== card && c.getAttribute('data-anio') === '4');
+  tl.to(vecinas, { opacity: 0, duration: 0.2, ease: 'power1.out' }, 5.7);
+  tl.to(Q('.page-header'), { opacity: 0, duration: 0.2 }, 5.7);
+  const ck = P((cr.left + cr.right) / 2, (cr.top + cr.bottom) / 2, S1);
+  const kd = 3.3;
+  cam('#r-cam', 5.75, 0.72, { scale: kd, x: 540 - kd * ck[0], y: 960 - kd * ck[1], ease: 'power2.in' });
+  tl.to('#r-cam', { opacity: 0, filter: 'blur(10px)', duration: 0.36, ease: 'power1.in' }, 6.1);
   tl.fromTo('#r-win2', { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'expo.out' }, 6.4);
   blurIn('#r-c4', 6.55);
   tl.fromTo('#r-d1, #r-d2', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.08 }, 6.6);

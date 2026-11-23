@@ -385,12 +385,11 @@ def build_apuntes():
   const AV = 1110 - 150 - 30;
   const upto = (k) => { let h = 0; for (let j = 0; j <= k; j++) { if (j === 4 && k === 5) continue; h += hs[j]; } return -Math.max(0, h - AV); };
   tl.set('#g-msgs', { y: 0 }, 0);
-  tl.set('#g-m0, #g-m1', { opacity: 1 }, 0);
   const reveal = (k, t) => {
     tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
     tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
   };
-  reveal(2, 0.7); reveal(3, 1.35);
+  reveal(0, 0.15); reveal(1, 0.6); reveal(2, 1.05); reveal(3, 1.5);
   reveal(4, 2.05);
   tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.15);
   tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 2.48);
@@ -518,11 +517,13 @@ def build_apuntes():
   tl.to(card, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' }, 5.57);
   // 4) se entra a la materia: la portada se agranda y desaparece
   blurOut('#r-c3', 5.7, 0.16);
-  tl.to(card.querySelector('.card-materia__body'), { opacity: 0, duration: 0.14 }, 5.72);
-  tl.to(card, { borderColor: 'rgba(0,0,0,0)', boxShadow: 'none', backgroundColor: 'rgba(0,0,0,0)', duration: 0.14 }, 5.72);
-  const kd = 7.5;
-  cam('#r-cam', 5.75, 0.72, { scale: kd, x: 540 - kd * cc[0], y: 960 - kd * cc[1], ease: 'power2.in' });
-  tl.to('#r-cam', { opacity: 0, filter: 'blur(14px)', duration: 0.26, ease: 'power1.in' }, 6.22);
+  const vecinas = QA('.apuntes__grid > *').filter((c) => c !== card && c.getAttribute('data-anio') === '4');
+  tl.to(vecinas, { opacity: 0, duration: 0.2, ease: 'power1.out' }, 5.7);
+  tl.to(Q('.page-header'), { opacity: 0, duration: 0.2 }, 5.7);
+  const ck = P((cr.left + cr.right) / 2, (cr.top + cr.bottom) / 2, S1);
+  const kd = 3.3;
+  cam('#r-cam', 5.75, 0.72, { scale: kd, x: 540 - kd * ck[0], y: 960 - kd * ck[1], ease: 'power2.in' });
+  tl.to('#r-cam', { opacity: 0, filter: 'blur(10px)', duration: 0.36, ease: 'power1.in' }, 6.1);
   tl.fromTo('#r-win2', { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'expo.out' }, 6.4);
   blurIn('#r-c4', 6.55);
   tl.fromTo('#r-d1, #r-d2', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.08 }, 6.6);
@@ -583,7 +584,7 @@ $CONV
     cierre_html = scene('cierre', cb, cj, C_DUR)
     total = round(C0 + C_DUR, 2)
 
-    sfx = [('pop-a', 0.72, 0.16), ('pop-b', 1.37, 0.16), ('pop-b', 2.52, 0.18),
+    sfx = [('pop-a', 0.17, 0.14), ('pop-b', 0.62, 0.14), ('pop-a', 1.07, 0.14), ('pop-b', 1.52, 0.16), ('pop-b', 2.52, 0.18),
            ('toque', 3.43, 0.26), ('barrido-a', 3.58, 0.12)]
     sfx += [('toque', R0 + 2.88, 0.24), ('barrido-b', R0 + 3.3, 0.08), ('toque', R0 + 5.58, 0.24), ('barrido-a', R0 + 5.8, 0.14),
             ('toque', R0 + 7.83, 0.22), ('toque', R0 + 9.58, 0.22),
@@ -650,8 +651,8 @@ def build_seguimiento():
         <div id="h-drop" class="drop"><div><i></i>No Cursada</div><div><i></i>Cursando</div><div id="h-op2"><i></i>Regular</div><div id="h-op3"><i></i>Aprobada</div></div>
         {TAPS}
       </div>
-      <div id="h-k0" class="kp" style="left:55px;top:1330px"><div class="l">Prom. sin aplazos</div><div id="h-k0v" class="v">—</div></div>
-      <div id="h-k1" class="kp" style="left:555px;top:1330px"><div class="l">Prom. con aplazos</div><div id="h-k1v" class="v">—</div></div>
+      <div id="h-k0" class="kp" style="left:55px;top:1415px"><div class="l">Prom. sin aplazos</div><div id="h-k0v" class="v">—</div></div>
+      <div id="h-k1" class="kp" style="left:555px;top:1415px"><div class="l">Prom. con aplazos</div><div id="h-k1v" class="v">—</div></div>
       {fh}
       {caps('h', [('c1', 'Tu carrera, en una planilla', None),
                   ('c2', 'Sin cuentas', 'Tus datos quedan en tu dispositivo.'),
@@ -681,11 +682,27 @@ def build_seguimiento():
   const colDisp = RR(Q('#seg-tabla-seguimiento thead th[data-col="disp"]'));
   // rectángulo de la tabla que se acerca: de N° a Disponible, filas 3 a 14
   const ET = enfoque(tbl.left, filaR(3).top - 10, colDisp.right + 6, filaR(14).bottom + 6, S_TAB, 1.6);
-  [10, 11, 12, 13, 14].forEach((n) => { const r = filaR(n), a = P(tbl.left, r.top, S_TAB); Object.assign(document.getElementById('h-rg' + n).style, { left: (a[0] + 2) + 'px', top: (a[1] + 1) + 'px', width: ((colDisp.right - tbl.left) * ZF - 4) + 'px', height: (r.height * ZF - 2) + 'px' }); });
-  [[6, 11], [6, 14], [4, 13], [5, 13], [3, 10], [3, 12]].forEach((ab) => {
-    const ra = filaR(ab[0]), rb = filaR(ab[1]);
+  // las «materias faltantes» cambian de largo y con ellas la altura de las filas de Nivel II:
+  // se mide la tabla en cada paso para que anillos y conectores queden encuadrados
+  const FALT = $FALT;
+  const celdaF = (n) => fila(n) && fila(n).querySelector('[data-col="falt"]');
+  const FILAS = [3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 40];
+  const orig = {}; FILAS.forEach((n) => { orig[n] = celdaF(n).innerHTML; });
+  const medir = (paso) => {
+    if (paso) Object.keys(FALT[paso]).forEach((n) => { const c = celdaF(n); if (c) c.innerHTML = FALT[paso][n]; });
+    const r = {}; FILAS.forEach((n) => { r[n] = filaR(n); }); return r;
+  };
+  const LY = { ini: medir(null), t_quimica: medir('t_quimica'), t_fis: medir('t_fis'), t_aga: medir('t_aga') };
+  FILAS.forEach((n) => { celdaF(n).innerHTML = orig[n]; });
+  const anillo = (n, paso) => { const r = LY[paso][n], a = P(tbl.left, r.top, S_TAB); Object.assign(document.getElementById('h-rg' + n).style, { left: (a[0] + 2) + 'px', top: (a[1] + 1) + 'px', width: ((colDisp.right - tbl.left) * ZF - 4) + 'px', height: (r.height * ZF - 2) + 'px' }); };
+  anillo(11, 't_quimica'); anillo(14, 't_quimica'); anillo(13, 't_fis'); anillo(10, 't_aga'); anillo(12, 't_aga');
+  const curva = (a, b, paso) => {
+    const ra = LY[paso][a], rb = LY[paso][b];
     const ya = P(0, ra.top + ra.height / 2, S_TAB)[1], yb = P(0, rb.top + rb.height / 2, S_TAB)[1], x0 = P(tbl.left, 0, 0)[0] + 2, bx = x0 - 22 - Math.abs(yb - ya) / 40;
-    document.getElementById('h-ln' + ab[0] + '-' + ab[1]).setAttribute('d', 'M ' + x0 + ' ' + ya + ' C ' + bx + ' ' + ya + ', ' + bx + ' ' + yb + ', ' + x0 + ' ' + yb);
+    return 'M ' + x0 + ' ' + ya + ' C ' + bx + ' ' + ya + ', ' + bx + ' ' + yb + ', ' + x0 + ' ' + yb;
+  };
+  [[6, 11, 'ini'], [6, 14, 'ini'], [4, 13, 't_quimica'], [5, 13, 't_quimica'], [3, 10, 't_fis'], [3, 12, 't_fis']].forEach((ab) => {
+    document.getElementById('h-ln' + ab[0] + '-' + ab[1]).setAttribute('d', curva(ab[0], ab[1], ab[2]));
   });
   const SELC = {};
   [3, 4, 5, 6].forEach((n) => { const r = RR(Q('#seg-estado-' + n)); SELC[n] = P(r.left + r.width / 2, r.top + r.height / 2, S_TAB); });
@@ -725,7 +742,6 @@ def build_seguimiento():
   tl.to('#h-scr', { y: -S_TAB * ZF, duration: 1.0, ease: 'power2.inOut' }, 3.5);
   cam('#h-cam', 3.9, 0.7, ET);
   capSwap('#h-c2', '#h-c3', 3.7);
-  const FALT = $FALT;
   const marcar = (n, val, t, opt, dur) => {
     const sel = Q('#seg-estado-' + n), c = SELC[n];
     tap(c[0], c[1], t);
@@ -760,12 +776,18 @@ def build_seguimiento():
   marcar(6, 'Aprobada', 4.85, '#h-op3', 0.5);
   capSwap('#h-c3', '#h-c4', 5.8);
   linea(6, 11, 5.75); linea(6, 14, 5.83);
+  tl.set('#h-ln6-11', { attr: { d: curva(6, 11, 't_quimica') } }, 6.07);
+  tl.set('#h-ln6-14', { attr: { d: curva(6, 14, 't_quimica') } }, 6.07);
   habilitar(11, 6.07); habilitar(14, 6.19); faltantes('t_quimica', 6.07);
   marcar(4, 'Aprobada', 7.15, '#h-op3', 0.3);
   marcar(5, 'Regular', 7.75, '#h-op2', 0.3);
-  linea(4, 13, 8.35); linea(5, 13, 8.4); habilitar(13, 8.65); faltantes('t_fis', 8.65);
+  linea(4, 13, 8.35); linea(5, 13, 8.4);
+  tl.set('#h-ln4-13', { attr: { d: curva(4, 13, 't_fis') } }, 8.65);
+  tl.set('#h-ln5-13', { attr: { d: curva(5, 13, 't_fis') } }, 8.65); habilitar(13, 8.65); faltantes('t_fis', 8.65);
   marcar(3, 'Regular', 9.1, '#h-op2', 0.3);
-  linea(3, 10, 9.7); linea(3, 12, 9.75); habilitar(10, 10.0); habilitar(12, 10.12); faltantes('t_aga', 10.0);
+  linea(3, 10, 9.7); linea(3, 12, 9.75);
+  tl.set('#h-ln3-10', { attr: { d: curva(3, 10, 't_aga') } }, 10.0);
+  tl.set('#h-ln3-12', { attr: { d: curva(3, 12, 't_aga') } }, 10.0); habilitar(10, 10.0); habilitar(12, 10.12); faltantes('t_aga', 10.0);
   const KAGA = $KAGA;
   vals.forEach((v, i) => tl.set(v, { innerHTML: KAGA[i] }, 10.15));
   // pestaña de exámenes finales
