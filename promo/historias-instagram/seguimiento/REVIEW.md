@@ -20,6 +20,8 @@
   13,4; 14,6; 15,6; 17,6; 19,2; 20,6; 23,4 y 25,7 s. Se corrigió la superposición de la nota final
   con la tercera ficha de Física I.
 - Sonido: los mismos efectos sintetizados que en Apuntes; medidos, no escuchados. Sin música.
+- Render medido (`hyperframes audio`): −23,1 LUFS integrados, pico real −4,9 dBTP, sin recortes;
+  los pops del gancho caen en 0,17 / 0,43 / 1,33 / 1,59 / 2,48 / 2,74 s, junto a cada fragmento.
 
 ## Plano más débil
 

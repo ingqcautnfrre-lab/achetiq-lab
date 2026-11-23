@@ -21,6 +21,10 @@
   10,6; 11,6; 12,1; 12,6; 13,3; 14,6; 17,0 y 19,6 s.
 - Sonido: efectos sintetizados a partir de ruido filtrado (sin tonos), con picos normalizados a
   −3 dBFS. Se midió la señal; no se escuchó. No hay música: se agrega en Instagram.
+- Render medido (`hyperframes audio`): −20,9 LUFS integrados, pico real −4,8 dBTP, sin recortes;
+  los golpes caen en 0,16 / 0,42 / 0,68 / 0,94 s (fragmentos) y 5,73 / 7,68 s (toques). El nivel
+  integrado queda por debajo del rango social (−16 a −14 LUFS) porque solo hay efectos: la música
+  de Instagram aporta el cuerpo.
 
 ## Plano más débil
 
