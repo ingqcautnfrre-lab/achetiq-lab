@@ -3,224 +3,330 @@
 @font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
 @font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
 @font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
-#root{position:absolute;inset:0;background:#FCF7F0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+#root{position:absolute;inset:0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
 .abs{position:absolute}
 .serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
 .mono{font-family:'Geist Mono',monospace}
-.soft{color:#4A4F59}
-.tap{position:absolute;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;background:rgba(19,23,32,.26);box-shadow:0 6px 18px rgba(11,41,100,.22);opacity:0;pointer-events:none;z-index:20}
-.chip{display:flex;align-items:center;gap:16px;padding:18px 26px;border-radius:16px;background:#FFFFFF;border:2px solid #E7DFD3;font-size:34px;white-space:nowrap;opacity:0}
-.frag{white-space:nowrap;opacity:0}
-.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;flex:0 0 52px}
-.pdf.s{width:36px;height:44px;font-size:12px;padding-bottom:6px;flex:0 0 36px;border-radius:5px}
-/* página de apuntes */
-.crumbs{font-size:32px;color:#4A4F59}
-.h1{font-size:116px;line-height:1.02}
-.lead{font-size:40px;line-height:1.4;color:#4A4F59}
-.pills{display:flex;flex-wrap:wrap;gap:16px}
-.pill{height:76px;padding:0 34px;border-radius:999px;border:2px solid #DCD3C6;background:#FFFFFF;font-size:34px;display:flex;align-items:center}
-.pill.on{background:#1344A5;border-color:#1344A5;color:#FFFFFF}
-.grid2{position:absolute;left:72px;width:936px;display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:28px}
-.gcell{position:relative}
-.gimg{height:256px;border-radius:16px;overflow:hidden;background:#E7CDAA}
-.gimg img{width:100%;height:100%;object-fit:cover;display:block}
-.gname{margin-top:12px;height:76px;font-size:30px;font-weight:500;line-height:1.25}
+.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0;z-index:40}
+.cap em{font-style:normal;color:#1344A5}
+.cap-sub{position:absolute;left:72px;top:338px;font-size:40px;line-height:1.3;color:#4A4F59;white-space:nowrap;opacity:0;z-index:40}
+.screen{position:absolute;left:0;width:1080px;height:1600px;overflow:hidden;border-radius:44px 44px 0 0;background:#F2F4F8;box-shadow:0 -14px 44px rgba(19,23,32,.10)}
+.cam{position:absolute;left:0;top:0;width:1080px}
+.cam iframe{display:block;border:0;background:#F2F4F8}
+.tap{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;background:rgba(19,23,32,.20);opacity:0;pointer-events:none;z-index:60}
+.ring{position:absolute;border:4px solid #1344A5;border-radius:20px;box-shadow:0 0 0 8px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
+.drop{position:absolute;width:300px;background:#FFFFFF;border-radius:14px;box-shadow:0 18px 44px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
+.drop div{position:relative;height:68px;display:flex;align-items:center;gap:18px;padding:0 24px;font-size:31px}
+.drop i{width:26px;height:26px;border-radius:50%;border:3px solid #9AA1AD;flex:0 0 26px}
+.flood{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
+/* chat */
+.chat{position:absolute;left:48px;top:470px;width:984px;height:1110px;background:#FFFFFF;border-radius:40px;box-shadow:0 18px 50px rgba(19,23,32,.10);overflow:hidden}
+.chat-h{position:absolute;left:0;top:0;width:100%;height:124px;display:flex;align-items:center;gap:22px;padding:0 34px;border-bottom:2px solid #F0EBE3;background:#FFFFFF;z-index:2}
+.av{width:72px;height:72px;border-radius:50%;background:#1344A5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:30px}
+.msgs{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:18px;padding:0 30px}
+.msg{max-width:720px;align-self:flex-start;opacity:0}
+.msg.me{align-self:flex-end}
+.msg .who{font-size:27px;font-weight:600;margin:0 0 6px 18px}
+.bub{padding:20px 28px;border-radius:30px 30px 30px 8px;background:#F1EEE8;font-size:37px;line-height:1.28}
+.msg.me .bub{background:#1344A5;color:#FFFFFF;border-radius:30px 30px 8px 30px}
+.typing{display:flex;gap:10px;padding:26px 30px;border-radius:30px 30px 30px 8px;background:#F1EEE8;align-self:flex-start;opacity:0}
+.typing span{width:14px;height:14px;border-radius:50%;background:#9AA1AD;display:block}
+.prev{margin-top:14px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:2px solid #E7DFD3}
+.prev img{display:block;width:100%;height:230px;object-fit:cover}
+.prev div{padding:14px 20px 18px}
+.prev b{display:block;font-size:32px;font-weight:600;color:#131720}
+.prev span{font-size:28px;color:#4A4F59}
 /* Drive simulado */
-.drive{left:0;top:0;width:1080px;height:1920px;background:#FFFFFF;padding:350px 72px 0;opacity:0}
-.drv-search{height:96px;border-radius:999px;background:#F1EEE8;font-size:36px;color:#4A4F59;padding:0 40px;display:flex;align-items:center;gap:22px}
-.drv-crumb{margin-top:44px;font-size:34px;color:#4A4F59;line-height:1.3}
-.drv-title{margin-top:10px;font-size:56px;font-weight:600;line-height:1.18}
-.drv-head{margin-top:38px;padding-bottom:16px;border-bottom:2px solid #E7DFD3;font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#4A4F59}
-.drv-row{position:relative;height:124px;display:flex;align-items:center;gap:30px;border-bottom:2px solid #F0EBE3;font-size:40px;padding:0 12px}
-.drv-row > *:not(.hl):not(.tap){position:relative;z-index:1}
-.drv-row .ic{flex:0 0 64px;display:flex;justify-content:center}
-.hl{position:absolute;inset:0;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0;z-index:0}
-.viewer{left:0;top:0;width:1080px;height:1920px;background:#E9E3D9;opacity:0}
-.viewer-bar{position:absolute;left:0;top:250px;width:1080px;height:116px;background:#FFFFFF;display:flex;align-items:center;gap:26px;padding:0 72px;font-size:36px;border-bottom:2px solid #E7DFD3}
-.viewer-page{position:absolute;left:100px;top:420px;width:880px;height:1150px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:64px 64px}
-.pg-head{display:flex;justify-content:space-between;font-size:28px;color:#4A4F59;border-bottom:2px solid #131720;padding-bottom:14px}
-.pg-title{margin-top:34px;font-size:36px;font-weight:600;line-height:1.3}
-.pg-text{margin-top:26px;font-size:30px;line-height:1.45}
+.sheet{position:absolute;left:0;width:1080px;height:1500px;background:#FFFFFF;border-radius:44px 44px 0 0;box-shadow:0 -14px 44px rgba(19,23,32,.16);overflow:hidden}
+.handle{position:absolute;left:500px;top:22px;width:80px;height:8px;border-radius:4px;background:#DCD3C6}
+.dcrumb{position:absolute;left:60px;top:66px;font-size:32px;color:#4A4F59;white-space:nowrap}
+.dtitle{position:absolute;left:60px;top:116px;width:960px;font-size:52px;font-weight:600;line-height:1.18}
+.dhead{position:absolute;left:60px;width:960px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;padding-bottom:14px;border-bottom:2px solid #F0EBE3}
+.drow{position:absolute;left:44px;width:992px;height:132px;display:flex;align-items:center;gap:30px;padding:0 16px;border-radius:18px}
+.drow .ic{flex:0 0 64px;display:flex;justify-content:center}
+.drow .tx b{display:block;font-size:39px;font-weight:500;white-space:nowrap}
+.drow .tx span{font-size:29px;color:#4A4F59}
+.dhl{position:absolute;inset:0;border-radius:18px;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0}
+.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
+.viewer{position:absolute;left:0;top:0;width:1080px;height:1500px;background:#E9E3D9;opacity:0}
+.vbar{position:absolute;left:0;top:0;width:1080px;height:120px;background:#FFFFFF;display:flex;align-items:center;gap:24px;padding:0 60px;font-size:34px;border-bottom:2px solid #E7DFD3}
+.page{position:absolute;left:130px;top:170px;width:820px;height:1080px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:84px 74px}
+.ln{height:22px;border-radius:6px;background:#E1E4E9;margin-bottom:26px}
+.ln.t{height:40px;width:62%;background:#CED2D9;margin-bottom:52px}
+/* muro de materias */
+.tile{position:absolute;width:196px;height:110px;border-radius:12px;overflow:hidden;opacity:0}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
 /* cierre */
-.flood{left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
-.claim{left:72px;width:936px;font-size:100px;line-height:1.04;opacity:0}
-.claim-sub{left:72px;width:900px;font-size:46px;line-height:1.35;color:#4A4F59;opacity:0}
-.end{left:72px;top:400px;width:936px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0}
-.end-logo{width:280px;height:280px}
-.end-name{font-size:96px;margin-top:18px;display:flex}
+.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:240px}
+.end-logo{width:460px;height:460px;opacity:0}
+.end-name{font-size:124px;margin-top:6px;display:flex;line-height:1.05}
 .end-name span{display:inline-block;opacity:0}
-.end-url{font-size:42px;color:#1344A5;margin-top:14px}
-.end-sec{font-size:38px;color:#4A4F59;margin-top:18px;line-height:1.3}
-.end-extra{font-size:34px;color:#4A4F59;margin-top:10px}
+.end-url{font-size:48px;color:#1344A5;margin-top:18px;opacity:0}
+.end-sec{font-size:42px;color:#4A4F59;margin-top:20px;line-height:1.3;opacity:0}
+.end-extra{font-size:36px;color:#4A4F59;margin-top:12px;opacity:0}
 /* seguimiento */
-.qwin{left:72px;top:330px;width:936px;height:250px;overflow:hidden}
-.q{position:absolute;left:0;top:0;font-size:112px;line-height:1.02;white-space:nowrap}
-.tok{font-size:36px;color:#4A4F59;white-space:nowrap;opacity:0}
-.tok b{color:#131720;font-weight:500}
-.pillb{height:62px;padding:0 24px;border-radius:999px;font-size:32px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap;opacity:0}
-.b-no{color:#9B171F;background:#FBEFEF;border:2px solid rgba(155,23,31,.3)}
-.b-si{color:#165E2E;background:#EDF6F0;border:2px solid rgba(22,94,46,.35)}
-.b-reg{color:#1344A5;background:#EEF3FC;border:2px solid rgba(19,68,165,.3)}
-.b-lvl{color:#006459;background:#EAF7F4;border:2px solid rgba(3,149,133,.4)}
-.nota{display:flex;align-items:baseline;gap:14px;padding:14px 24px;border-radius:16px;white-space:nowrap;opacity:0}
-.nota .k{font-family:'Geist Mono',monospace;font-size:30px}
-.nota .v{font-family:'Fraunces',serif;font-size:60px;line-height:1}
-.n-mal{background:#FBEFEF;border:2px solid #EBC3C5;color:#9B171F}
-.n-bien{background:#EDF6F0;border:2px solid #BFDCC9;color:#165E2E}
-.hh1{left:72px;top:300px;width:936px;font-size:96px;line-height:1.02}
-.kcard{position:absolute;width:456px;height:180px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:22px 26px}
-.kl{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.05em;color:#4A4F59;white-space:nowrap}
-.kv{font-family:'Fraunces',serif;font-size:84px;line-height:1.1;margin-top:8px;white-space:nowrap}
-.kv small{font-family:'Hanken Grotesk',sans-serif;font-size:34px;color:#4A4F59;margin-left:8px}
-.tbl{left:72px;top:750px;width:936px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px}
-.lvl{height:64px;padding:0 28px;display:flex;align-items:center;font-size:32px;font-weight:500}
-.trow{position:relative;height:96px;display:flex;align-items:center;padding:0 28px;gap:22px;border-top:1px solid #EFE8DE;font-size:36px}
-.trow .n{font-family:'Geist Mono',monospace;font-size:30px;width:56px;color:#4A4F59}
-.trow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tint{position:absolute;inset:0;background:#EDF6F0;opacity:0;z-index:0}
-.trow > *:not(.tint){position:relative;z-index:1}
-.sel{position:relative;height:64px;width:270px;padding:0 20px;border:2px solid #DCD3C6;border-radius:12px;font-size:30px;display:flex;align-items:center;justify-content:space-between;background:#FFFFFF}
-.sel-ring{position:absolute;inset:-6px;border:4px solid #922FA1;border-radius:16px;opacity:0}
-.sel-win{position:relative;width:200px;height:40px;overflow:hidden}
-.sel-win span{position:absolute;left:0;top:0;line-height:40px;white-space:nowrap}
-.sel .tap{position:absolute}
-.dd{position:absolute;right:0;top:72px;width:300px;background:#FFFFFF;border:2px solid #DCD3C6;border-radius:14px;box-shadow:0 18px 40px rgba(11,41,100,.16);opacity:0;z-index:30;overflow:hidden}
-.dd div{position:relative;height:70px;display:flex;align-items:center;padding:0 24px;font-size:30px}
-.bwrap{position:relative;width:290px;height:58px}
-.badge{position:absolute;right:0;top:0;height:58px;padding:0 22px;border-radius:999px;font-size:28px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap}
-.note{left:72px;width:936px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;opacity:0}
-.tabs{left:72px;top:300px;width:936px;height:76px;display:flex;gap:44px;border-bottom:2px solid #E7DFD3;font-size:36px}
-.tabs div{padding-top:10px;white-space:nowrap}
-.tab-ul{left:72px;top:370px;height:5px;background:#1344A5;width:200px}
-.fcard{position:absolute;left:72px;width:936px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:24px 28px;opacity:0}
-.fhead{display:flex;align-items:baseline;gap:18px;height:52px}
-.fhead .n{font-family:'Geist Mono',monospace;font-size:30px;color:#4A4F59}
-.fhead .nm{font-size:40px;font-weight:500;white-space:nowrap}
-.ffin{position:absolute;right:28px;top:14px;display:flex;align-items:baseline;gap:14px}
-.ffin .k{font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;letter-spacing:.05em}
-.ffin .v{font-family:'Fraunces',serif;font-size:64px;line-height:1;color:#165E2E;opacity:0}
-.atts{display:flex;gap:12px;margin-top:26px}
-.att{width:284px;height:132px;border-radius:16px;padding:14px 15px;opacity:0}
-.att .d{font-family:'Geist Mono',monospace;font-size:28px;white-space:nowrap}
-.att .g{display:flex;align-items:baseline;gap:12px;margin-top:4px}
-.att .g b{font-family:'Fraunces',serif;font-weight:400;font-size:64px;line-height:1;opacity:0}
-.att .g i{font-style:normal;font-family:'Geist Mono',monospace;font-size:28px;opacity:0}
-.a-mal{background:#FBEFEF;border:2px solid #EBC3C5;color:#9B171F}
-.a-bien{background:#EDF6F0;border:2px solid #BFDCC9;color:#165E2E}
-.prom{position:absolute;top:1430px;width:456px;height:140px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:18px 26px;opacity:0}
+.clu{position:absolute;opacity:0;white-space:nowrap}
+.seg{position:absolute;top:0;width:18px;height:64px;border-radius:4px;background:#E7DFD3}
+.kp{position:absolute;width:470px;height:176px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:24px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12)}
+.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.08em;color:#4A4F59;text-transform:uppercase}
+.kp .v{font-family:'Fraunces',serif;font-size:80px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
+.feat{position:absolute;display:flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;background:#FFFFFF;border:2px solid #E7DFD3;box-shadow:0 14px 36px rgba(19,23,32,.12);font-size:38px;font-weight:500;white-space:nowrap;opacity:0;z-index:30}
+.feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
 </style>
   <div id="root" data-composition-id="herramienta" data-width="1080" data-height="1920">
-    <div id="herramienta-all" class="clip" data-start="0" data-duration="15.9" data-track-index="1" style="position:absolute;inset:0">
-      <div id="h-head" class="abs serif hh1">Seguimiento de<br>Carrera</div>
-      <div id="h-cards"><div id="h-k0" class="kcard" style="left:72px;top:540px"><div class="kl">APROBADAS</div><div class="kv"><span id="h-v0">0</span></div></div><div id="h-k1" class="kcard" style="left:552px;top:540px"><div class="kl">AVANCE</div><div class="kv"><span id="h-v1">0,0 %</span></div></div><div id="h-k2" class="kcard" style="opacity:0;left:72px;top:738px"><div class="kl">NO CURSADAS / CURSANDO</div><div class="kv"><span id="h-v2">22</span></div></div><div id="h-k3" class="kcard" style="opacity:0;left:552px;top:738px"><div class="kl">DISPONIBLES</div><div class="kv"><span id="h-v3">9</span></div></div><div id="h-k4" class="kcard" style="opacity:0;left:72px;top:936px"><div class="kl">REGULARES</div><div class="kv"><span id="h-v4">3</span></div></div><div id="h-k5" class="kcard" style="opacity:0;left:552px;top:936px"><div class="kl">PROM. SIN APLAZOS</div><div class="kv"><span id="h-v5">7,76</span></div></div><div id="h-k6" class="kcard" style="opacity:0;left:72px;top:1134px"><div class="kl">PROM. CON APLAZOS</div><div class="kv"><span id="h-v6">6,95</span></div></div><div id="h-k7" class="kcard" style="opacity:0;left:552px;top:1134px"><div class="kl">HS. OBLIGATORIAS APROB.</div><div class="kv"><span id="h-v7">58</span><small>hs</small></div></div><div id="h-k8" class="kcard" style="opacity:0;left:72px;top:1332px"><div class="kl">HS. ELECTIVAS APROB.</div><div class="kv"><span id="h-v8">5</span><small>hs</small></div></div><div id="h-k9" class="kcard" style="opacity:0;left:552px;top:1332px"><div class="kl">% ELECTIVAS COMPLETADAS</div><div class="kv"><span id="h-v9">20,8 %</span></div></div></div>
-      <div id="h-tbl" class="abs tbl">
-        <div class="lvl" style="border-top:5px solid #507ED3;background:#EEF4FD;color:#315393;border-radius:18px 18px 0 0">Nivel I</div>
-        <div id="h-r4" class="trow" style=""><div id="h-r4-tint" class="tint"></div><div class="n">4</div><div class="nm">Análisis Matemático I</div><div id="h-r4-sel" class="sel"><div id="h-r4-ring" class="sel-ring"></div><div class="sel-win"><span id="h-r4-s0">No Cursada</span><span id="h-r4-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span></div></div>
-        <div id="h-r5" class="trow" style=""><div id="h-r5-tint" class="tint"></div><div class="n">5</div><div class="nm">Física I</div><div id="h-r5-sel" class="sel"><div id="h-r5-ring" class="sel-ring"></div><div class="sel-win"><span id="h-r5-s0">No Cursada</span><span id="h-r5-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span></div></div>
-        <div id="h-r6" class="trow" style="z-index:5"><div id="h-r6-tint" class="tint"></div><div class="n">6</div><div class="nm">Química</div><div id="h-r6-sel" class="sel"><div id="h-r6-ring" class="sel-ring"></div><div class="sel-win"><span id="h-r6-s0">No Cursada</span><span id="h-r6-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span><div id="h-tap-sel" class="tap" style="left:40%;top:50%"></div><div id="h-dd" class="dd" data-layout-allow-overlap data-layout-allow-occlusion><div id="h-dd0">No Cursada</div><div id="h-dd1">Cursando</div><div id="h-dd2">Regular</div><div id="h-dd3">Aprobada<div id="h-tap-dd" class="tap" style="left:40%;top:50%"></div></div></div></div></div>
-        <div class="lvl" style="border-top:5px solid #8E6AC7;background:#F5F2FC;color:#5F4489">Nivel II</div>
-        <div id="h-r11" class="trow"><div class="n">11</div><div class="nm">Química Inorgánica</div><div class="bwrap"><div id="h-r11-no" class="badge b-no">✕ No disponible</div><div id="h-r11-si" class="badge b-si" style="opacity:0">✓ Disponible</div></div></div>
-        <div id="h-r14" class="trow"><div class="n">14</div><div class="nm">Química Orgánica</div><div class="bwrap"><div id="h-r14-no" class="badge b-no">✕ No disponible</div><div id="h-r14-si" class="badge b-si" style="opacity:0">✓ Disponible</div></div></div>
+    <div id="herramienta-all" class="clip" data-start="0" data-duration="26.24" data-track-index="1" style="position:absolute;inset:0">
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div id="h-screen" class="screen" style="top:400px">
+        <div id="h-cam" class="cam"><iframe id="h-fr" src="assets/site/pages/recursos/seguimiento.html" style="width:510px;height:4200px;zoom:2.1176" scrolling="no"></iframe></div>
       </div>
-      <div id="h-note1" class="abs note" style="top:1400px">Ejemplo: Niveles I y II aprobados</div>
-      <div id="h-note2" class="abs note" style="top:1530px">Ejemplo · valores calculados por la planilla</div>
-      <div id="h-fin" class="abs" style="left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0">
-        <div class="abs tabs"><div id="h-tb0">Seguimiento</div><div id="h-tb1">Exámenes finales</div><div id="h-tb2" class="soft">Nota al estudiante</div></div>
-        <div id="h-ul" class="abs tab-ul" style="left:72px;width:196px"></div>
-        <div id="h-intro" class="abs soft" style="left:72px;top:420px;width:936px;font-size:40px;line-height:1.35;opacity:0">Se aprueba con 6. Máximo 4 instancias en condición regular.</div>
-        <div id="h-f0" class="fcard" style="top:560px"><div class="fhead"><span class="n">3</span><span class="nm">Álgebra y Geometría Analítica</span></div><div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f0v" class="v">7</div></div><div class="atts"><div id="h-a00" class="att a-mal"><div class="d">1° · 20/02/2024</div><div class="g"><b id="h-a00g">4</b><i id="h-a00i">aplazo</i></div></div><div id="h-a01" class="att a-bien"><div class="d">2° · 05/03/2024</div><div class="g"><b id="h-a01g">7</b><i id="h-a01i">aprobado</i></div></div></div></div><div id="h-f1" class="fcard" style="top:846px"><div class="fhead"><span class="n">5</span><span class="nm">Física I</span></div><div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f1v" class="v">8</div></div><div class="atts"><div id="h-a10" class="att a-mal"><div class="d">1° · 24/07/2024</div><div class="g"><b id="h-a10g">2</b><i id="h-a10i">aplazo</i></div></div><div id="h-a11" class="att a-mal"><div class="d">2° · 11/12/2024</div><div class="g"><b id="h-a11g">5</b><i id="h-a11i">aplazo</i></div></div><div id="h-a12" class="att a-bien"><div class="d">3° · 19/02/2025</div><div class="g"><b id="h-a12g">8</b><i id="h-a12i">aprobado</i></div></div></div></div><div id="h-f2" class="fcard" style="top:1132px"><div class="fhead"><span class="n">12</span><span class="nm">Análisis Matemático II</span></div><div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f2v" class="v">7</div></div><div class="atts"><div id="h-a20" class="att a-mal"><div class="d">1° · 16/07/2025</div><div class="g"><b id="h-a20g">3</b><i id="h-a20i">aplazo</i></div></div><div id="h-a21" class="att a-bien"><div class="d">2° · 03/12/2025</div><div class="g"><b id="h-a21g">7</b><i id="h-a21i">aprobado</i></div></div></div></div>
-        <div id="h-p0" class="prom" style="left:72px"><div class="kl">PROM. SIN APLAZOS</div><div class="kv" style="font-size:64px">7,76</div></div>
-        <div id="h-p1" class="prom" style="left:552px"><div class="kl">PROM. CON APLAZOS</div><div class="kv" style="font-size:64px">6,95</div></div>
-      </div>
+      <div id="h-ringp" class="ring"></div>
+      <div id="h-rg10" class="ring"></div><div id="h-rg11" class="ring"></div><div id="h-rg12" class="ring"></div><div id="h-rg13" class="ring"></div><div id="h-rg14" class="ring"></div>
+      <svg class="abs" style="left:0;top:0;z-index:56" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" stroke="#1344A5" stroke-width="6" stroke-linecap="butt" data-layout-ignore><path id="h-ln6-11" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln6-14" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln4-13" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln5-13" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln3-10" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln3-12" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/></svg>
+      <div id="h-drop" class="drop"><div><i></i>No Cursada</div><div><i></i>Cursando</div><div id="h-op2"><i></i>Regular</div><div id="h-op3"><i></i>Aprobada</div></div>
+      <div id="h-k0" class="kp" style="left:55px;top:1380px"><div class="l">Prom. sin aplazos</div><div id="h-k0v" class="v">—</div></div>
+      <div id="h-k1" class="kp" style="left:555px;top:1380px"><div class="l">Prom. con aplazos</div><div id="h-k1v" class="v">—</div></div>
+      <div id="h-f0" class="feat" style="left:60px;top:560px"><i>✓</i>Correlativas</div><div id="h-f1" class="feat" style="left:540px;top:700px"><i>✓</i>Avance de carrera</div><div id="h-f2" class="feat" style="left:40px;top:860px"><i>✓</i>Promedios</div><div id="h-f3" class="feat" style="left:560px;top:1010px"><i>✓</i>Exámenes finales</div><div id="h-f4" class="feat" style="left:50px;top:1170px"><i>✓</i>Exportá a Excel</div><div id="h-f5" class="feat" style="left:600px;top:1320px"><i>✓</i>Google Sheets</div><div id="h-f6" class="feat" style="left:120px;top:1470px"><i>✓</i>Respaldo en JSON</div>
+      <div id="h-c1" class="cap">Tu carrera, en una <em>planilla</em></div><div id="h-c2" class="cap">Sin <em>cuentas</em></div><div id="h-c2s" class="cap-sub">Tus datos quedan en tu dispositivo.</div><div id="h-c3" class="cap">Marcá tus <em>materias</em></div><div id="h-c4" class="cap">Se habilitan sus <em>correlativas</em></div><div id="h-c5" class="cap">Cargá tus <em>finales</em></div><div id="h-c5s" class="cap-sub">Los promedios se calculan solos.</div><div id="h-c6" class="cap">Todo tu avance, al <em>día</em></div>
+      <div id="h-claim" class="cap" style="white-space:normal;font-size:92px">Marcá tus materias.<br>La planilla hace <em>el resto</em>.</div>
+      <div id="h-tap" class="tap"></div><div id="h-tap2" class="tap"></div>
     </div>
   </div>
   <script>
-  const tl = gsap.timeline({ paused: true });
-  const blurIn = (s, t, d = 0.24) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d, ease: 'power4.out' }, t);
-  const blurOut = (s, t, d = 0.2) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d, ease: 'power2.in' }, t);
-  const tap = (s, t) => {
-    tl.fromTo(s, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
-    tl.to(s, { scale: 0.78, duration: 0.08, ease: 'power2.in' }, t + 0.14);
-    tl.to(s, { scale: 1.08, opacity: 0, duration: 0.24, ease: 'power2.out' }, t + 0.24);
-  };
-  const press = (s, t) => { tl.to(s, { scale: 0.965, duration: 0.09, ease: 'power2.in' }, t + 0.12); tl.to(s, { scale: 1, duration: 0.22, ease: 'power3.out' }, t + 0.22); };
-  const roll = (a, b, t, h) => { tl.to(a, { y: -h, opacity: 0, filter: 'blur(6px)', duration: 0.22, ease: 'power3.in' }, t); tl.fromTo(b, { y: h, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.32, ease: 'expo.out' }, t + 0.12); };
-  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
-  const spring = (s, t, from) => tl.fromTo(s, Object.assign({ opacity: 0, scale: 0.6 }, from || {}), { opacity: 1, scale: 1, rotation: (from && from.rot) || 0, duration: 0.42, ease: 'back.out(1.6)' }, t);
+  const fr = document.getElementById('h-fr');
+  function arrancar() {
+    const D = fr.contentDocument;
+    const Q = (s) => D.querySelector(s);
+    const QA = (s) => Array.from(D.querySelectorAll(s));
 
-  blurIn('#h-head', 0.00, 0.28);
-  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out', stagger: 0.08 }, 0.15);
-  tl.fromTo('#h-tbl', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 0.30);
-  tl.fromTo('#h-tbl .trow', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.06 }, 0.40);
-  tap('#h-tap-sel', 1.20);
-  tl.to('#h-r6-ring', { opacity: 1, duration: 0.12 }, 1.32);
-  tl.fromTo('#h-dd', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.22, ease: 'expo.out' }, 1.40);
-  tap('#h-tap-dd', 1.90);
-  tl.to('#h-dd3', { backgroundColor: 'rgba(146,47,161,.12)', duration: 0.1 }, 2.02);
-  tl.to('#h-dd', { opacity: 0, duration: 0.15 }, 2.22);
-  tl.to('#h-r6-ring', { opacity: 0, duration: 0.2 }, 2.30);
-  roll('#h-r6-s0', '#h-r6-s1', 2.25, 40);
-  tl.to('#h-r6-tint', { opacity: 1, duration: 0.25 }, 2.30);
-  steps('#h-v1', 2.30, ['0,8 %', '1,6 %', '2,4 %'], 0.067); tl.set('#h-v0', { innerHTML: '1' }, 2.30);
-  tl.to('#h-r11-no, #h-r14-no', { opacity: 0, scale: 0.8, duration: 0.14, stagger: 0.12 }, 2.60);
-  tl.fromTo('#h-r11-si, #h-r14-si', { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)', stagger: 0.12 }, 2.68);
-  roll('#h-r4-s0', '#h-r4-s1', 3.25, 40); tl.to('#h-r4-tint', { opacity: 1, duration: 0.2 }, 3.30);
-  roll('#h-r5-s0', '#h-r5-s1', 3.40, 40); tl.to('#h-r5-tint', { opacity: 1, duration: 0.2 }, 3.45);
-  steps('#h-v1', 3.35, ['4,9 %', '7,3 %', '9,8 %', '12,2 %', '14,6 %', '17,1 %', '19,5 %', '22,0 %', '24,4 %', '26,8 %', '29,3 %', '31,7 %', '34,1 %', '36,6 %', '39,0 %'], 0.067);
-  steps('#h-v0', 3.35, ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'], 0.067); tl.set('#h-v0', { innerHTML: '17' }, 4.36);
-  blurIn('#h-note1', 3.45);
-  // el tablero se rearma con los diez indicadores
-  tl.to('#h-tbl', { y: 120, opacity: 0, filter: 'blur(8px)', duration: 0.38, ease: 'power3.in' }, 5.00);
-  blurOut('#h-note1', 5.00);
-  tl.fromTo('#h-k2', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.35);
-  tl.fromTo('#h-k3', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.44);
-  tl.fromTo('#h-k4', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.53);
-  tl.fromTo('#h-k5', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.62);
-  tl.fromTo('#h-k6', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.71);
-  tl.fromTo('#h-k7', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.80);
-  tl.fromTo('#h-k8', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.89);
-  tl.fromTo('#h-k9', { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }, 5.98);
-  blurIn('#h-note2', 6.20);
-  // foco en «Prom. con aplazos» y paso a la pestaña de finales
-  tl.to('#h-k0, #h-k1, #h-k2, #h-k3, #h-k4, #h-k5, #h-k7, #h-k8, #h-k9, #h-head, #h-note2', { opacity: 0.25, duration: 0.3 }, 8.40);
-  tl.to('#h-k6', { borderColor: '#1344A5', scale: 1.05, duration: 0.3, ease: 'power2.out' }, 8.40);
-  tl.set('#h-k6', { transformOrigin: '228px 90px' }, 0.00);
-  tl.to('#h-k6', { scale: 7, x: 240, y: -264, opacity: 0, duration: 0.6, ease: 'power3.in' }, 9.00);
-  tl.fromTo('#h-fin', { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 9.35);
-  tl.set('#h-cards, #h-head, #h-note2', { opacity: 0 }, 9.80);
-  tl.set('#h-ul', { transformOrigin: '0% 50%' }, 0.00);
-  tl.to('#h-ul', { x: 240, scaleX: 1.414, duration: 0.4, ease: 'power3.inOut' }, 9.90);
-  tl.to('#h-tb1', { color: '#1344A5', duration: 0.2 }, 10.00);
-  tl.to('#h-tb0', { color: '#4A4F59', duration: 0.2 }, 10.00);
-  blurIn('#h-intro', 10.15);
-  tl.fromTo('#h-f0', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }, 10.60);
-  tl.fromTo('#h-a00', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 10.75);
-  tl.fromTo('#h-a00g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 10.91);
-  blurIn('#h-a00i', 10.99, 0.18);
-  tl.fromTo('#h-a01', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 11.09);
-  tl.fromTo('#h-a01g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 11.25);
-  blurIn('#h-a01i', 11.33, 0.18);
-  tl.fromTo('#h-f0v', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }, 11.48);
-  tl.fromTo('#h-f1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }, 11.63);
-  tl.fromTo('#h-a10', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 11.78);
-  tl.fromTo('#h-a10g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 11.94);
-  blurIn('#h-a10i', 12.02, 0.18);
-  tl.fromTo('#h-a11', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 12.12);
-  tl.fromTo('#h-a11g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 12.28);
-  blurIn('#h-a11i', 12.36, 0.18);
-  tl.fromTo('#h-a12', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 12.46);
-  tl.fromTo('#h-a12g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 12.62);
-  blurIn('#h-a12i', 12.70, 0.18);
-  tl.fromTo('#h-f1v', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }, 12.85);
-  tl.fromTo('#h-f2', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }, 13.00);
-  tl.fromTo('#h-a20', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 13.15);
-  tl.fromTo('#h-a20g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 13.31);
-  blurIn('#h-a20i', 13.39, 0.18);
-  tl.fromTo('#h-a21', { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 13.49);
-  tl.fromTo('#h-a21g', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }, 13.65);
-  blurIn('#h-a21i', 13.73, 0.18);
-  tl.fromTo('#h-f2v', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }, 13.88);
-  tl.fromTo('#h-p0, #h-p1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.1 }, 14.18);
-  window.__timelines["herramienta"] = tl;
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d || 0.24, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d || 0.18, ease: 'power2.in' }, t);
+  const tap = (s, x, y, t) => {
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+  const pop = (s, t) => tl.fromTo(s, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(2.2)', immediateRender: false }, t);
+  const capSwap = (a, b, t) => { if (a) blurOut(a, t, 0.16); blurIn(b, t + 0.12, 0.26); };
+
+  const vals = QA('#seg-dashboard .seg-kpi__value');
+  vals.forEach((v) => { v.style.display = 'inline-block'; v.style.transformOrigin = '0% 60%'; });
+  // los paneles ocultos pasan a manejarse con display (se deshace bien al retroceder)
+  const panelSeg = Q('#seg-panel-seguimiento'), panelFin = Q('#seg-panel-finales');
+  panelFin.hidden = false; panelFin.style.display = 'none';
+  // geometría medida en la página real, dentro del iframe (px CSS del teléfono)
+  const Z = 2.11765, PT = 400;
+  const RR = (el) => el.getBoundingClientRect();
+  const sy = (y, S) => PT + (y - S) * Z;
+  const priv = RR(Q('.seguimiento__nota-privacidad'));
+  const S_PRIV = priv.top - (660 - PT) / Z;
+  Object.assign(document.getElementById('h-ringp').style, { left: (priv.left * Z - 6) + 'px', top: (660 - 6) + 'px', width: (priv.width * Z + 12) + 'px', height: (priv.height * Z + 12) + 'px' });
+  const S_TAB = RR(Q('#seg-tabla-seguimiento thead')).top - (414 - PT) / Z;
+  const filaR = (n) => RR(Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"]'));
+  const tw = RR(Q('#seg-tabla-seguimiento .seg-table-scroll'));
+  [10, 11, 12, 13, 14].forEach((n) => { const r = filaR(n); Object.assign(document.getElementById('h-rg' + n).style, { left: (tw.left * Z + 4) + 'px', top: (sy(r.top, S_TAB) + 2) + 'px', width: (tw.width * Z - 8) + 'px', height: (r.height * Z - 4) + 'px' }); });
+  [[6, 11], [6, 14], [4, 13], [5, 13], [3, 10], [3, 12]].forEach((ab) => {
+    const ra = filaR(ab[0]), rb = filaR(ab[1]);
+    const ya = sy(ra.top + ra.height / 2, S_TAB), yb = sy(rb.top + rb.height / 2, S_TAB), bx = 24 - Math.abs(yb - ya) / 160;
+    document.getElementById('h-ln' + ab[0] + '-' + ab[1]).setAttribute('d', 'M 52 ' + ya + ' C ' + bx + ' ' + ya + ', ' + bx + ' ' + yb + ', 52 ' + yb);
+  });
+  const SELC = {};
+  [3, 4, 5, 6].forEach((n) => { const r = RR(Q('#seg-estado-' + n)); SELC[n] = [(r.left + r.width / 2) * Z, sy(r.top + r.height / 2, S_TAB)]; });
+  const tSeg = Q('.seg-tabs__tab[data-tab="seguimiento"]'), tFin = Q('.seg-tabs__tab[data-tab="finales"]');
+  const S_FIN = RR(Q('.seg-tabs')).top - (412 - PT) / Z;
+  const tc = (el) => { const r = RR(el); return [(r.left + r.width / 2) * Z, sy(r.top + r.height / 2, S_FIN)]; };
+  const TF = tc(tFin), TS = tc(tSeg);
+  panelSeg.style.display = 'none'; panelFin.style.display = 'block';
+  const sc = Q('#seg-tabla-finales .seg-table-scroll');
+  const scR = RR(sc);
+  const fila = (n) => Q('#seg-tabla-finales tr[data-numero="' + n + '"]');
+  const ins = (n) => Array.from(fila(n).querySelectorAll('input')).filter((i) => getComputedStyle(i.parentElement).display !== 'none');
+  const INS = {}, SCR = {};
+  [3, 5].forEach((n) => {
+    INS[n] = ins(n).map(RR);
+    SCR[n] = [0, 1, 2].map((k) => Math.max(0, Math.ceil(INS[n][2 * k + 1].right - (scR.left + scR.width) + 16)));
+  });
+  const finBottom = RR(Q('#seg-tabla-finales')).bottom;
+  panelSeg.style.display = ''; panelFin.style.display = 'none';
+  const KT = sy(finBottom, S_FIN) + 34;
+  document.getElementById('h-k0').style.top = KT + 'px';
+  document.getElementById('h-k1').style.top = KT + 'px';
+  let tapN = 0;
+  const tapA = (x, y, t) => tap((tapN++ % 2) ? '#h-tap2' : '#h-tap', x, y, t);
+  const tapIn = (n, i, s, t) => { const r = INS[n][i]; tapA((r.left + r.width / 2 - s) * Z, sy(r.top + r.height / 2, S_FIN), t); };
+  const S_DASH = RR(QA('#seg-dashboard .seg-kpi')[4]).top - (430 - PT) / Z;
+
+  tl.fromTo('#h-screen', { y: 1500 }, { y: 0, duration: 0.55, ease: 'power3.out' }, 0.0);
+  blurIn('#h-c1', 0.3);
+  tl.to('#h-cam', { y: -S_PRIV * Z, duration: 1.25, ease: 'power2.inOut' }, 0.55);
+  capSwap('#h-c1', '#h-c2', 1.85); blurIn('#h-c2s', 2.05);
+  tl.fromTo('#h-ringp', { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'expo.out' }, 2.05);
+  tl.to('#h-ringp', { opacity: 0, duration: 0.25 }, 3.25);
+  blurOut('#h-c2s', 3.3);
+  // de la cabecera a la tabla, sin cortes
+  tl.to('#h-cam', { y: -S_TAB * Z, duration: 1.1, ease: 'power2.inOut' }, 3.35);
+  capSwap('#h-c2', '#h-c3', 3.6);
+  const marcar = (n, val, t, opt, dur) => {
+    const sel = Q('#seg-estado-' + n);
+    const c = SELC[n];
+    tapA(c[0], c[1], t);
+    tl.set('#h-drop', { left: c[0] - 150, top: c[1] + 46 }, t);
+    tl.fromTo('#h-drop', { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.16, ease: 'expo.out' }, t + 0.15);
+    tl.set(opt, { backgroundColor: 'rgba(146,47,161,0.12)' }, t + 0.15 + dur);
+    tl.set(opt + ' i', { borderColor: '#922FA1', borderWidth: '9px' }, t + 0.15 + dur);
+    tapA(c[0], c[1] + 46 + (opt === '#h-op3' ? 238 : 170), t + 0.08 + dur);
+    tl.to('#h-drop', { opacity: 0, duration: 0.12 }, t + 0.3 + dur);
+    tl.set(opt, { backgroundColor: 'rgba(146,47,161,0)' }, t + 0.42 + dur);
+    tl.set(opt + ' i', { borderColor: '#9AA1AD', borderWidth: '3px' }, t + 0.42 + dur);
+    tl.set(sel, { value: val }, t + 0.32 + dur);
+    // la columna Disponible pasa a mostrar el estado de la materia, como en la herramienta
+    const bm = Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"] .seg-badge');
+    const ap = val === 'Aprobada';
+    tl.set(bm, { attr: { class: 'seg-badge seg-badge--' + (ap ? 'aprobada' : 'regular') } }, t + 0.32 + dur);
+    tl.set(bm.querySelector('.seg-badge__icon'), { innerHTML: ap ? '✓' : '◐' }, t + 0.32 + dur);
+    tl.set(bm.querySelector('.seg-badge__text'), { innerHTML: val }, t + 0.32 + dur);
+  };
+  const habilitar = (n, t) => {
+    const b = Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"] .seg-badge');
+    tl.set(b, { attr: { class: 'seg-badge seg-badge--disponible' } }, t);
+    tl.set(b.querySelector('.seg-badge__icon'), { innerHTML: '✓' }, t);
+    tl.set(b.querySelector('.seg-badge__text'), { innerHTML: 'Disponible' }, t);
+    tl.fromTo(b, { scale: 1.3 }, { scale: 1, duration: 0.32, ease: 'back.out(2.2)', immediateRender: false }, t);
+    tl.fromTo('#h-rg' + n, { opacity: 0 }, { opacity: 1, duration: 0.18 }, t);
+    tl.to('#h-rg' + n, { opacity: 0, duration: 0.3 }, t + 0.9);
+  };
+  const linea = (a, b, t) => {
+    tl.to('#h-ln' + a + '-' + b, { strokeDashoffset: 0, duration: 0.38, ease: 'power2.inOut' }, t);
+    tl.to('#h-ln' + a + '-' + b, { opacity: 0, duration: 0.3 }, t + 1.2);
+  };
+  // 1) Química aprobada: se habilitan Química Inorgánica y Química Orgánica
+  marcar(6, 'Aprobada', 4.7, '#h-op3', 0.5);
+  capSwap('#h-c3', '#h-c4', 5.65);
+  linea(6, 11, 5.6); linea(6, 14, 5.68);
+  habilitar(11, 5.92); habilitar(14, 6.04);
+  // 2) Análisis Matemático I aprobada y Física I regular: Física II
+  marcar(4, 'Aprobada', 7.0, '#h-op3', 0.3);
+  marcar(5, 'Regular', 7.6, '#h-op2', 0.3);
+  linea(4, 13, 8.2); linea(5, 13, 8.25); habilitar(13, 8.5);
+  // 3) Álgebra regular: Probabilidad y Estadística y Análisis Matemático II
+  marcar(3, 'Regular', 8.95, '#h-op2', 0.3);
+  linea(3, 10, 9.55); linea(3, 12, 9.6); habilitar(10, 9.85); habilitar(12, 9.97);
+  // el tablero (fuera de cuadro) ya refleja estos cambios, como en la herramienta real
+  const KAGA = ["2", "4,9 %", "37", "10", "2", "\u2014", "\u2014", "10", "0", "0,0 %"];
+  vals.forEach((v, i) => tl.set(v, { innerHTML: KAGA[i] }, 10.0));
+  // a la pestaña de exámenes finales
+  capSwap('#h-c4', '#h-c5', 10.6); blurIn('#h-c5s', 10.8);
+  tl.to('#h-cam', { y: -S_FIN * Z, duration: 1.0, ease: 'power2.inOut' }, 10.55);
+  tapA(TF[0], TF[1], 11.7);
+  tl.set(tSeg, { attr: { 'aria-selected': 'false' } }, 11.83);
+  tl.set(tFin, { attr: { 'aria-selected': 'true' } }, 11.83);
+  tl.set(panelSeg, { display: 'none' }, 11.83);
+  tl.set(panelFin, { display: 'block' }, 11.83);
+  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.08 }, 12.0);
+  const foco = (el, t, t2) => {
+    tl.set(el, { borderColor: '#1344A5', outline: '2px solid #1344A5', outlineOffset: '2px' }, t);
+    tl.set(el, { borderColor: '', outline: '', outlineOffset: '' }, t2);
+  };
+  const tipear = (el, txt, t, dt) => { for (let k = 1; k <= txt.length; k++) tl.set(el, { value: txt.slice(0, k) }, t + (k - 1) * dt); };
+  const prom = (sin, con, t) => {
+    if (sin) { tl.set('#h-k0v', { innerHTML: sin }, t); pop('#h-k0v', t); }
+    tl.set('#h-k1v', { innerHTML: con }, t); pop('#h-k1v', t);
+  };
+
+  tapIn(3, 0, 0, 12.30);
+  foco(ins(3)[0], 12.43, 12.85);
+  tipear(ins(3)[0], '20/02/2024', 12.46, 0.028);
+  tl.to(sc, { scrollLeft: SCR[3][0], duration: 0.34, ease: 'power2.inOut' }, 12.80);
+  tapIn(3, 1, SCR[3][0], 13.18);
+  foco(ins(3)[1], 13.31, 13.63);
+  tl.set(ins(3)[1], { value: '4' }, 13.38);
+  prom(null, '4,00', 13.50);
+  tl.to(sc, { scrollLeft: SCR[3][1], duration: 0.34, ease: 'power2.inOut' }, 13.68);
+  tapIn(3, 2, SCR[3][1], 14.06);
+  foco(ins(3)[2], 14.19, 14.61);
+  tipear(ins(3)[2], '05/03/2024', 14.22, 0.028);
+  tapIn(3, 3, SCR[3][1], 14.56);
+  foco(ins(3)[3], 14.69, 15.01);
+  tl.set(ins(3)[3], { value: '7' }, 14.76);
+  prom("7,00", '5,50', 14.88);
+  tl.to(sc, { scrollLeft: 0, duration: 0.34, ease: 'power2.inOut' }, 15.06);
+  tl.set(Q('#seg-tabla-finales tr[data-numero="3"] [data-col="nota"]'), { innerHTML: '7', color: '#165E2E', fontWeight: '600' }, 15.44); pop(Q('#seg-tabla-finales tr[data-numero="3"] [data-col="nota"]'), 15.44);
+  tl.to(sc, { scrollLeft: SCR[5][0], duration: 0.34, ease: 'power2.inOut' }, 15.86);
+  tapIn(5, 0, SCR[5][0], 16.24);
+  foco(ins(5)[0], 16.37, 16.54);
+  tl.set(ins(5)[0], { value: '24/07/2024' }, 16.39);
+  tapIn(5, 1, SCR[5][0], 16.52);
+  foco(ins(5)[1], 16.65, 16.97);
+  tl.set(ins(5)[1], { value: '2' }, 16.72);
+  prom(null, '4,33', 16.84);
+  tl.to(sc, { scrollLeft: SCR[5][1], duration: 0.34, ease: 'power2.inOut' }, 16.92);
+  tapIn(5, 2, SCR[5][1], 17.30);
+  foco(ins(5)[2], 17.43, 17.60);
+  tl.set(ins(5)[2], { value: '11/12/2024' }, 17.45);
+  tapIn(5, 3, SCR[5][1], 17.58);
+  foco(ins(5)[3], 17.71, 18.03);
+  tl.set(ins(5)[3], { value: '5' }, 17.78);
+  prom(null, '4,50', 17.90);
+  tl.to(sc, { scrollLeft: SCR[5][2], duration: 0.34, ease: 'power2.inOut' }, 17.98);
+  tapIn(5, 4, SCR[5][2], 18.36);
+  foco(ins(5)[4], 18.49, 18.66);
+  tl.set(ins(5)[4], { value: '19/02/2025' }, 18.51);
+  tapIn(5, 5, SCR[5][2], 18.64);
+  foco(ins(5)[5], 18.77, 19.09);
+  tl.set(ins(5)[5], { value: '8' }, 18.84);
+  prom("7,50", '5,20', 18.96);
+  tl.to(sc, { scrollLeft: 0, duration: 0.34, ease: 'power2.inOut' }, 19.04);
+  tl.set(Q('#seg-tabla-finales tr[data-numero="5"] [data-col="nota"]'), { innerHTML: '8', color: '#165E2E', fontWeight: '600' }, 19.42); pop(Q('#seg-tabla-finales tr[data-numero="5"] [data-col="nota"]'), 19.42);
+  // de vuelta a Seguimiento: el tablero completo
+  capSwap('#h-c5', '#h-c6', 19.99); blurOut('#h-c5s', 19.99);
+  tapA(TS[0], TS[1], 18.15);
+  tl.set(tSeg, { attr: { 'aria-selected': 'true' } }, 20.27);
+  tl.set(tFin, { attr: { 'aria-selected': 'false' } }, 20.27);
+  tl.set(panelFin, { display: 'none' }, 20.27);
+  tl.set(panelSeg, { display: 'block' }, 20.27);
+  tl.to('#h-k0, #h-k1', { opacity: 0, y: 30, duration: 0.2 }, 20.24);
+
+  tl.set(vals[0], { innerHTML: '5' }, 20.44); pop(vals[0], 20.44);
+  tl.set(vals[1], { innerHTML: '12,2 %' }, 20.50); pop(vals[1], 20.50);
+  tl.set(vals[2], { innerHTML: '36' }, 20.56); pop(vals[2], 20.56);
+  tl.set(vals[4], { innerHTML: '0' }, 20.68); pop(vals[4], 20.68);
+  tl.set(vals[5], { innerHTML: '7,50' }, 20.74); pop(vals[5], 20.74);
+  tl.set(vals[6], { innerHTML: '5,20' }, 20.80); pop(vals[6], 20.80);
+  tl.set(vals[7], { innerHTML: '23' }, 20.86); pop(vals[7], 20.86);
+  tl.to('#h-cam', { y: -S_DASH * Z, duration: 1.2, ease: 'power2.inOut' }, 20.94);
+  // cierre: la planilla se aleja y aparecen sus funciones
+  blurOut('#h-c6', 22.39);
+  tl.to('#h-screen', { scale: 0.56, y: 140, borderRadius: '44px', transformOrigin: '540px 0px', duration: 0.75, ease: 'power3.inOut' }, 22.39);
+
+  blurIn('#h-claim', 22.59, 0.3);
+  tl.fromTo('#h-f0', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 22.94);
+  tl.fromTo('#h-f1', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 23.06);
+  tl.fromTo('#h-f2', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 23.18);
+  tl.fromTo('#h-f3', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 23.30);
+  tl.fromTo('#h-f4', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 23.42);
+  tl.fromTo('#h-f5', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 23.54);
+  tl.fromTo('#h-f6', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 23.66);
+  blurOut('#h-claim', 25.64);
+  tl.to('#h-f0', { x: 320, y: 340, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.59);
+  tl.to('#h-f1', { x: -160, y: 200, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.61);
+  tl.to('#h-f2', { x: 340, y: 40, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.63);
+  tl.to('#h-f3', { x: -180, y: -110, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.65);
+  tl.to('#h-f4', { x: 330, y: -270, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.67);
+  tl.to('#h-f5', { x: -220, y: -420, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.69);
+  tl.to('#h-f6', { x: 260, y: -570, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 25.71);
+  tl.to('#h-screen', { scale: 0.12, y: 600, opacity: 0, duration: 0.45, ease: 'power3.in' }, 25.64);
+
+    window.__timelines['herramienta'] = tl;
+  }
+  function listo() { const D = fr.contentDocument; return D && D.readyState === 'complete' && D.querySelector('main'); }
+  function esperar() {
+    const D = fr.contentDocument;
+    const imgs = Array.from(D.images).map((i) => (i.complete ? Promise.resolve() : (i.decode ? i.decode().catch(() => 0) : Promise.resolve())));
+    return Promise.all([D.fonts.ready, document.fonts.ready].concat(imgs)).then(arrancar);
+  }
+  if (listo()) esperar(); else fr.addEventListener('load', esperar);
+
   </script>
 </template>

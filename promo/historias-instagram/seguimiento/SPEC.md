@@ -1,65 +1,48 @@
-# SPEC — Historia 2: Seguimiento de Carrera
+# SPEC — Historia 2: Seguimiento de Carrera (versión 3)
 
-Base: boceto A, sin horarios, con los números sueltos como introducción, sumando finales y
-correlativas, los diez indicadores que calcula la planilla y la tabla de exámenes finales
-(devolución del 23/11/2026).
+Devolución del 23/11/2026 aplicada: gancho con jerarquía clara (una pregunta y un solo racimo por
+vez), habilitación de correlativas con más materias y conexiones visibles, promedios que se
+completan al cargar notas, pestaña de exámenes finales fiel al sitio, cierre lleno de funciones,
+final centrado con el logo más grande.
 
 ```text
-GOAL:    que el estudiante sepa que la planilla le dice qué puede cursar, cuánto avanzó y
-         cuál es su promedio, a partir de cargar el estado de sus materias y sus finales.
-OUTPUT:  HyperFrames, 1080 x 1920 (9:16, historia de Instagram), 30 fps, MP4.
-TIME:    24,6 s x 30 = 738 cuadros. Sin música (se agrega en Instagram); solo efectos.
-LOOK:    el mismo sistema que la historia de Apuntes: crema #FCF7F0, superficies #FFFFFF con
-         filete #E7DFD3, tinta #131720 / #4A4F59, cobalto #1344A5, mauveína #922FA1 solo en el
-         foco del selector y de la opción elegida. Colores de nivel y de estado de tokens.css
-         (Nivel I #507ED3, Nivel II #8E6AC7; positivo #165E2E, negativo #9B171F).
-         Fraunces para preguntas, titulares y valores; Hanken Grotesk para nombres; Geist Mono
-         para rótulos de indicadores, fechas y correlativas (como en la herramienta real).
-OBJECTS: selector de estado con desplegable real (No Cursada, Cursando, Regular, Aprobada);
-         insignias «✓ Disponible» / «✕ No disponible»; tarjetas de indicador con rótulo,
-         valor y aclaración reales; pestañas reales (Seguimiento, Exámenes finales, Nota al
-         estudiante); fichas de intento con fecha DD/MM/AAAA y nota.
-MOTION:  como Apuntes; la pregunta cambia con rodillo vertical de 0,25 s; los números sueltos
-         entran con resorte (back.out 1,6) y salen dispersos con desenfoque 12 px en 0,35 s;
-         los valores suben por pasos de 2 cuadros; el tablero se rearma sin salir del cuadro.
-SHOTS:   0,0-3,3   Gancho. «¿Qué puedo cursar?» en el cuadro 0, rueda a «¿Cuánto me falta?» y
-                   a «¿Cuál es mi promedio?». En cada pregunta caen fragmentos reales:
-                   correlativas («Cursadas req. 6, 7, 8, 9, 13», «Aprobadas req. 1, 3, 4»,
-                   «✕ No disponible»), avance («41 obligatorias», «24 hs electivas»,
-                   «Regular») y finales («1° nota 4», «2° nota 7», «Se aprueba con 6»,
-                   «Máximo 4 instancias»). Sonido: pops alternados; barrido al salir.
-         3,3-8,0   La herramienta: «Seguimiento de Carrera», Avance y Aprobadas, filas del
-                   Nivel I y II. Toque en el selector de Química -> «Aprobada»; Química
-                   Inorgánica y Orgánica pasan a «✓ Disponible»; Avance 0,0 % -> 2,4 %.
-                   Avance rápido al estudiante de ejemplo: 39,0 %, 17 aprobadas.
-         8,0-12,6  El tablero se rearma con los diez indicadores reales del ejemplo:
-                   Aprobadas 17 · Avance 39,0 % · No cursadas / cursando 22 · Disponibles 9 ·
-                   Regulares 3 · Prom. sin aplazos 7,76 · Prom. con aplazos 6,95 ·
-                   Hs. obligatorias aprob. 58 hs · Hs. electivas aprob. 5 hs ·
-                   % electivas completadas 20,8 %. Se resalta «Prom. con aplazos».
-         12,6-18,6 La tarjeta abre la pestaña «Exámenes finales»: «Se aprueba con 6. Máximo 4
-                   instancias en condición regular.» Tres materias con sus intentos:
-                   Álgebra y Geometría Analítica (20/02/2024 · 4; 05/03/2024 · 7 -> 7),
-                   Física I (24/07/2024 · 2; 11/12/2024 · 5; 19/02/2025 · 8 -> 8),
-                   Análisis Matemático II (16/07/2025 · 3; 03/12/2025 · 7 -> 7).
-                   Los aplazos se marcan; la nota final se calcula; cierran los dos promedios.
-         18,6-21,4 Afirmación: «Marcá tus materias. La planilla calcula el resto.» +
-                   «Tus datos quedan en tu dispositivo.»
-         21,4-24,6 Cierre: logo, achetiq.github.io, «Recursos académicos › Seguimiento de
-                   Carrera», «También en Excel y Google Sheets»; zona libre para el sticker.
-BANNED:  lo mismo que Apuntes, más: horarios, relojes y fechas de calendario en el gancho
-         (pedido explícito); grilla de KPI genérica sin rótulos reales; números inventados.
-QA:      cuadro 0 con la pregunta; 2,9 s gancho completo; 5,3 s desplegable abierto;
-         6,2 s insignias en verde; 11,0 s tablero completo legible; 16,5 s tabla de finales
-         con notas finales; 20,0 s afirmación; 23,5 s cierre con zona del sticker despejada.
+GOAL:    el estudiante entiende qué hace la planilla: marcar materias habilita correlativas, cargar
+         finales calcula los promedios y el tablero muestra el avance.
+OUTPUT:  HyperFrames, 1080 x 1920, 30 fps, MP4. Duración: 33,7 s.
+LOOK:    fondo crema #FCF7F0; la página real (iframe de 510 px CSS, zoom 2,118) con su CSS. La tabla
+         muestra las columnas del diseño móvil de la especificación (N°, Asignatura, Estado,
+         Disponible) y un subconjunto real de filas; la tabla de finales muestra N°, Asignatura,
+         Nota final y los intentos 1 a 3. Títulos de paso en Fraunces 84 px.
+MOTION:  el gancho cambia de pregunta con rodillo vertical; la página se recorre sin cortes; las
+         correlativas se dibujan como arcos cobalto desde la materia marcada a las que habilita.
+SOUND:   efectos suaves (toques, tic de tecla al escribir, pop al cambiar un valor).
+SHOTS:   0,0-4,7    Gancho: «¿Qué puedo cursar?» (Balances de Masa y Energía y sus correlativas
+                    reales 6·7·8·9·13 / 1·3·4) -> «¿Cuánto me falta?» (41 obligatorias, barra de
+                    41 segmentos, avance 12,2 %) -> «¿Cuál es mi promedio?» (notas sueltas que
+                    convergen en un signo de pregunta).
+         4,4-7,7    «Tu carrera, en una planilla» y «Sin cuentas. Tus datos quedan en tu
+                    dispositivo» con la nota de privacidad real resaltada.
+         7,7-14,5   «Marcá tus materias» / «Se habilitan sus correlativas»: Química aprobada ->
+                    Química Inorgánica y Química Orgánica; Análisis Matemático I aprobada y Física
+                    I regular -> Física II; Álgebra regular -> Probabilidad y Estadística y
+                    Análisis Matemático II. Cada cambio sale de la lógica real de la herramienta.
+         14,9-24,2  «Cargá tus finales»: pestaña real «Exámenes finales»; se tipean las fechas y
+                    notas de Álgebra (4, 7) y Física I (2, 5, 8) con el desplazamiento horizontal
+                    real de la tabla; los promedios se actualizan en cada nota (4,00 -> 5,50 ->
+                    4,33 -> 4,50 -> 5,20; sin aplazos 7,00 -> 7,50) y aparece la nota final.
+         24,4-26,8  «Todo tu avance, al día»: pestaña Seguimiento y tablero real con los diez
+                    indicadores del estado mostrado (5 aprobadas, 12,2 %, promedios 7,50 y 5,20…).
+         26,8-30,3  «Marcá tus materias. La planilla hace el resto.»: la pantalla se aleja y aparecen
+                    sus funciones: Correlativas, Avance de carrera, Promedios, Exámenes finales,
+                    Exportá a Excel, Google Sheets, Respaldo en JSON.
+         30,3-33,7  Cierre centrado: logo de 460 px, AChETIQ, achetiq.github.io, Recursos
+                    académicos › Seguimiento de Carrera, También en Excel y Google Sheets.
+BANNED:  horarios y relojes; valores que no salgan de la herramienta; grillas de KPI inventadas.
 ```
 
-## Datos que aparecen en pantalla (fuente)
+## Fuentes de lo que se ve
 
-- Estudiante de ejemplo (ilustrativo): Niveles I y II aprobados (16 obligatorias), Prácticas
-  de Laboratorio aprobada (electiva, 5 hs), Balances, Termodinámica y Matemática Superior
-  Aplicada regulares, Fisicoquímica y Fenómenos de Transporte cursando; intentos de final en
-  seis materias. Los diez indicadores se leyeron de la herramienta real
-  (`pages/recursos/seguimiento.html`) cargada con ese estado.
-- Correlativas: `data/plan_academico.json` (Balances: cursadas 6, 7, 8, 9, 13; aprobadas 1, 3, 4).
-- Regla de finales: texto real de la pestaña «Exámenes finales».
+- Página: `pages/recursos/seguimiento.html` capturada vacía (sin datos) a 510 px; los estados,
+  insignias, notas y promedios de cada paso se leyeron de la herramienta real cargada con ese
+  estado (`valores.json`, generado por `herramientas/preparar_sitio.cjs`).
+- Las fechas se muestran en formato dd/mm/aaaa, como en un navegador configurado en es-AR.

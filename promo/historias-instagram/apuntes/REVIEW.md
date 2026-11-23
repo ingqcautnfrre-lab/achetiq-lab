@@ -1,45 +1,34 @@
-# REVIEW — Historia 1: Apuntes Académicos
+# REVIEW — Historia 1: Apuntes Académicos (versión 3)
 
-## Decisiones creativas
+## Decisiones
 
-- Base: boceto B (zoom continuo) con una introducción breve, según la devolución del 23/11/2026.
-- Introducción: «¿Dónde quedaron los apuntes?» con ocho fragmentos reales de la carpeta (carpetas,
-  archivos y tipos de material). Uno de ellos, «2024 - GS - Resolución Serie 07.pdf», es el archivo
-  que se encuentra al final: el gancho anticipa el desenlace.
-- La introducción y la página forman un solo «mundo» vertical: la cámara baja de la pregunta a la
-  página real y recorre la grilla sin cortes.
-- Fondo crema #FCF7F0 por pedido explícito. Contradice la «Regla de la Porcelana Fría» de
-  `docs/DESIGN.md`, que rige el sitio web; aquí se aplica solo a estas piezas de Instagram.
-- La hoja del PDF muestra el encabezado y el enunciado reales (fragmento de contenido devuelto por
-  Drive); los trazos manuscritos son una representación, porque no se pudo descargar la imagen de
-  la página sin cargar el archivo completo en la sesión.
+- Fidelidad: la interfaz del sitio ya no se redibuja; se incrusta la página real (DOM, CSS,
+  tipografías e imágenes) en un iframe de ancho de teléfono. El filtro por año, las tarjetas y las
+  portadas son los del sitio. Drive se simula porque su interfaz no es accesible desde aquí.
+- Gancho con emoción: un chat de cursada en el que nadie encuentra la Serie 7; la respuesta es el
+  enlace a la página, y esa vista previa se convierte en la pantalla (continuidad).
+- Afirmación: el muro de las 38 portadas reales con contador, y «Toda la carrera, a un toque».
+- Sonido: efectos nuevos, más graves y apagados, a volumen bajo.
 
 ## Medido y observado
 
-- `hyperframes check`: sin errores.
-- Cuadros revisados a 0; 0,6; 1,6; 2,6; 3,6; 4,8; 5,6; 6,0; 6,6; 7,2; 7,6; 8,4; 9,2; 9,5; 9,9;
-  10,6; 11,6; 12,1; 12,6; 13,3; 14,6; 17,0 y 19,6 s.
-- Sonido: efectos sintetizados a partir de ruido filtrado (sin tonos), con picos normalizados a
-  −3 dBFS. Se midió la señal; no se escuchó. No hay música: se agrega en Instagram.
-- Render medido (`hyperframes audio`): −20,9 LUFS integrados, pico real −4,8 dBTP, sin recortes;
-  los golpes caen en 0,16 / 0,42 / 0,68 / 0,94 s (fragmentos) y 5,73 / 7,68 s (toques). El nivel
-  integrado queda por debajo del rango social (−16 a −14 LUFS) porque solo hay efectos: la música
-  de Instagram aporta el cuerpo.
+- `hyperframes check`: sin errores. Cuadros revisados en todo el recorrido; la geometría de las
+  superposiciones (toques, portada, zoom) se mide dentro del iframe al arrancar, para que coincida
+  exactamente con la página real.
+- Audio: medido con `hyperframes audio`, no escuchado.
 
 ## Plano más débil
 
-- 12,6-13,4 s: la grilla completa queda en pantalla menos de un segundo antes de la afirmación.
-  Con más tiempo, se sostendría 0,5 s más o se marcarían las 16 portadas con un destello en cascada.
+- 4,0-4,4 s: el rectángulo que crece desde la vista previa del enlace es liso durante 0,4 s antes de
+  mostrar la página; con más tiempo, se usaría una captura de la página dentro de ese rectángulo.
 
 ## Advertencias que se mantienen
 
-- `outside_safe_zone`: el control mide el riel lateral de TikTok y YouTube Shorts; las historias
-  de Instagram no lo tienen. El contenido respeta la franja superior (250 px) e inferior (340 px).
-- `line_unread`: los nombres de materias que pasan durante el paneo y el texto del PDF son
-  vistazos intencionales, no líneas para leer completas.
-- `text_below_floor` a 12,0 s: nombres de la grilla al alejarse (escala 0,6), usados como textura.
+- `outside_safe_zone`: corresponde al riel lateral de TikTok/Shorts; las historias no lo tienen.
+- `line_unread`: nombres de tarjetas durante el desplazamiento y el nombre del archivo en el visor
+  son vistazos.
 
 ## Uso en Instagram
 
-- Ubicar el sticker de enlace en la zona libre del cierre (aproximadamente entre y = 1180 y
-  y = 1400 px), apuntando a `achetiq.github.io/pages/recursos/apuntes`.
+- Sticker de enlace debajo del bloque final (aprox. y = 1350-1550 px), hacia
+  `achetiq.github.io/pages/recursos/apuntes`.

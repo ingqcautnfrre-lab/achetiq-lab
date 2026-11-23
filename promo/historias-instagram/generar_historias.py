@@ -1,167 +1,126 @@
 #!/usr/bin/env python3
-"""Genera los proyectos HyperFrames de las dos historias de Instagram.
+"""Genera los proyectos HyperFrames de las dos historias de Instagram (versión 3).
 
-  apuntes/      Historia 1 · Apuntes Académicos (boceto B + introducción breve)
-  seguimiento/  Historia 2 · Seguimiento de Carrera (boceto A sin horarios)
+  apuntes/      Historia 1 · Apuntes Académicos
+  seguimiento/  Historia 2 · Seguimiento de Carrera
 
-Escribe HTML estático: cada elemento temporizado queda escrito en el HTML. Ver el SPEC.md de
-cada proyecto. Ejecutar desde cualquier carpeta: python3 generar_historias.py
+La interfaz del sitio no se redibuja: cada historia incrusta la página real (DOM tras el JS,
+CSS, tipografías e imágenes del sitio) en un <iframe> de ancho de teléfono, escalado al cuadro,
+y la anima cuadro a cuadro (desplazamiento, selectores, insignias, campos, indicadores).
+Las capturas, las medidas y los valores salen de herramientas/preparar_sitio.cjs.
+
+Uso:  python3 generar_historias.py
 """
 import json
 import os
-
-BASE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.abspath(os.path.join(BASE, '..', '..'))
-plan = json.load(open(os.path.join(REPO, 'data/plan_academico.json')))
-MAT = {m['numero']: m for m in plan['materias']}
-
-# ───────────────────────── sistema visual (crema) ─────────────────────────
-CSS = r"""
-@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
-@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
-@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
-#root{position:absolute;inset:0;background:#FCF7F0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
-.abs{position:absolute}
-.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
-.mono{font-family:'Geist Mono',monospace}
-.soft{color:#4A4F59}
-.tap{position:absolute;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;background:rgba(19,23,32,.26);box-shadow:0 6px 18px rgba(11,41,100,.22);opacity:0;pointer-events:none;z-index:20}
-.chip{display:flex;align-items:center;gap:16px;padding:18px 26px;border-radius:16px;background:#FFFFFF;border:2px solid #E7DFD3;font-size:34px;white-space:nowrap;opacity:0}
-.frag{white-space:nowrap;opacity:0}
-.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;flex:0 0 52px}
-.pdf.s{width:36px;height:44px;font-size:12px;padding-bottom:6px;flex:0 0 36px;border-radius:5px}
-/* página de apuntes */
-.crumbs{font-size:32px;color:#4A4F59}
-.h1{font-size:116px;line-height:1.02}
-.lead{font-size:40px;line-height:1.4;color:#4A4F59}
-.pills{display:flex;flex-wrap:wrap;gap:16px}
-.pill{height:76px;padding:0 34px;border-radius:999px;border:2px solid #DCD3C6;background:#FFFFFF;font-size:34px;display:flex;align-items:center}
-.pill.on{background:#1344A5;border-color:#1344A5;color:#FFFFFF}
-.grid2{position:absolute;left:72px;width:936px;display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:28px}
-.gcell{position:relative}
-.gimg{height:256px;border-radius:16px;overflow:hidden;background:#E7CDAA}
-.gimg img{width:100%;height:100%;object-fit:cover;display:block}
-.gname{margin-top:12px;height:76px;font-size:30px;font-weight:500;line-height:1.25}
-/* Drive simulado */
-.drive{left:0;top:0;width:1080px;height:1920px;background:#FFFFFF;padding:350px 72px 0;opacity:0}
-.drv-search{height:96px;border-radius:999px;background:#F1EEE8;font-size:36px;color:#4A4F59;padding:0 40px;display:flex;align-items:center;gap:22px}
-.drv-crumb{margin-top:44px;font-size:34px;color:#4A4F59;line-height:1.3}
-.drv-title{margin-top:10px;font-size:56px;font-weight:600;line-height:1.18}
-.drv-head{margin-top:38px;padding-bottom:16px;border-bottom:2px solid #E7DFD3;font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#4A4F59}
-.drv-row{position:relative;height:124px;display:flex;align-items:center;gap:30px;border-bottom:2px solid #F0EBE3;font-size:40px;padding:0 12px}
-.drv-row > *:not(.hl):not(.tap){position:relative;z-index:1}
-.drv-row .ic{flex:0 0 64px;display:flex;justify-content:center}
-.hl{position:absolute;inset:0;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0;z-index:0}
-.viewer{left:0;top:0;width:1080px;height:1920px;background:#E9E3D9;opacity:0}
-.viewer-bar{position:absolute;left:0;top:250px;width:1080px;height:116px;background:#FFFFFF;display:flex;align-items:center;gap:26px;padding:0 72px;font-size:36px;border-bottom:2px solid #E7DFD3}
-.viewer-page{position:absolute;left:100px;top:420px;width:880px;height:1150px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:64px 64px}
-.pg-head{display:flex;justify-content:space-between;font-size:28px;color:#4A4F59;border-bottom:2px solid #131720;padding-bottom:14px}
-.pg-title{margin-top:34px;font-size:36px;font-weight:600;line-height:1.3}
-.pg-text{margin-top:26px;font-size:30px;line-height:1.45}
-/* cierre */
-.flood{left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
-.claim{left:72px;width:936px;font-size:100px;line-height:1.04;opacity:0}
-.claim-sub{left:72px;width:900px;font-size:46px;line-height:1.35;color:#4A4F59;opacity:0}
-.end{left:72px;top:400px;width:936px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0}
-.end-logo{width:280px;height:280px}
-.end-name{font-size:96px;margin-top:18px;display:flex}
-.end-name span{display:inline-block;opacity:0}
-.end-url{font-size:42px;color:#1344A5;margin-top:14px}
-.end-sec{font-size:38px;color:#4A4F59;margin-top:18px;line-height:1.3}
-.end-extra{font-size:34px;color:#4A4F59;margin-top:10px}
-/* seguimiento */
-.qwin{left:72px;top:330px;width:936px;height:250px;overflow:hidden}
-.q{position:absolute;left:0;top:0;font-size:112px;line-height:1.02;white-space:nowrap}
-.tok{font-size:36px;color:#4A4F59;white-space:nowrap;opacity:0}
-.tok b{color:#131720;font-weight:500}
-.pillb{height:62px;padding:0 24px;border-radius:999px;font-size:32px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap;opacity:0}
-.b-no{color:#9B171F;background:#FBEFEF;border:2px solid rgba(155,23,31,.3)}
-.b-si{color:#165E2E;background:#EDF6F0;border:2px solid rgba(22,94,46,.35)}
-.b-reg{color:#1344A5;background:#EEF3FC;border:2px solid rgba(19,68,165,.3)}
-.b-lvl{color:#006459;background:#EAF7F4;border:2px solid rgba(3,149,133,.4)}
-.nota{display:flex;align-items:baseline;gap:14px;padding:14px 24px;border-radius:16px;white-space:nowrap;opacity:0}
-.nota .k{font-family:'Geist Mono',monospace;font-size:30px}
-.nota .v{font-family:'Fraunces',serif;font-size:60px;line-height:1}
-.n-mal{background:#FBEFEF;border:2px solid #EBC3C5;color:#9B171F}
-.n-bien{background:#EDF6F0;border:2px solid #BFDCC9;color:#165E2E}
-.hh1{left:72px;top:300px;width:936px;font-size:96px;line-height:1.02}
-.kcard{position:absolute;width:456px;height:180px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:22px 26px}
-.kl{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.05em;color:#4A4F59;white-space:nowrap}
-.kv{font-family:'Fraunces',serif;font-size:84px;line-height:1.1;margin-top:8px;white-space:nowrap}
-.kv small{font-family:'Hanken Grotesk',sans-serif;font-size:34px;color:#4A4F59;margin-left:8px}
-.tbl{left:72px;top:750px;width:936px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px}
-.lvl{height:64px;padding:0 28px;display:flex;align-items:center;font-size:32px;font-weight:500}
-.trow{position:relative;height:96px;display:flex;align-items:center;padding:0 28px;gap:22px;border-top:1px solid #EFE8DE;font-size:36px}
-.trow .n{font-family:'Geist Mono',monospace;font-size:30px;width:56px;color:#4A4F59}
-.trow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tint{position:absolute;inset:0;background:#EDF6F0;opacity:0;z-index:0}
-.trow > *:not(.tint){position:relative;z-index:1}
-.sel{position:relative;height:64px;width:270px;padding:0 20px;border:2px solid #DCD3C6;border-radius:12px;font-size:30px;display:flex;align-items:center;justify-content:space-between;background:#FFFFFF}
-.sel-ring{position:absolute;inset:-6px;border:4px solid #922FA1;border-radius:16px;opacity:0}
-.sel-win{position:relative;width:200px;height:40px;overflow:hidden}
-.sel-win span{position:absolute;left:0;top:0;line-height:40px;white-space:nowrap}
-.sel .tap{position:absolute}
-.dd{position:absolute;right:0;top:72px;width:300px;background:#FFFFFF;border:2px solid #DCD3C6;border-radius:14px;box-shadow:0 18px 40px rgba(11,41,100,.16);opacity:0;z-index:30;overflow:hidden}
-.dd div{position:relative;height:70px;display:flex;align-items:center;padding:0 24px;font-size:30px}
-.bwrap{position:relative;width:290px;height:58px}
-.badge{position:absolute;right:0;top:0;height:58px;padding:0 22px;border-radius:999px;font-size:28px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap}
-.note{left:72px;width:936px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;opacity:0}
-.tabs{left:72px;top:300px;width:936px;height:76px;display:flex;gap:44px;border-bottom:2px solid #E7DFD3;font-size:36px}
-.tabs div{padding-top:10px;white-space:nowrap}
-.tab-ul{left:72px;top:370px;height:5px;background:#1344A5;width:200px}
-.fcard{position:absolute;left:72px;width:936px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:24px 28px;opacity:0}
-.fhead{display:flex;align-items:baseline;gap:18px;height:52px}
-.fhead .n{font-family:'Geist Mono',monospace;font-size:30px;color:#4A4F59}
-.fhead .nm{font-size:40px;font-weight:500;white-space:nowrap}
-.ffin{position:absolute;right:28px;top:14px;display:flex;align-items:baseline;gap:14px}
-.ffin .k{font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;letter-spacing:.05em}
-.ffin .v{font-family:'Fraunces',serif;font-size:64px;line-height:1;color:#165E2E;opacity:0}
-.atts{display:flex;gap:12px;margin-top:26px}
-.att{width:284px;height:132px;border-radius:16px;padding:14px 15px;opacity:0}
-.att .d{font-family:'Geist Mono',monospace;font-size:28px;white-space:nowrap}
-.att .g{display:flex;align-items:baseline;gap:12px;margin-top:4px}
-.att .g b{font-family:'Fraunces',serif;font-weight:400;font-size:64px;line-height:1;opacity:0}
-.att .g i{font-style:normal;font-family:'Geist Mono',monospace;font-size:28px;opacity:0}
-.a-mal{background:#FBEFEF;border:2px solid #EBC3C5;color:#9B171F}
-.a-bien{background:#EDF6F0;border:2px solid #BFDCC9;color:#165E2E}
-.prom{position:absolute;top:1430px;width:456px;height:140px;background:#FFFFFF;border:2px solid #E7DFD3;border-radius:20px;padding:18px 26px;opacity:0}
-"""
-
-JS_HELPERS = r"""
-  const tl = gsap.timeline({ paused: true });
-  const blurIn = (s, t, d = 0.24) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d, ease: 'power4.out' }, t);
-  const blurOut = (s, t, d = 0.2) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d, ease: 'power2.in' }, t);
-  const tap = (s, t) => {
-    tl.fromTo(s, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
-    tl.to(s, { scale: 0.78, duration: 0.08, ease: 'power2.in' }, t + 0.14);
-    tl.to(s, { scale: 1.08, opacity: 0, duration: 0.24, ease: 'power2.out' }, t + 0.24);
-  };
-  const press = (s, t) => { tl.to(s, { scale: 0.965, duration: 0.09, ease: 'power2.in' }, t + 0.12); tl.to(s, { scale: 1, duration: 0.22, ease: 'power3.out' }, t + 0.22); };
-  const roll = (a, b, t, h) => { tl.to(a, { y: -h, opacity: 0, filter: 'blur(6px)', duration: 0.22, ease: 'power3.in' }, t); tl.fromTo(b, { y: h, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.32, ease: 'expo.out' }, t + 0.12); };
-  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
-  const spring = (s, t, from) => tl.fromTo(s, Object.assign({ opacity: 0, scale: 0.6 }, from || {}), { opacity: 1, scale: 1, rotation: (from && from.rot) || 0, duration: 0.42, ease: 'back.out(1.6)' }, t);
-"""
-
-FOLDER = '<svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg>'
-FOLDER_S = '<svg width="44" height="36" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg>'
-SEARCH = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#4A4F59" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>'
-PDF = '<div class="pdf" data-layout-ignore>PDF</div>'
-PDF_S = '<div class="pdf s" data-layout-ignore>PDF</div>'
-IRQ = 'Ingeniería de las Reacciones Químicas'
-
-
-import re
 import wave
+from string import Template
+import re
 
 _T_END = re.compile(r"(\}\s*,\s*)(\d+(?:\.\d+)?)(\s*\);)")
-_T_FN = re.compile(r"((?:tap|press|blurIn|blurOut|steps)\('[^']*',\s*)(\d+(?:\.\d+)?)")
-_T_ROLL = re.compile(r"(roll\('[^']*',\s*'[^']*',\s*)(\d+(?:\.\d+)?)")
+_T_FN = re.compile(r"((?:tap\('[^']*',\s*[\d.]+,\s*[\d.]+,|(?:blurIn|blurOut|pop|steps)\([^,]+,|capSwap\('[^']*',\s*'[^']*',)\s*)(\d+(?:\.\d+)?)")
 
 
 def shift(js, f):
     """Aplica f(t) a cada tiempo de inicio escrito en el código del timeline."""
     g = lambda m: m.group(1) + ('%.2f' % f(float(m.group(2)))) + (m.group(3) if m.lastindex >= 3 else '')
-    return _T_ROLL.sub(g, _T_FN.sub(g, _T_END.sub(g, js)))
+    return _T_FN.sub(g, _T_END.sub(g, js))
+
+BASE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.abspath(os.path.join(BASE, '..', '..'))
+COB, MAU, INK, SOFT = '#1344A5', '#922FA1', '#131720', '#4A4F59'
+POS, NEG = '#165E2E', '#9B171F'
+
+# ─────────────────────────────── estilos del video ───────────────────────────────
+CSS = r"""
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0;z-index:40}
+.cap em{font-style:normal;color:#1344A5}
+.cap-sub{position:absolute;left:72px;top:338px;font-size:40px;line-height:1.3;color:#4A4F59;white-space:nowrap;opacity:0;z-index:40}
+.screen{position:absolute;left:0;width:1080px;height:1600px;overflow:hidden;border-radius:44px 44px 0 0;background:#F2F4F8;box-shadow:0 -14px 44px rgba(19,23,32,.10)}
+.cam{position:absolute;left:0;top:0;width:1080px}
+.cam iframe{display:block;border:0;background:#F2F4F8}
+.tap{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;background:rgba(19,23,32,.20);opacity:0;pointer-events:none;z-index:60}
+.ring{position:absolute;border:4px solid #1344A5;border-radius:20px;box-shadow:0 0 0 8px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
+.drop{position:absolute;width:300px;background:#FFFFFF;border-radius:14px;box-shadow:0 18px 44px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
+.drop div{position:relative;height:68px;display:flex;align-items:center;gap:18px;padding:0 24px;font-size:31px}
+.drop i{width:26px;height:26px;border-radius:50%;border:3px solid #9AA1AD;flex:0 0 26px}
+.flood{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
+/* chat */
+.chat{position:absolute;left:48px;top:470px;width:984px;height:1110px;background:#FFFFFF;border-radius:40px;box-shadow:0 18px 50px rgba(19,23,32,.10);overflow:hidden}
+.chat-h{position:absolute;left:0;top:0;width:100%;height:124px;display:flex;align-items:center;gap:22px;padding:0 34px;border-bottom:2px solid #F0EBE3;background:#FFFFFF;z-index:2}
+.av{width:72px;height:72px;border-radius:50%;background:#1344A5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:30px}
+.msgs{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:18px;padding:0 30px}
+.msg{max-width:720px;align-self:flex-start;opacity:0}
+.msg.me{align-self:flex-end}
+.msg .who{font-size:27px;font-weight:600;margin:0 0 6px 18px}
+.bub{padding:20px 28px;border-radius:30px 30px 30px 8px;background:#F1EEE8;font-size:37px;line-height:1.28}
+.msg.me .bub{background:#1344A5;color:#FFFFFF;border-radius:30px 30px 8px 30px}
+.typing{display:flex;gap:10px;padding:26px 30px;border-radius:30px 30px 30px 8px;background:#F1EEE8;align-self:flex-start;opacity:0}
+.typing span{width:14px;height:14px;border-radius:50%;background:#9AA1AD;display:block}
+.prev{margin-top:14px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:2px solid #E7DFD3}
+.prev img{display:block;width:100%;height:230px;object-fit:cover}
+.prev div{padding:14px 20px 18px}
+.prev b{display:block;font-size:32px;font-weight:600;color:#131720}
+.prev span{font-size:28px;color:#4A4F59}
+/* Drive simulado */
+.sheet{position:absolute;left:0;width:1080px;height:1500px;background:#FFFFFF;border-radius:44px 44px 0 0;box-shadow:0 -14px 44px rgba(19,23,32,.16);overflow:hidden}
+.handle{position:absolute;left:500px;top:22px;width:80px;height:8px;border-radius:4px;background:#DCD3C6}
+.dcrumb{position:absolute;left:60px;top:66px;font-size:32px;color:#4A4F59;white-space:nowrap}
+.dtitle{position:absolute;left:60px;top:116px;width:960px;font-size:52px;font-weight:600;line-height:1.18}
+.dhead{position:absolute;left:60px;width:960px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;padding-bottom:14px;border-bottom:2px solid #F0EBE3}
+.drow{position:absolute;left:44px;width:992px;height:132px;display:flex;align-items:center;gap:30px;padding:0 16px;border-radius:18px}
+.drow .ic{flex:0 0 64px;display:flex;justify-content:center}
+.drow .tx b{display:block;font-size:39px;font-weight:500;white-space:nowrap}
+.drow .tx span{font-size:29px;color:#4A4F59}
+.dhl{position:absolute;inset:0;border-radius:18px;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0}
+.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
+.viewer{position:absolute;left:0;top:0;width:1080px;height:1500px;background:#E9E3D9;opacity:0}
+.vbar{position:absolute;left:0;top:0;width:1080px;height:120px;background:#FFFFFF;display:flex;align-items:center;gap:24px;padding:0 60px;font-size:34px;border-bottom:2px solid #E7DFD3}
+.page{position:absolute;left:130px;top:170px;width:820px;height:1080px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:84px 74px}
+.ln{height:22px;border-radius:6px;background:#E1E4E9;margin-bottom:26px}
+.ln.t{height:40px;width:62%;background:#CED2D9;margin-bottom:52px}
+/* muro de materias */
+.tile{position:absolute;width:196px;height:110px;border-radius:12px;overflow:hidden;opacity:0}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+/* cierre */
+.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:240px}
+.end-logo{width:460px;height:460px;opacity:0}
+.end-name{font-size:124px;margin-top:6px;display:flex;line-height:1.05}
+.end-name span{display:inline-block;opacity:0}
+.end-url{font-size:48px;color:#1344A5;margin-top:18px;opacity:0}
+.end-sec{font-size:42px;color:#4A4F59;margin-top:20px;line-height:1.3;opacity:0}
+.end-extra{font-size:36px;color:#4A4F59;margin-top:12px;opacity:0}
+/* seguimiento */
+.clu{position:absolute;opacity:0;white-space:nowrap}
+.seg{position:absolute;top:0;width:18px;height:64px;border-radius:4px;background:#E7DFD3}
+.kp{position:absolute;width:470px;height:176px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:24px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12)}
+.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.08em;color:#4A4F59;text-transform:uppercase}
+.kp .v{font-family:'Fraunces',serif;font-size:80px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
+.feat{position:absolute;display:flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;background:#FFFFFF;border:2px solid #E7DFD3;box-shadow:0 14px 36px rgba(19,23,32,.12);font-size:38px;font-weight:500;white-space:nowrap;opacity:0;z-index:30}
+.feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
+"""
+
+HELPERS = r"""
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d || 0.24, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d || 0.18, ease: 'power2.in' }, t);
+  const tap = (s, x, y, t) => {
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+  const pop = (s, t) => tl.fromTo(s, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(2.2)', immediateRender: false }, t);
+  const capSwap = (a, b, t) => { if (a) blurOut(a, t, 0.16); blurIn(b, t + 0.12, 0.26); };
+"""
 
 
 def wav_dur(proj, name):
@@ -169,22 +128,37 @@ def wav_dur(proj, name):
         return w.getnframes() / w.getframerate()
 
 
-def cls_style(cls, x, y):
-    extra = ''
-    if '" style="' in cls:
-        cls, extra = cls.split('" style="', 1)
-    return f'class="abs {cls}" style="left:{x}px;top:{y}px;{extra}"'
-
-
-def scene(cid, body, js, dur):
+def scene(cid, body, js, dur, iframe_id=None, fonts=False):
+    """Escena con su línea de tiempo. Con iframe, el timeline se registra al cargar la página real."""
+    if iframe_id:
+        boot = Template(r"""
+  const fr = document.getElementById('$fid');
+  function arrancar() {
+    const D = fr.contentDocument;
+    const Q = (s) => D.querySelector(s);
+    const QA = (s) => Array.from(D.querySelectorAll(s));
+$HELPERS$JS
+    window.__timelines['$cid'] = tl;
+  }
+  function listo() { const D = fr.contentDocument; return D && D.readyState === 'complete' && D.querySelector('main'); }
+  function esperar() {
+    const D = fr.contentDocument;
+    const imgs = Array.from(D.images).map((i) => (i.complete ? Promise.resolve() : (i.decode ? i.decode().catch(() => 0) : Promise.resolve())));
+    return Promise.all([D.fonts.ready, document.fonts.ready].concat(imgs)).then(arrancar);
+  }
+  if (listo()) esperar(); else fr.addEventListener('load', esperar);
+""").substitute(fid=iframe_id, HELPERS=HELPERS, JS=js, cid=cid)
+    elif fonts:
+        boot = "\n  document.fonts.ready.then(() => {" + HELPERS + js + f"\n  window.__timelines['{cid}'] = tl;\n  }});\n"
+    else:
+        boot = HELPERS + js + f"\n  window.__timelines['{cid}'] = tl;\n"
     return f'''<template>
   <style>{CSS}</style>
   <div id="root" data-composition-id="{cid}" data-width="1080" data-height="1920">
     <div id="{cid}-all" class="clip" data-start="0" data-duration="{dur}" data-track-index="1" style="position:absolute;inset:0">{body}
     </div>
   </div>
-  <script>{JS_HELPERS}{js}
-  window.__timelines["{cid}"] = tl;
+  <script>{boot}
   </script>
 </template>
 '''
@@ -196,7 +170,7 @@ def index_html(title, scenes, sfx, total, proj):
         hosts += f'''
       <div id="{sid}" data-composition-id="{sid}" data-composition-src="compositions/{sid}.html" data-start="{start}" data-duration="{dur}" data-track-index="{1 + (i % 2)}" data-track-kind="graphics" data-width="1080" data-height="1920" style="z-index:{i + 1}"></div>'''
     audio = ''
-    for i, (name, t, vol) in enumerate(sfx):
+    for i, (name, t, vol) in enumerate(sorted(sfx, key=lambda s: s[1])):
         audio += f'''
       <audio id="sfx-{i:02d}" class="clip" src="assets/sfx/{name}.wav" data-start="{t:.2f}" data-duration="{wav_dur(proj, name):.2f}" data-track-index="{5 + i % 2}" data-volume="{vol}"></audio>'''
     return f'''<!doctype html>
@@ -223,424 +197,683 @@ def index_html(title, scenes, sfx, total, proj):
 '''
 
 
-def cierre(p, l1, l2, sub, sec, extra, dur):
-    """Afirmación + cierre con la marca. Devuelve (body, js)."""
-    letters = ''.join(f'<span id="{p}-ch{i}">{c}</span>' for i, c in enumerate('AChETIQ'))
-    extra_html = f'<div class="end-extra">{extra}</div>' if extra else ''
+def cierre(p, sec, extra, dur):
+    letters = ''.join(f'<span>{c}</span>' for c in 'AChETIQ')
+    ex = f'<div id="{p}-ex" class="end-extra">{extra}</div>' if extra else ''
     body = f'''
-      <div id="{p}-flood" class="abs flood"></div>
-      <div id="{p}-l1" class="abs claim serif" style="top:540px">{l1}</div>
-      <div id="{p}-l2" class="abs claim serif" style="top:650px">{l2}</div>
-      <div id="{p}-sub" class="abs claim-sub" style="top:900px">{sub}</div>
-      <div id="{p}-end" class="abs end">
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div class="end">
         <img id="{p}-logo" class="end-logo" src="assets/img/achetiq-logo.svg" alt="">
-        <div class="serif end-name">{letters}</div>
+        <div id="{p}-name" class="serif end-name">{letters}</div>
         <div id="{p}-url" class="end-url mono">achetiq.github.io</div>
-        <div id="{p}-sec" class="end-sec">{sec}</div>{extra_html}
+        <div id="{p}-sec" class="end-sec">{sec}</div>{ex}
       </div>'''
     js = f'''
-  tl.fromTo('#{p}-flood', {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3, ease: 'power2.inOut' }}, 0);
-  blurIn('#{p}-l1', 0.25, 0.28);
-  blurIn('#{p}-l2', 0.5, 0.28);
-  blurIn('#{p}-sub', 0.85, 0.24);
-  blurOut('#{p}-l1', 3.2); blurOut('#{p}-l2', 3.24); blurOut('#{p}-sub', 3.28);
-  tl.set('#{p}-end', {{ opacity: 1 }}, 3.4);
-  tl.fromTo('#{p}-logo', {{ opacity: 0, scale: 0.82, y: 30 }}, {{ opacity: 1, scale: 1, y: 0, duration: 0.55, ease: 'back.out(1.4)' }}, 3.4);
-  tl.fromTo('#{p}-end .end-name span', {{ opacity: 0.25, filter: 'blur(4px)' }}, {{ opacity: 1, filter: 'blur(0px)', duration: 0.18, stagger: 0.05 }}, 3.7);
-  blurIn('#{p}-url', 4.05); blurIn('#{p}-sec', 4.18);'''
+  tl.fromTo('#{p}-logo', {{ opacity: 0, scale: 0.55 }}, {{ opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)' }}, 0.05);
+  tl.fromTo('#{p}-name span', {{ opacity: 0, filter: 'blur(6px)', y: 16 }}, {{ opacity: 1, filter: 'blur(0px)', y: 0, duration: 0.24, stagger: 0.05, ease: 'power3.out' }}, 0.45);
+  blurIn('#{p}-url', 0.85); blurIn('#{p}-sec', 1.0);'''
     if extra:
-        js += f"\n  blurIn('#{p}-end .end-extra', 4.3);"
+        js += f"\n  blurIn('#{p}-ex', 1.12);"
     return body, js
 
 
-# ═════════════════════════════ HISTORIA 1 · APUNTES ═════════════════════════════
-GRID = ['introduccion-a-la-ingenieria-quimica', 'quimica', 'analisis-matematico-i', 'fisica-i',
-        'quimica-inorganica', 'quimica-organica', 'fisicoquimica', 'ingenieria-de-las-reacciones-quimicas',
-        'fenomenos-de-transporte', 'operaciones-unitarias-i', 'operaciones-unitarias-ii',
-        'tecnologia-de-la-energia-termica', 'control-automatico-de-procesos',
-        'calidad-y-control-estadistico-de-procesos', 'organizacion-industrial',
-        'diseno-simulacion-optimizacion-y-seguridad-de-procesos']
-GRID_NAMES = ['Introducción a la Ingeniería Química', 'Química', 'Análisis Matemático I', 'Física I',
-              'Química Inorgánica', 'Química Orgánica', 'Fisicoquímica', IRQ, 'Fenómenos de Transporte',
-              'Operaciones Unitarias I', 'Operaciones Unitarias II', 'Tecnología de la Energía Térmica',
-              'Control Automático de Procesos', 'Calidad y Control Estadístico de Procesos',
-              'Organización Industrial', 'Diseño, Simulación, Optimización y Seguridad de Procesos']
-Y0 = 1920              # comienzo de la página dentro del mundo
-GRID_TOP = Y0 + 990
-PITCH = 372
-IRQ_I = GRID.index('ingenieria-de-las-reacciones-quimicas')
-IRQ_X = 72 + 456 + 24 + 228
-IRQ_Y = GRID_TOP + (IRQ_I // 2) * PITCH + 128
-CAM_IRQ = 960 - IRQ_Y
-
-FRAGS = [  # (html, x, y, rot, clase)
-    (f'{FOLDER_S}<span>03. Práctica</span>', 90, 720, -5, 'chip'),
-    ('Apuntes', 690, 700, 4, 'frag serif soft" style="font-size:64px'),
-    (f'{PDF_S}<span>2024 - GS - Resolución Serie 07.pdf</span>', 150, 860, 3, 'chip'),
-    ('Guías de ejercicios', 560, 1010, -6, 'frag mono soft" style="font-size:36px'),
-    (f'{FOLDER_S}<span>Guías de Estudio</span>', 80, 1100, 6, 'chip'),
-    ('Bibliografía', 640, 1210, 5, 'frag serif soft" style="font-size:58px'),
-    (f'{FOLDER_S}<span>05. Presentaciones</span>', 330, 1300, -3, 'chip'),
-    (f'{PDF_S}<span>2024 - SMR - Resolución Series.pdf</span>', 100, 1440, -6, 'chip'),
-]
+def caps(p, items):
+    out = ''
+    for cid, html, sub in items:
+        out += f'<div id="{p}-{cid}" class="cap">{html}</div>'
+        if sub:
+            out += f'<div id="{p}-{cid}s" class="cap-sub">{sub}</div>'
+    return out
 
 
-def drive_panel(pid, crumb, title, rows):
-    r = ''
-    for rid, kind, name in rows:
-        ic = FOLDER if kind == 'folder' else PDF
-        r += (f'<div id="{rid}" class="drv-row"><div id="{rid}-hl" class="hl"></div><div class="ic">{ic}</div>'
-              f'<span>{name}</span><div id="{rid}-tap" class="tap" style="left:62%;top:50%"></div></div>')
-    return f'''
-      <div id="{pid}" class="abs drive">
-        <div class="drv-search">{SEARCH}<span>Buscar en Drive</span></div>
-        <div class="drv-crumb">{crumb}</div>
-        <div class="drv-title">{title}</div>
-        <div class="drv-head">Nombre</div>
-        {r}
-      </div>'''
+FOLDER = '<svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg>'
+PDF = '<div class="pdf" data-layout-ignore>PDF</div>'
+IRQ = 'Ingeniería de las Reacciones Químicas'
 
 
-def viewer(p):
-    # trazos «manuscritos»: perfil de concentración de la doble película y renglones de resolución
-    strokes = [
-        'M70 40 L70 330', 'M250 40 L250 330', 'M70 330 L560 330',
-        'M20 80 C 60 85, 70 120, 90 160 S 200 250, 250 260', 'M250 260 C 300 262, 420 270, 540 275',
-        'M20 150 C 80 152, 140 200, 250 300',
-        'M600 70 C 640 60, 690 90, 730 70 S 800 60, 820 80', 'M600 130 C 650 120, 700 150, 760 128',
-        'M600 190 C 640 182, 680 205, 730 188 S 790 176, 810 196', 'M600 250 C 660 240, 700 262, 770 246',
-    ]
-    paths = ''.join(f'<path id="{p}-st{i}" d="{d}" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/>'
-                    for i, d in enumerate(strokes))
-    labels = ('<text x="12" y="30" font-size="24">GAS</text><text x="262" y="30" font-size="24">LÍQUIDO</text>'
-              '<text x="40" y="365" font-size="22">interfase</text>')
-    return f'''
-      <div id="{p}-view" class="abs viewer">
-        <div class="viewer-bar">{PDF}<span>2024 - GS - Resolución Serie 07.pdf</span></div>
-        <div class="viewer-page">
-          <div class="pg-head"><span class="mono">UTN · FRRe</span><span>Ingeniería de las Reacciones</span></div>
-          <div class="pg-title">Serie 7: Reacciones heterogéneas fluido-fluido</div>
-          <div class="pg-text">1. Desafío. a. Mencione brevemente las hipótesis principales en que se basa la teoría de la doble película.</div>
-          <div class="pg-text">b. Indique el régimen cinético que caracteriza los siguientes perfiles.</div>
-          <svg class="abs" style="left:64px;top:700px" width="760" height="400" viewBox="0 0 860 400" fill="none" stroke="#1F3F8F" stroke-width="4" stroke-linecap="round" data-layout-ignore>
-            <g fill="#1F3F8F" stroke="none" font-family="Hanken Grotesk" id="{p}-pglab" opacity="0">{labels}</g>{paths}
-          </svg>
-        </div>
-      </div>'''
+def write_project(proj, files, index):
+    os.makedirs(os.path.join(proj, 'compositions'), exist_ok=True)
+    for old in os.listdir(os.path.join(proj, 'compositions')):
+        os.remove(os.path.join(proj, 'compositions', old))
+    for name, html in files.items():
+        open(os.path.join(proj, 'compositions', name + '.html'), 'w').write(html)
+    open(os.path.join(proj, 'index.html'), 'w').write(index)
 
 
+# ═════════════════════════════════ HISTORIA 1 · APUNTES ═════════════════════════════════
 def build_apuntes():
-    out = os.path.join(BASE, 'apuntes')
-    P1X, P1Y = GEOM.get('prac', [116, 828])
-    P2X, P2Y = GEOM.get('s07', [116, 886])
-    # ───── escena «toma» ─────
-    T_DUR = 13.6
-    frags = ''.join(
-        f'<div id="t-f{i}" {cls_style(cls, x, y)}>{h}</div>'
-        for i, (h, x, y, r, cls) in enumerate(FRAGS))
-    pills = '<div class="pill on">Todos</div>' + ''.join(f'<div class="pill">{i}º año</div>' for i in range(1, 6))
-    cells = ''
-    for i, (g, n) in enumerate(zip(GRID, GRID_NAMES)):
-        tap = '<div id="t-gtap" class="tap" style="left:50%;top:128px"></div>' if i == IRQ_I else ''
-        cells += f'<div class="gcell" id="t-g{i}"><div class="gimg"><img src="assets/img/{g}.webp" alt=""></div><div class="gname">{n}</div>{tap}</div>'
-    body = f'''
-      <div id="t-world" class="abs" style="left:0;top:0;width:1080px;height:6000px">
-        <div id="t-intro" class="abs" style="left:0;top:0;width:1080px;height:1920px">
-          <div id="t-q" class="abs serif" style="left:72px;top:330px;width:936px;font-size:112px;line-height:1.02">¿Dónde quedaron<br>los apuntes?</div>
-          {frags}
-        </div>
-        <div id="t-page" class="abs" style="left:72px;top:{Y0 + 300}px;width:936px">
-          <div class="crumbs">Inicio › Recursos académicos › Apuntes</div>
-          <div class="serif h1" style="margin-top:14px">Apuntes Académicos</div>
-          <div class="lead" style="margin-top:26px">Cada materia enlaza a su carpeta de Google Drive.</div>
-          <div class="pills" style="margin-top:36px">{pills}</div>
-        </div>
-        <div class="grid2" style="top:{GRID_TOP}px">{cells}</div>
+    proj = os.path.join(BASE, 'apuntes')
+    M = json.load(open(os.path.join(proj, 'medidas.json')))
+    W, H = M['W'], M['H']
+    Z = 1080 / W
+    PT = 430                                     # borde superior de la pantalla
+    S1 = 190                                     # desplazamiento con el filtro a la vista
+    irq = next(c for c in M['cards4'] if c['nombre'].startswith('Ingeniería de las Reacciones'))
+    cv = irq['cover']
+    S2 = round(cv[1] - (520 - PT) / Z, 1)        # portada de IRQ a 520 px del borde superior
+    pill = M['pill4']
+    pill_x, pill_y = (pill[0] + pill[2] / 2) * Z, PT + (pill[1] + pill[3] / 2 - S1) * Z
+    cx, cy, cw, ch = cv[0] * Z, PT + (cv[1] - S2) * Z, cv[2] * Z, cv[3] * Z
+    zoom_s = 1960 / ch
+    zoom_dy = 960 - (cy + ch / 2)
+
+    # ───── escena 1 · gancho (chat) ─────
+    G_DUR = 4.45
+    msgs = [('me', '', '¿Alguien tiene la Serie 7 de Reacciones resuelta?'),
+            ('', 'Lu', 'creo que estaba en un drive viejo'),
+            ('', 'Tomi', 'a mí me la pasaron por mail y no la encuentro'),
+            ('me', '', 'rindo esta semana y no tengo nada')]
+    colors = {'Lu': '#8E6AC7', 'Tomi': '#039585', 'Agus': '#AA7323'}
+    mh = ''
+    for i, (who, name, text) in enumerate(msgs):
+        nm = f'<div class="who" style="color:{colors[name]}">{name}</div>' if name else ''
+        mh += f'<div id="g-m{i}" class="msg {who}">{nm}<div class="bub">{text}</div></div>'
+    mh += '<div id="g-typ" class="typing"><span></span><span></span><span></span></div>'
+    mh += (f'<div id="g-m4" class="msg"><div class="who" style="color:{colors["Agus"]}">Agus</div><div class="bub">Está todo en la página de AChETIQ'
+           '<div id="g-prev" class="prev"><img src="assets/img/og-image-achetiq.png" alt=""><div><b>Apuntes Académicos - AChETIQ</b>'
+           '<span>achetiq.github.io</span></div></div></div></div>')
+    gb = f'''
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div id="g-q" class="cap" style="white-space:normal;font-size:96px;opacity:1">¿Otra vez buscando<br>apuntes?</div>
+      <div id="g-ok" class="cap" style="font-size:96px">Está todo <em>acá</em>.</div>
+      <div id="g-chat" class="chat" data-layout-allow-overlap data-layout-allow-occlusion>
+        <div class="chat-h" data-layout-allow-overlap><div class="av">IQ</div><div><div style="font-size:38px;font-weight:600">IQ · 4º año</div><div style="font-size:28px;color:#4A4F59">Grupo de la cursada</div></div></div>
+        <div id="g-msgs" class="msgs" data-layout-allow-overlap>{mh}</div>
       </div>
-      {drive_panel('t-drv1', 'Compartidos conmigo › AChETIQ', IRQ,
-                   [('t-r-prac', 'folder', '03. Práctica'), ('t-r-pres', 'folder', '05. Presentaciones')])}
-      {drive_panel('t-drv2', f'… › {IRQ}', '03. Práctica',
-                   [('t-r-guias', 'folder', 'Guías de Estudio'),
-                    ('t-r-s07', 'pdf', '2024 - GS - Resolución Serie 07.pdf'),
-                    ('t-r-smr', 'pdf', '2024 - SMR - Resolución Series.pdf')])}
-      {viewer('t')}'''
-    js = ''
-    # gancho: pregunta visible en el cuadro 0, fragmentos con resorte
-    for i, (h, x, y, r, cls) in enumerate(FRAGS):
-        js += f"\n  tl.fromTo('#t-f{i}', {{ opacity: 0, scale: 0.6, rotation: {r * 3}, y: -30 }}, {{ opacity: 1, scale: 1, rotation: {r}, y: 0, duration: 0.42, ease: 'back.out(1.6)' }}, {0.15 + i * 0.13:.2f});"
-    js += f'''
-  // paneo 1: el gancho sube y entra la página real
-  tl.to('#t-intro [id^="t-f"]', {{ y: -420, filter: 'blur(8px)', duration: 0.8, ease: 'power3.in', stagger: 0.015 }}, 2.3);
-  tl.to('#t-world', {{ y: -{Y0}, duration: 0.85, ease: 'power3.inOut' }}, 2.3);
-  tl.set('#t-intro', {{ opacity: 0 }}, 3.2);
-  // paneo 2: la cámara recorre la grilla y frena en IRQ
-  tl.to('#t-world', {{ y: {CAM_IRQ}, duration: 1.25, ease: 'power2.inOut' }}, 3.9);
-  tap('#t-gtap', 5.2);
-  press('#t-g{IRQ_I}', 5.2);
-  tl.set('#t-world', {{ transformOrigin: '{IRQ_X}px {IRQ_Y}px' }}, 0);
-  tl.to('#t-world', {{ scale: 8, x: {540 - IRQ_X}, duration: 0.7, ease: 'power3.in' }}, 5.4);
-  tl.fromTo('#t-drv1', {{ opacity: 0, scale: 0.2 }}, {{ opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }}, 5.85);
-  tl.set('#t-world', {{ opacity: 0 }}, 6.3);
-  tl.fromTo('#t-r-prac, #t-r-pres', {{ opacity: 0, x: 40 }}, {{ opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.08 }}, 6.0);
-  tap('#t-r-prac-tap', 7.15);
-  tl.to('#t-r-prac-hl', {{ opacity: 0.6, duration: 0.1 }}, 7.27);
-  tl.set('#t-drv1', {{ transformOrigin: '{P1X}px {P1Y}px' }}, 7.3);
-  tl.to('#t-drv1', {{ scale: 7, x: {540 - P1X}, y: {960 - P1Y}, duration: 0.6, ease: 'power3.in' }}, 7.35);
-  tl.fromTo('#t-drv2', {{ opacity: 0, scale: 0.2 }}, {{ opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }}, 7.7);
-  tl.set('#t-drv1', {{ opacity: 0 }}, 8.1);
-  tl.fromTo('#t-r-guias, #t-r-s07, #t-r-smr', {{ opacity: 0, x: 40 }}, {{ opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.08 }}, 7.85);
-  tap('#t-r-s07-tap', 8.65);
-  tl.to('#t-r-s07-hl', {{ opacity: 1, duration: 0.14 }}, 8.77);
-  tl.set('#t-drv2', {{ transformOrigin: '{P2X}px {P2Y}px' }}, 8.9);
-  tl.to('#t-drv2', {{ scale: 7, x: {540 - P2X}, y: {960 - P2Y}, duration: 0.6, ease: 'power3.in' }}, 8.95);
-  tl.fromTo('#t-view', {{ opacity: 0, scale: 0.2 }}, {{ opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }}, 9.3);
-  tl.set('#t-drv2', {{ opacity: 0 }}, 9.7);
-  tl.to('#t-pglab', {{ opacity: 1, duration: 0.3 }}, 9.85);
-  tl.to('#t-view svg path', {{ strokeDashoffset: 0, duration: 0.32, ease: 'power1.inOut', stagger: 0.09 }}, 9.9);
-  // alejamiento continuo hasta la grilla completa
-  tl.to('#t-view', {{ scale: 0.08, opacity: 0, duration: 0.42, ease: 'power3.in' }}, 11.15);
-  tl.set('#t-world', {{ opacity: 1 }}, 11.35);
-  tl.to('#t-world', {{ scale: 0.6, x: -96, duration: 0.95, ease: 'power3.out' }}, 11.35);'''
-    js = shift(js, lambda t: t + (0.4 if t >= 3.85 else 0) + (0.3 if t >= 9.95 else 0))
-    toma = scene('toma', body, js, T_DUR)
+      <div id="g-morph" class="abs" style="left:0;top:{PT}px;width:1080px;height:1490px;background:#F2F4F8;border-radius:44px 44px 0 0;opacity:0;z-index:30"></div>
+      <div id="g-tap" class="tap"></div>'''
+    gj = Template(r"""
+  // el chat se arma desde abajo: cada mensaje nuevo empuja a los anteriores
+  const ids = ['#g-m0', '#g-m1', '#g-m2', '#g-m3', '#g-typ', '#g-m4'];
+  const hs = ids.map((s) => document.querySelector(s).offsetHeight + 18);
+  const AV = 1110 - 150 - 30;
+  // desplazamiento de la lista cuando lo visible supera el alto del chat (el indicador de escritura se reemplaza)
+  const upto = (k) => { let h = 0; for (let j = 0; j <= k; j++) { if (j === 4 && k === 5) continue; h += hs[j]; } return -Math.max(0, h - AV); };
+  tl.set('#g-msgs', { y: 0 }, 0);
+  tl.set('#g-m0, #g-m1', { opacity: 1 }, 0);
+  const reveal = (k, t) => {
+    tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
+    tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
+  };
+  reveal(2, 0.7); reveal(3, 1.35);
+  reveal(4, 2.05);
+  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.15);
+  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 2.48);
+  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 2.5);
+  tl.set('#g-typ', { display: 'none' }, 2.5);
+  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 2.5);
+  capSwap('#g-q', '#g-ok', 2.8);
+  const pr = document.querySelector('#g-prev').getBoundingClientRect();
+  const rr = document.querySelector('#gancho-all').getBoundingClientRect();
+  const sx = 1080 / rr.width;
+  const px = (pr.left - rr.left) * sx, py = (pr.top - rr.top) * sx, pw = pr.width * sx, ph = pr.height * sx;
+  tap('#g-tap', px + pw * 0.5, py + ph * 0.45, 3.3);
+  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 3.42);
+  // la vista previa del enlace se convierte en la pantalla del sitio
+  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px, y: py - $PT, scaleX: pw / 1080, scaleY: ph / 1490, borderRadius: '20px', opacity: 1 }, 3.58);
+  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: '44px 44px 0px 0px', duration: 0.62, ease: 'power3.inOut' }, 3.58);
+  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 3.6);
+  blurOut('#g-ok', 3.95, 0.2);
+""").substitute(PT=PT)
+    gancho = scene('gancho', gb, gj, G_DUR, fonts=True)
 
-    # ───── escena «cierre» ─────
-    C_START, C_DUR = 13.4, 6.3
-    cb, cj = cierre('c', '38 materias.', 'Una carpeta cada una.',
-                    'Apuntes, guías y bibliografía aportados por la comunidad estudiantil.',
-                    'Recursos académicos › Apuntes', '', C_DUR)
+    # ───── escena 2 · recorrido por el sitio ─────
+    R0 = 3.95
+    R_DUR = 16.55
+    R = json.load(open(os.path.join(REPO, 'data/recursos.json')))
+    mats = [m for m in R if m.get('anio')]
+    irq_i = next(i for i, m in enumerate(mats) if m['id'] == 'ingenieria-de-las-reacciones-quimicas')
+    slots = [(c, r) for r in range(8) for c in range(5)][:len(mats)]
+    order = list(range(len(mats)))
+    centro = slots.index((2, 3))                 # IRQ al centro del muro
+    order[irq_i], order[centro] = order[centro], order[irq_i]
+    year_col = {1: '#E7CDAA', 2: '#D1A6D8', 3: '#89AFD6', 4: '#537ABB', 5: '#264A8E'}
+    WX, WY, TW, TH, G = 30, 520, 196, 110, 12
+    tiles = ''
+    tpos = {}
+    for slot_i, mi in enumerate(order):
+        m = mats[mi]
+        c, r = slots[slot_i]
+        x, y = WX + c * (TW + G), WY + r * (TH + G)
+        if r == 7:
+            x += (5 - (len(mats) - 35)) * (TW + G) / 2
+        tpos[m['id']] = (x, y)
+        if m['id'] == 'termodinamica':      # la imagen del sitio es de terceros: se usa el color del año
+            inner = f'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:600 24px Hanken Grotesk;color:#0B2964">Termodinámica</div>'
+        else:
+            inner = f'<img src="assets/site/assets/img/materias/{m["id"]}.webp" alt="">'
+        tiles += f'<div id="r-t-{m["id"]}" class="tile" data-layout-ignore style="left:{x:.0f}px;top:{y:.0f}px;background:{year_col[m["anio"]]}">{inner}</div>'
+    ix, iy = tpos['ingenieria-de-las-reacciones-quimicas']
+
+    def drow(rid, kind, name, meta, top):
+        ic = FOLDER if kind == 'folder' else PDF
+        return (f'<div id="{rid}" class="drow" style="top:{top}px"><div id="{rid}-hl" class="dhl"></div><div class="ic">{ic}</div>'
+                f'<div class="tx"><b>{name}</b><span>{meta}</span></div></div>')
+    lista1 = (drow('r-d1', 'folder', '03. Práctica', 'Modificado: 3 sept 2026', 360) +
+              drow('r-d2', 'folder', '05. Presentaciones', 'Modificado: 3 sept 2026', 496))
+    lista2 = (drow('r-e1', 'folder', 'Guías de Estudio', 'Modificado: 3 sept 2026', 250) +
+              drow('r-e2', 'pdf', '2024 - GS - Resolución Serie 07.pdf', '11 ago 2026 · 2,3 MB', 386) +
+              drow('r-e3', 'pdf', '2024 - NCMQ - Resolución Serie 06.pdf', '11 ago 2026 · 28,1 MB', 522) +
+              drow('r-e4', 'pdf', '2024 - SMR - Resolución Series.pdf', '11 ago 2026 · 56,2 MB', 658))
+    lines = '<div class="ln t"></div>' + ''.join(
+        f'<div class="ln" style="width:{w}%{";background:transparent" if w == 0 else ""}"></div>'
+        for w in [100, 94, 98, 72, 0, 100, 88, 96, 60, 0, 100, 91, 97, 83, 100, 55, 0, 100, 76])
+    SH = 600                                     # borde superior de la hoja de Drive
+    rb = f'''
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div id="r-screen" class="screen" style="top:{PT}px;opacity:0">
+        <div id="r-cam" class="cam"><iframe id="r-fr" src="assets/site/pages/recursos/apuntes.html" style="width:{W}px;height:{H}px;zoom:{Z:.4f}" scrolling="no"></iframe></div>
+      </div>
+      <div id="r-zoom" class="abs" style="left:0;top:0;width:100px;height:56px;overflow:hidden;opacity:0;z-index:20"><img src="assets/site/assets/img/materias/ingenieria-de-las-reacciones-quimicas.webp" style="width:100%;height:100%;object-fit:cover;display:block" alt=""></div>
+      <div id="r-label" class="abs" style="left:60px;top:1330px;width:960px;padding:30px 36px;background:#FCF7F0;border-radius:26px;opacity:0;z-index:21">
+        <div class="mono" style="font-size:30px;letter-spacing:.12em;color:#4A4F59">4º AÑO</div>
+        <div class="serif" style="font-size:66px;line-height:1.08;margin-top:6px">{IRQ}</div>
+      </div>
+      <div id="r-fade" class="abs" style="left:0;top:0;width:1080px;height:560px;background:linear-gradient(#FCF7F0 0%,#FCF7F0 62%,rgba(252,247,240,0) 100%);opacity:0;z-index:21"></div>
+      <div id="r-sheet" class="sheet" style="top:{SH}px;z-index:22">
+        <div class="handle"></div>
+        <div id="r-l1">
+          <div class="dcrumb">Compartidos conmigo › AChETIQ</div>
+          <div class="dtitle">{IRQ}</div>
+          <div class="dhead" style="top:300px">Nombre ↑</div>
+          {lista1}
+        </div>
+        <div id="r-l2" style="opacity:0">
+          <div class="dcrumb">… › {IRQ}</div>
+          <div class="dtitle">03. Práctica</div>
+          <div class="dhead" style="top:196px">Nombre ↑</div>
+          {lista2}
+        </div>
+        <div id="r-morph" class="abs" style="left:0;top:0;width:1080px;height:1500px;background:#FFFFFF;opacity:0"></div>
+        <div id="r-view" class="viewer">
+          <div class="vbar">{PDF}<span>2024 - GS - Resolución Serie 07.pdf</span></div>
+          <div id="r-page" class="page">{lines}</div>
+        </div>
+      </div>
+      <div id="r-flood" class="flood" style="z-index:23"></div>
+      <div id="r-wall" class="abs" style="left:0;top:0;width:1080px;height:1920px;z-index:24">{tiles}</div>
+      {caps('r', [('c1', 'Apuntes de cada <em>materia</em>', None), ('c2', 'Filtrá por <em>año</em>', None),
+                  ('c3', 'Elegí tu <em>materia</em>', None), ('c4', 'Su carpeta en <em>Drive</em>', None),
+                  ('c5', 'Guías y series <em>resueltas</em>', None), ('c6', 'La Serie 7, <em>encontrada</em>.', None)])}
+      <div id="r-cnt" class="cap" style="display:flex;align-items:baseline;gap:22px"><span id="r-n" style="font-size:170px;line-height:.9;color:{COB}">1</span><span>materias</span></div>
+      <div id="r-cnts" class="cap-sub" style="top:418px">cada una con su carpeta de Drive</div>
+      <div id="r-claim" class="cap" style="white-space:normal;font-size:96px">Toda la carrera,<br>a un <em>toque</em>.</div>
+      <div id="r-claims" class="cap-sub" style="top:446px">Apuntes y guías aportados por estudiantes.</div>
+      <div id="r-tap" class="tap"></div>'''
+    rj = Template(r"""
+  // geometría medida en la página real, dentro del iframe (px CSS del teléfono)
+  const Z = $Z, PT = $PT;
+  const RR = (el) => el.getBoundingClientRect();
+  const p4 = Q('.pill-nav__pill[data-anio="4"]'), pT = Q('.pill-nav__pill[data-anio="all"]');
+  const pr = RR(p4);
+  const S1 = pr.top + pr.height / 2 - (1356 - PT) / Z;
+  const PX = (pr.left + pr.width / 2) * Z, PY = 1356;
+  const card = QA('.apuntes__grid > *').find((c) => (c.textContent || '').indexOf('Reacciones Químicas') >= 0);
+  const otros = QA('.apuntes__grid > *').filter((c) => c.getAttribute('data-anio') !== '4');
+  otros.forEach((c) => { c.style.display = 'none'; });
+  const cr = RR(card.querySelector('.card-materia__cover'));
+  otros.forEach((c) => { c.style.display = ''; });
+  const S2 = cr.top - (520 - PT) / Z;
+  const zx = cr.left * Z, zy = 520, zw = cr.width * Z, zh = cr.height * Z;
+  Object.assign(document.getElementById('r-zoom').style, { left: zx + 'px', top: zy + 'px', width: zw + 'px', height: zh + 'px' });
+  const ZS = 1960 / zh, ZDY = 960 - (zy + zh / 2);
+  // pantalla: la página real (iframe) aparece donde terminó la vista previa del enlace
+  tl.fromTo('#r-screen', { opacity: 0 }, { opacity: 1, duration: 0.18 }, 0.22);
+  blurIn('#r-c1', 0.4);
+  tl.fromTo('#r-cam', { y: 0 }, { y: -S1 * Z, duration: 1.3, ease: 'power2.inOut' }, 0.6);
+  // filtro por año: el comportamiento real de apuntes.js (oculta las demás tarjetas)
+  capSwap('#r-c1', '#r-c2', 2.0);
+  tap('#r-tap', PX, PY, 2.2);
+  tl.set(pT, { attr: { class: 'pill-nav__pill', 'aria-pressed': 'false' } }, 2.35);
+  tl.set(p4, { attr: { class: 'pill-nav__pill is-active', 'aria-pressed': 'true' } }, 2.35);
+  const grid = Q('.apuntes__grid');
+  tl.to(grid, { opacity: 0, duration: 0.1 }, 2.35);
+  QA('.apuntes__grid > *').forEach((c) => { if (c.getAttribute('data-anio') !== '4') tl.set(c, { display: 'none' }, 2.46); });
+  tl.to(grid, { opacity: 1, duration: 0.22 }, 2.48);
+  // desplazamiento continuo hasta la materia
+  capSwap('#r-c2', '#r-c3', 2.8);
+  tl.to('#r-cam', { y: -S2 * Z, duration: 1.85, ease: 'power2.inOut' }, 2.85);
+  tap('#r-tap', zx + zw / 2, zy + zh / 2, 4.8);
+  tl.to(card, { scale: 0.975, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' }, 4.92);
+  // la portada de la materia se acerca hasta llenar el cuadro
+  tl.set('#r-zoom', { opacity: 1 }, 5.08);
+  blurOut('#r-c3', 5.05, 0.16);
+  tl.to('#r-zoom', { scale: ZS, y: ZDY, duration: 0.9, ease: 'power2.inOut' }, 5.1);
+  tl.set('#r-screen', { opacity: 0 }, 6.05);
+  tl.fromTo('#r-label', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, 5.75);
+  // la carpeta de Drive sube como una hoja sobre la portada
+  tl.fromTo('#r-sheet', { y: 1400 }, { y: 0, duration: 0.65, ease: 'power3.inOut' }, 6.75);
+  tl.to('#r-zoom', { y: ZDY - 330, duration: 0.65, ease: 'power3.inOut' }, 6.75);
+  tl.to('#r-label', { y: -60, opacity: 0, duration: 0.35, ease: 'power2.in' }, 6.8);
+  tl.to('#r-fade', { opacity: 1, duration: 0.4 }, 6.95);
+  blurIn('#r-c4', 7.2);
+  tl.to('#r-fade', { opacity: 0, duration: 0.3 }, 11.75);
+  tl.fromTo('#r-d1, #r-d2', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.08 }, 7.15);
+  tap('#r-tap', 640, $D1Y, 8.1);
+  tl.to('#r-d1-hl', { opacity: 0.55, duration: 0.1 }, 8.22);
+  tl.to('#r-l1', { x: -1080, duration: 0.45, ease: 'power3.inOut' }, 8.35);
+  tl.fromTo('#r-l2', { x: 1080, opacity: 1 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.inOut' }, 8.35);
+  capSwap('#r-c4', '#r-c5', 8.45);
+  tl.fromTo('#r-e1, #r-e2, #r-e3, #r-e4', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.07 }, 8.6);
+  tap('#r-tap', 700, $E2Y, 9.65);
+  tl.to('#r-e2-hl', { opacity: 1, duration: 0.12 }, 9.77);
+  // el archivo se abre: la fila crece hasta el visor
+  tl.set('#r-morph', { transformOrigin: '0px 0px', x: 44, y: 386, scaleX: 992 / 1080, scaleY: 132 / 1500, opacity: 1 }, 9.95);
+  tl.to('#r-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.5, ease: 'power3.inOut' }, 9.95);
+  tl.to('#r-view', { opacity: 1, duration: 0.25 }, 10.3);
+  tl.fromTo('#r-page', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'expo.out' }, 10.35);
+  tl.fromTo('#r-page .ln', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.25, stagger: 0.03, ease: 'power2.out' }, 10.45);
+  capSwap('#r-c5', '#r-c6', 10.3);
+  // alejamiento: la hoja vuelve a ser una portada en el muro de las 38 materias
+  tl.to('#r-page', { x: $PGX, y: $PGY, scaleX: $PGSX, scaleY: $PGSY, transformOrigin: '0px 0px', duration: 0.6, ease: 'power3.inOut' }, 11.75);
+  tl.to('#r-view .vbar, #r-l2, #r-morph', { opacity: 0, duration: 0.25 }, 11.75);
+  tl.to('#r-sheet', { backgroundColor: 'rgba(255,255,255,0)', boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.4 }, 11.75);
+  tl.to('#r-view', { backgroundColor: 'rgba(233,227,217,0)', duration: 0.4 }, 11.75);
+  tl.to('#r-zoom', { opacity: 0, duration: 0.4 }, 11.8);
+  blurOut('#r-c6', 11.8, 0.16);
+  tl.fromTo('#r-t-ingenieria-de-las-reacciones-quimicas', { opacity: 0 }, { opacity: 1, duration: 0.25 }, 12.25);
+  tl.to('#r-page', { opacity: 0, duration: 0.2 }, 12.3);
+  tl.set('#r-sheet', { opacity: 0 }, 12.5);
+$WALL
+  blurIn('#r-cnt', 12.3); blurIn('#r-cnts', 12.45);
+  steps('#r-n', 12.35, $NUMS, 0.033);
+  // cierre: la carrera entera, a un toque
+  blurOut('#r-cnt', 14.0); blurOut('#r-cnts', 14.0);
+  blurIn('#r-claim', 14.15, 0.28); blurIn('#r-claims', 14.45);
+  tl.to('#r-wall', { y: 70, scale: 0.94, transformOrigin: '540px 1000px', duration: 0.6, ease: 'power2.inOut' }, 14.0);
+  blurOut('#r-claim', 16.0); blurOut('#r-claims', 16.0);
+$CONV
+""")
+    wall = ''
+    conv = ''
+    for mid, (x, y) in tpos.items():
+        if mid == 'ingenieria-de-las-reacciones-quimicas':
+            continue
+        d = ((x - ix) ** 2 + (y - iy) ** 2) ** 0.5
+        wall += f"\n  tl.fromTo('#r-t-{mid}', {{ opacity: 0, scale: 0.4 }}, {{ opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }}, {12.35 + d / 1100:.2f});"
+        conv += f"\n  tl.to('#r-t-{mid}', {{ x: {540 - (x + 98):.0f}, y: {880 - (y + 55):.0f}, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }}, {16.05 + (1 - d / 1400) * 0.25:.2f});"
+    conv += f"\n  tl.to('#r-t-ingenieria-de-las-reacciones-quimicas', {{ x: {540 - (ix + 98):.0f}, y: {880 - (iy + 55):.0f}, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }}, 16.3);"
+    page_x, page_y, page_w, page_h = 130, SH + 170, 820, 1080
+    rj = rj.substitute(Z=f'{Z:.5f}', PT=PT,
+                       D1Y=f'{SH + 360 + 66}', E2Y=f'{SH + 386 + 66}',
+                       PGX=f'{ix - page_x:.1f}', PGY=f'{iy - page_y:.1f}', PGSX=f'{TW / page_w:.4f}', PGSY=f'{TH / page_h:.4f}',
+                       WALL=wall, CONV=conv, NUMS=json.dumps([str(n) for n in range(1, 39)]))
+    recorrido = scene('recorrido', rb, rj, R_DUR, iframe_id='r-fr')
+
+    # ───── escena 3 · cierre ─────
+    C0 = round(R0 + 16.35, 2)
+    C_DUR = 3.3
+    cb, cj = cierre('c', 'Recursos académicos › Apuntes', '', C_DUR)
     cierre_html = scene('cierre', cb, cj, C_DUR)
+    total = round(C0 + C_DUR, 2)
 
-    total = round(C_START + C_DUR, 2)
-    sfx = [('pop-a', 0.16, 0.45), ('pop-b', 0.42, 0.45), ('pop-c', 0.68, 0.45), ('pop-a', 0.94, 0.4),
-           ('barrido-a', 2.28, 0.55), ('barrido-c', 4.35, 0.3),
-           ('toque-a', 5.73, 0.8), ('barrido-b', 5.85, 0.6),
-           ('toque-b', 7.68, 0.8), ('barrido-a', 7.78, 0.6),
-           ('toque-a', 9.18, 0.8), ('barrido-c', 9.38, 0.6),
-           ('barrido-inv', 11.8, 0.6), ('barrido-b', C_START - 0.05, 0.3),
-           ('impacto', C_START + 3.4 + 0.35 - 0.9, 0.75)]
-    os.makedirs(os.path.join(out, 'compositions'), exist_ok=True)
-    open(os.path.join(out, 'compositions/toma.html'), 'w').write(toma)
-    open(os.path.join(out, 'compositions/cierre.html'), 'w').write(cierre_html)
-    open(os.path.join(out, 'index.html'), 'w').write(
-        index_html('Apuntes Académicos — historia', [('toma', 0, T_DUR), ('cierre', C_START, C_DUR)], sfx, total, 'apuntes'))
+    sfx = [('pop-a', 0.72, 0.16), ('pop-b', 1.37, 0.16), ('pop-b', 2.52, 0.18),
+           ('toque', 3.43, 0.28), ('barrido-a', 3.58, 0.14)]
+    sfx += [('toque', R0 + 2.33, 0.26), ('toque', R0 + 4.93, 0.26), ('barrido-b', R0 + 5.12, 0.16),
+            ('barrido-a', R0 + 6.75, 0.12), ('toque', R0 + 8.23, 0.24), ('toque', R0 + 9.78, 0.24),
+            ('barrido-b', R0 + 11.75, 0.13), ('cierre', C0 + 0.35 - 0.8, 0.32)]
+    write_project(proj, {'gancho': gancho, 'recorrido': recorrido, 'cierre': cierre_html}, index_html(
+        'Apuntes Académicos — historia', [('gancho', 0, G_DUR), ('recorrido', R0, R_DUR), ('cierre', C0, C_DUR)], sfx, total, 'apuntes'))
     return total
 
 
-# ═════════════════════════════ HISTORIA 2 · SEGUIMIENTO ═════════════════════════════
-# Valores leídos de la herramienta real con el estado de ejemplo (ver SPEC.md)
-GEOM = json.load(open(os.path.join(BASE, 'geometria.json'))) if os.path.exists(os.path.join(BASE, 'geometria.json')) else {}
-KPIS = [('APROBADAS', '17', ''), ('AVANCE', '39,0 %', ''), ('NO CURSADAS / CURSANDO', '22', ''),
-        ('DISPONIBLES', '9', ''), ('REGULARES', '3', ''), ('PROM. SIN APLAZOS', '7,76', ''),
-        ('PROM. CON APLAZOS', '6,95', ''), ('HS. OBLIGATORIAS APROB.', '58', 'hs'),
-        ('HS. ELECTIVAS APROB.', '5', 'hs'), ('% ELECTIVAS COMPLETADAS', '20,8 %', '')]
-FINALES = [(3, 'Álgebra y Geometría Analítica', [('20/02/2024', 4), ('05/03/2024', 7)], 7),
-           (5, 'Física I', [('24/07/2024', 2), ('11/12/2024', 5), ('19/02/2025', 8)], 8),
-           (12, 'Análisis Matemático II', [('16/07/2025', 3), ('03/12/2025', 7)], 7)]
-
-TOKS = [  # (html, x, y, rot, grupo, clase)
-    ('Cursadas req. <b>6, 7, 8, 9, 13</b>', 72, 700, -3, 0, 'tok mono'),
-    ('Aprobadas req. <b>1, 3, 4</b>', 520, 790, 4, 0, 'tok mono'),
-    ('✕ No disponible', 110, 860, -6, 0, 'pillb b-no'),
-    ('<b>11, 12, 13</b>', 700, 905, 8, 0, 'tok mono" style="font-size:52px'),
-    ('41 obligatorias', 90, 1000, 3, 1, 'tok serif" style="font-size:60px;color:#131720'),
-    ('24 hs electivas', 590, 1080, -5, 1, 'tok mono'),
-    ('Regular', 330, 1150, 6, 1, 'pillb b-reg'),
-    ('Nivel III', 720, 1210, -4, 1, 'pillb b-lvl'),
-    ('<span class="k">1° nota</span><span class="v">4</span>', 80, 1280, -4, 2, 'nota n-mal'),
-    ('<span class="k">2° nota</span><span class="v">7</span>', 430, 1320, 5, 2, 'nota n-bien'),
-    ('Se aprueba con <b>6</b>', 110, 1450, 2, 2, 'tok mono'),
-    ('Máximo <b>4</b> instancias', 560, 1490, -6, 2, 'tok mono'),
-]
-
-
-def kcard(i, label, val, unit, x, y, vid):
-    u = f'<small>{unit}</small>' if unit else ''
-    return (f'<div id="h-k{i}" class="kcard" style="left:{x}px;top:{y}px"><div class="kl">{label}</div>'
-            f'<div class="kv"><span id="{vid}">{val}</span>{u}</div></div>')
-
-
-def kpos(i):
-    return 72 + (i % 2) * 480, 540 + (i // 2) * 198
-
-
+# ═══════════════════════════════ HISTORIA 2 · SEGUIMIENTO ═══════════════════════════════
 def build_seguimiento():
-    out = os.path.join(BASE, 'seguimiento')
-    # ───── escena «gancho» ─────
-    G_DUR = 3.9
-    toks = ''.join(f'<div id="g-t{i}" {cls_style(cls, x, y)}>{h}</div>'
-                   for i, (h, x, y, r, g, cls) in enumerate(TOKS))
+    proj = os.path.join(BASE, 'seguimiento')
+    M = json.load(open(os.path.join(proj, 'medidas.json')))
+    V = json.load(open(os.path.join(proj, 'valores.json')))
+    W, H = M['W'], M['H']
+    Z = 1080 / W
+    PT = 400
+
+    # ───── escena 1 · gancho ─────
+    G_DUR = 4.75
+    nums1 = ''
+    for i, n in enumerate(['6', '7', '8', '9', '13']):
+        nums1 += f'<div id="g-a{i}" class="clu serif" style="left:{150 + i * 170}px;top:930px;font-size:124px;color:{COB}">{n}</div>'
+    for i, n in enumerate(['1', '3', '4']):
+        nums1 += f'<div id="g-b{i}" class="clu serif" style="left:{320 + i * 170}px;top:1170px;font-size:124px">{n}</div>'
+    segs = ''.join(f'<div id="g-s{i}" class="seg" style="left:{i * 22}px"></div>' for i in range(41))
+    grades = [('4', NEG, 170, 880), ('7', POS, 760, 820), ('2', NEG, 300, 1230), ('5', NEG, 820, 1180), ('8', POS, 520, 1390)]
+    gr = ''.join(f'<div id="g-g{i}" class="clu serif" style="left:{x}px;top:{y}px;font-size:150px;color:{c}">{n}</div>'
+                 for i, (n, c, x, y) in enumerate(grades))
     gb = f'''
-      <div class="abs qwin" id="g-qwin">
-        <div id="g-q0" class="q serif">¿Qué puedo<br>cursar?</div>
-        <div id="g-q1" class="q serif" style="opacity:0">¿Cuánto<br>me falta?</div>
-        <div id="g-q2" class="q serif" style="opacity:0">¿Cuál es mi<br>promedio?</div>
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div class="abs" style="left:56px;top:226px;width:968px;height:120px;overflow:hidden;z-index:40">
+        <div id="g-q0" class="cap" style="left:0;top:0;opacity:1">¿Qué puedo <em>cursar</em>?</div>
+        <div id="g-q1" class="cap" style="left:0;top:0">¿Cuánto me <em>falta</em>?</div>
+        <div id="g-q2" class="cap" style="left:0;top:0">¿Cuál es mi <em>promedio</em>?</div>
       </div>
-      {toks}'''
+      <div id="g-k1">
+        <div class="clu" style="left:0;width:1080px;top:690px;text-align:center;font-size:58px;font-weight:600;opacity:1">Balances de Masa y Energía</div>
+        <div class="clu" style="left:0;width:1080px;top:776px;text-align:center;font-size:38px;color:{SOFT};opacity:1">pide estas correlativas</div>
+        {nums1}
+        <div id="g-la" class="clu mono" style="left:0;width:1080px;top:1092px;text-align:center;font-size:30px;letter-spacing:.1em;color:{SOFT}">CURSADAS (REGULAR)</div>
+        <div id="g-lb" class="clu mono" style="left:0;width:1080px;top:1332px;text-align:center;font-size:30px;letter-spacing:.1em;color:{SOFT}">APROBADAS</div>
+      </div>
+      <div id="g-k2">
+        <div id="g-41" class="clu serif" style="left:0;width:1080px;top:600px;text-align:center;font-size:300px;line-height:1">41</div>
+        <div id="g-41l" class="clu" style="left:0;width:1080px;top:930px;text-align:center;font-size:44px">materias obligatorias</div>
+        <div id="g-bar" class="abs" style="left:89px;top:1040px;width:902px;height:64px;opacity:0">{segs}</div>
+        <div id="g-av" class="clu" style="left:0;width:1080px;top:1150px;text-align:center;font-size:40px;color:{SOFT}">avance: <span class="serif" style="font-size:64px;color:{COB}">12,2 %</span></div>
+      </div>
+      <div id="g-k3">{gr}
+        <div id="g-qm" class="clu serif" style="left:0;width:1080px;top:760px;text-align:center;font-size:360px;line-height:1;color:{COB}">?</div>
+        <div id="g-qml" class="clu mono" style="left:0;width:1080px;top:1170px;text-align:center;font-size:32px;letter-spacing:.1em;color:{SOFT}">PROM. CON APLAZOS</div>
+      </div>'''
     gj = ''
-    for i, (h, x, y, r, g, cls) in enumerate(TOKS):
-        t0 = [0.15, 1.3, 2.45][g] + (i % 4) * 0.13
-        gj += f"\n  tl.fromTo('#g-t{i}', {{ opacity: 0, scale: 0.6, rotation: {r * 3} }}, {{ opacity: 1, scale: 1, rotation: {r}, duration: 0.42, ease: 'back.out(1.6)' }}, {t0:.2f});"
+    scatter1 = [(-420, -380, -20), (380, -300, 15), (-300, 420, 25), (420, 380, -15), (-120, -520, 10), (-460, 120, -25), (480, -60, 20), (60, 520, -10)]
+    for i in range(5):
+        dx, dy, r = scatter1[i]
+        gj += f"\n  tl.fromTo('#g-a{i}', {{ opacity: 0, x: {dx}, y: {dy}, rotation: {r}, scale: 0.7 }}, {{ opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 0.55, ease: 'expo.out' }}, {0.12 + i * 0.07:.2f});"
+    for i in range(3):
+        dx, dy, r = scatter1[5 + i]
+        gj += f"\n  tl.fromTo('#g-b{i}', {{ opacity: 0, x: {dx}, y: {dy}, rotation: {r}, scale: 0.7 }}, {{ opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 0.55, ease: 'expo.out' }}, {0.47 + i * 0.07:.2f});"
     gj += '''
-  roll('#g-q0', '#g-q1', 1.15, 260);
-  roll('#g-q1', '#g-q2', 2.3, 260);'''
-    for i, (h, x, y, r, g, cls) in enumerate(TOKS):
-        dx = (x + 200 - 540) * 1.6
-        dy = (y - 1100) * 1.2
-        gj += f"\n  tl.to('#g-t{i}', {{ x: {dx:.0f}, y: {dy:.0f}, opacity: 0, filter: 'blur(12px)', duration: 0.36, ease: 'power3.in' }}, {3.45 + (i % 3) * 0.02:.2f});"
-    gj += "\n  blurOut('#g-qwin', 3.48, 0.24);"
+  blurIn('#g-la', 0.75); blurIn('#g-lb', 0.85);
+  tl.to('#g-k1', { opacity: 0, filter: 'blur(10px)', scale: 0.96, duration: 0.24, ease: 'power2.in' }, 1.45);
+  tl.to('#g-q0', { y: -120, opacity: 0, duration: 0.22, ease: 'power3.in' }, 1.5);
+  tl.fromTo('#g-q1', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: 'expo.out' }, 1.6);
+  tl.fromTo('#g-41', { opacity: 0, scale: 1.3, filter: 'blur(12px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.4, ease: 'expo.out' }, 1.65);
+  blurIn('#g-41l', 1.85);
+  tl.to('#g-bar', { opacity: 1, duration: 0.15 }, 1.95);'''
+    for i in range(5):
+        gj += f"\n  tl.to('#g-s{i}', {{ backgroundColor: '{COB}', duration: 0.08 }}, {2.05 + i * 0.07:.2f});"
+    gj += '''
+  blurIn('#g-av', 2.45);
+  tl.to('#g-k2', { opacity: 0, filter: 'blur(10px)', scale: 0.96, duration: 0.24, ease: 'power2.in' }, 3.0);
+  tl.to('#g-q1', { y: -120, opacity: 0, duration: 0.22, ease: 'power3.in' }, 3.05);
+  tl.fromTo('#g-q2', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: 'expo.out' }, 3.15);'''
+    for i, (n, c, x, y) in enumerate(grades):
+        gj += (f"\n  tl.fromTo('#g-g{i}', {{ opacity: 0, scale: 0.5, rotation: {(-1) ** i * 14} }}, {{ opacity: 1, scale: 1, rotation: {(-1) ** i * 6}, duration: 0.4, ease: 'back.out(1.7)' }}, {3.2 + i * 0.08:.2f});"
+               f"\n  tl.to('#g-g{i}', {{ x: {540 - x - 40}, y: {900 - y}, scale: 0.3, opacity: 0, rotation: 0, duration: 0.42, ease: 'power3.in' }}, {3.8 + i * 0.03:.2f});")
+    gj += '''
+  tl.fromTo('#g-qm', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.42, ease: 'back.out(1.8)' }, 4.1);
+  blurIn('#g-qml', 4.2);
+  tl.to('#g-q2', { opacity: 0, filter: 'blur(10px)', duration: 0.16 }, 4.4);
+  tl.to('#g-k3', { y: -260, opacity: 0, scale: 0.8, duration: 0.42, ease: 'power3.in' }, 4.35);'''
     gancho = scene('gancho', gb, gj, G_DUR)
 
-    # ───── escena «herramienta» ─────
-    H_START, H_DUR = 3.7, 15.9
-    a, f, t = '#507ED3', '#EEF4FD', '#315393'
-    a2, f2, t2 = '#8E6AC7', '#F5F2FC', '#5F4489'
-    dd = ''.join(f'<div id="h-dd{i}">{o}' + ('<div id="h-tap-dd" class="tap" style="left:40%;top:50%"></div>' if i == 3 else '') + '</div>'
-                 for i, o in enumerate(['No Cursada', 'Cursando', 'Regular', 'Aprobada']))
+    # ───── escena 2 · la herramienta real ─────
+    H0 = 4.4
+    F = M['filas']
+    S_PRIV, S_TAB, S_FIN, S_DASH = 470, 2256, 870, 1430
 
-    def selrow(n, name, rid, extra='', z=''):
-        return (f'<div id="{rid}" class="trow" style="{z}"><div id="{rid}-tint" class="tint"></div><div class="n">{n}</div><div class="nm">{name}</div>'
-                f'<div id="{rid}-sel" class="sel"><div id="{rid}-ring" class="sel-ring"></div><div class="sel-win"><span id="{rid}-s0">No Cursada</span>'
-                f'<span id="{rid}-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span>{extra}</div></div>')
+    def scr(x, y, S, scrollx=0):
+        return x * Z - scrollx * Z, PT + (y - S) * Z
 
-    def badgerow(n, name, rid):
-        return (f'<div id="{rid}" class="trow"><div class="n">{n}</div><div class="nm">{name}</div>'
-                f'<div class="bwrap"><div id="{rid}-no" class="badge b-no">✕ No disponible</div>'
-                f'<div id="{rid}-si" class="badge b-si" style="opacity:0">✓ Disponible</div></div></div>')
+    def selc(n):
+        r = F[str(n)]['sel']
+        return scr(r[0] + r[2] / 2, r[1] + r[3] / 2, S_TAB)
 
-    cards = ''
-    for i, (lab, val, unit) in enumerate(KPIS):
-        x, y = kpos(i)
-        start_val = {0: '0', 1: '0,0 %'}.get(i, val)
-        c = kcard(i, lab, start_val, unit, x, y, f'h-v{i}')
-        cards += c.replace('class="kcard" style="', 'class="kcard" style="opacity:0;') if i >= 2 else c
-    att_html = ''
-    fy = 560
-    for j, (n, name, atts, fin) in enumerate(FINALES):
-        chips = ''
-        for k, (d, g) in enumerate(atts):
-            cls = 'a-mal' if g < 6 else 'a-bien'
-            tag = 'aplazo' if g < 6 else 'aprobado'
-            chips += (f'<div id="h-a{j}{k}" class="att {cls}"><div class="d">{k + 1}° · {d}</div>'
-                      f'<div class="g"><b id="h-a{j}{k}g">{g}</b><i id="h-a{j}{k}i">{tag}</i></div></div>')
-        att_html += (f'<div id="h-f{j}" class="fcard" style="top:{fy + j * 286}px"><div class="fhead"><span class="n">{n}</span><span class="nm">{name}</span></div>'
-                     f'<div class="ffin"><div class="k">NOTA FINAL</div><div id="h-f{j}v" class="v">{fin}</div></div><div class="atts">{chips}</div></div>')
+    def rowc(n):
+        r = F[str(n)]['fila']
+        return PT + (r[1] + r[3] / 2 - S_TAB) * Z
+
+    def ringbox(n):
+        r = F[str(n)]['fila']
+        x, y = scr(r[0], r[1], S_TAB)
+        return x + 4, y + 2, min(r[2], 458) * Z - 8, r[3] * Z - 4
+
+    links = [(6, 11), (6, 14), (4, 13), (5, 13), (3, 10), (3, 12)]
+    paths = ''.join(f'<path id="h-ln{a}-{b}" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/>' for a, b in links)
+    rings = ''.join(f'<div id="h-rg{n}" class="ring"></div>' for n in [10, 11, 12, 13, 14])
+    feats = [('Correlativas', 60, 560), ('Avance de carrera', 540, 700), ('Promedios', 40, 860),
+             ('Exámenes finales', 560, 1010), ('Exportá a Excel', 50, 1170), ('Google Sheets', 600, 1320), ('Respaldo en JSON', 120, 1470)]
+    fh = ''.join(f'<div id="h-f{i}" class="feat" style="left:{x}px;top:{y}px"><i>✓</i>{tx}</div>' for i, (tx, x, y) in enumerate(feats))
     hb = f'''
-      <div id="h-head" class="abs serif hh1">Seguimiento de<br>Carrera</div>
-      <div id="h-cards">{cards}</div>
-      <div id="h-tbl" class="abs tbl">
-        <div class="lvl" style="border-top:5px solid {a};background:{f};color:{t};border-radius:18px 18px 0 0">Nivel I</div>
-        {selrow(4, 'Análisis Matemático I', 'h-r4')}
-        {selrow(5, 'Física I', 'h-r5')}
-        {selrow(6, 'Química', 'h-r6', f'<div id="h-tap-sel" class="tap" style="left:40%;top:50%"></div><div id="h-dd" class="dd" data-layout-allow-overlap data-layout-allow-occlusion>{dd}</div>', 'z-index:5')}
-        <div class="lvl" style="border-top:5px solid {a2};background:{f2};color:{t2}">Nivel II</div>
-        {badgerow(11, 'Química Inorgánica', 'h-r11')}
-        {badgerow(14, 'Química Orgánica', 'h-r14')}
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div id="h-screen" class="screen" style="top:{PT}px">
+        <div id="h-cam" class="cam"><iframe id="h-fr" src="assets/site/pages/recursos/seguimiento.html" style="width:{W}px;height:{H}px;zoom:{Z:.4f}" scrolling="no"></iframe></div>
       </div>
-      <div id="h-note1" class="abs note" style="top:1400px">Ejemplo: Niveles I y II aprobados</div>
-      <div id="h-note2" class="abs note" style="top:1530px">Ejemplo · valores calculados por la planilla</div>
-      <div id="h-fin" class="abs" style="left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0">
-        <div class="abs tabs"><div id="h-tb0">Seguimiento</div><div id="h-tb1">Exámenes finales</div><div id="h-tb2" class="soft">Nota al estudiante</div></div>
-        <div id="h-ul" class="abs tab-ul"></div>
-        <div id="h-intro" class="abs soft" style="left:72px;top:420px;width:936px;font-size:40px;line-height:1.35;opacity:0">Se aprueba con 6. Máximo 4 instancias en condición regular.</div>
-        {att_html}
-        <div id="h-p0" class="prom" style="left:72px"><div class="kl">PROM. SIN APLAZOS</div><div class="kv" style="font-size:64px">7,76</div></div>
-        <div id="h-p1" class="prom" style="left:552px"><div class="kl">PROM. CON APLAZOS</div><div class="kv" style="font-size:64px">6,95</div></div>
-      </div>'''
-    hj = '''
-  blurIn('#h-head', 0.0, 0.28);'''
-    # primera parte: solo las dos primeras tarjetas
-    hj += '''
-  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out', stagger: 0.08 }, 0.15);
-  tl.fromTo('#h-tbl', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 0.3);
-  tl.fromTo('#h-tbl .trow', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.06 }, 0.4);
-  tap('#h-tap-sel', 1.2);
-  tl.to('#h-r6-ring', { opacity: 1, duration: 0.12 }, 1.32);
-  tl.fromTo('#h-dd', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.22, ease: 'expo.out' }, 1.4);
-  tap('#h-tap-dd', 1.9);
-  tl.to('#h-dd3', { backgroundColor: 'rgba(146,47,161,.12)', duration: 0.1 }, 2.02);
-  tl.to('#h-dd', { opacity: 0, duration: 0.15 }, 2.22);
-  tl.to('#h-r6-ring', { opacity: 0, duration: 0.2 }, 2.3);
-  roll('#h-r6-s0', '#h-r6-s1', 2.25, 40);
-  tl.to('#h-r6-tint', { opacity: 1, duration: 0.25 }, 2.3);
-  steps('#h-v1', 2.3, ['0,8 %', '1,6 %', '2,4 %'], 0.067); tl.set('#h-v0', { innerHTML: '1' }, 2.3);
-  tl.to('#h-r11-no, #h-r14-no', { opacity: 0, scale: 0.8, duration: 0.14, stagger: 0.12 }, 2.6);
-  tl.fromTo('#h-r11-si, #h-r14-si', { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)', stagger: 0.12 }, 2.68);
-  roll('#h-r4-s0', '#h-r4-s1', 3.25, 40); tl.to('#h-r4-tint', { opacity: 1, duration: 0.2 }, 3.3);
-  roll('#h-r5-s0', '#h-r5-s1', 3.4, 40); tl.to('#h-r5-tint', { opacity: 1, duration: 0.2 }, 3.45);'''
-    av = ['4,9', '7,3', '9,8', '12,2', '14,6', '17,1', '19,5', '22,0', '24,4', '26,8', '29,3', '31,7', '34,1', '36,6', '39,0']
-    hj += f"\n  steps('#h-v1', 3.35, {[v + ' %' for v in av]}, 0.067);"
-    hj += f"\n  steps('#h-v0', 3.35, {[str(n) for n in range(2, 18)][:15]}, 0.067); tl.set('#h-v0', {{ innerHTML: '17' }}, 4.36);"
-    hj += '''
-  blurIn('#h-note1', 3.45);
-  // el tablero se rearma con los diez indicadores
-  tl.to('#h-tbl', { y: 120, opacity: 0, filter: 'blur(8px)', duration: 0.38, ease: 'power3.in' }, 4.6);
-  blurOut('#h-note1', 4.6);'''
-    for i in range(2, 10):
-        hj += f"\n  tl.fromTo('#h-k{i}', {{ opacity: 0, y: 40, scale: 0.94 }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' }}, {4.95 + (i - 2) * 0.09:.2f});"
-    hj += '''
-  blurIn('#h-note2', 5.8);
-  // foco en «Prom. con aplazos» y paso a la pestaña de finales
-  tl.to('#h-k0, #h-k1, #h-k2, #h-k3, #h-k4, #h-k5, #h-k7, #h-k8, #h-k9, #h-head, #h-note2', { opacity: 0.25, duration: 0.3 }, 8.0);
-  tl.to('#h-k6', { borderColor: '#1344A5', scale: 1.05, duration: 0.3, ease: 'power2.out' }, 8.0);
-  tl.set('#h-k6', { transformOrigin: '228px 90px' }, 0);
-  tl.to('#h-k6', { scale: 7, x: 240, y: -264, opacity: 0, duration: 0.6, ease: 'power3.in' }, 8.6);
-  tl.fromTo('#h-fin', { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 8.95);
-  tl.set('#h-cards, #h-head, #h-note2', { opacity: 0 }, 9.4);
-  tl.set('#h-ul', { transformOrigin: '0% 50%' }, 0);
-  tl.to('#h-ul', { x: UL_X, scaleX: UL_S, duration: 0.4, ease: 'power3.inOut' }, 9.5);
-  tl.to('#h-tb1', { color: '#1344A5', duration: 0.2 }, 9.6);
-  tl.to('#h-tb0', { color: '#4A4F59', duration: 0.2 }, 9.6);
-  blurIn('#h-intro', 9.75);'''
-    t = 10.2
-    fin_times = []
-    for j, (n, name, atts, fin) in enumerate(FINALES):
-        hj += f"\n  tl.fromTo('#h-f{j}', {{ opacity: 0, y: 40 }}, {{ opacity: 1, y: 0, duration: 0.42, ease: 'expo.out' }}, {t:.2f});"
-        tt = t + 0.15
-        for k, (d, g) in enumerate(atts):
-            hj += (f"\n  tl.fromTo('#h-a{j}{k}', {{ opacity: 0, x: 24 }}, {{ opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }}, {tt:.2f});"
-                   f"\n  tl.fromTo('#h-a{j}{k}g', {{ opacity: 0, scale: 1.4 }}, {{ opacity: 1, scale: 1, duration: 0.26, ease: 'back.out(2)' }}, {tt + 0.16:.2f});"
-                   f"\n  blurIn('#h-a{j}{k}i', {tt + 0.24:.2f}, 0.18);")
-            tt += 0.34
-        hj += f"\n  tl.fromTo('#h-f{j}v', {{ opacity: 0, scale: 1.5 }}, {{ opacity: 1, scale: 1, duration: 0.32, ease: 'back.out(2)' }}, {tt + 0.05:.2f});"
-        fin_times.append(tt + 0.05)
-        t = tt + 0.2
-    hj += f'''
-  tl.fromTo('#h-p0, #h-p1', {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.1 }}, {t + 0.15:.2f});'''
-    p_time = t + 0.15
-    t0x, t0w = GEOM.get('tab0', [72, 200]); t1x, t1w = GEOM.get('tab1', [316, 280])
-    hj = hj.replace('UL_X', str(round(t1x - t0x))).replace('UL_S', '%.3f' % (t1w / t0w))
-    hb = hb.replace('class="abs tab-ul"', 'class="abs tab-ul" style="left:%dpx;width:%dpx"' % (round(t0x), round(t0w)))
-    hj = shift(hj, lambda t: t + (0.4 if t >= 4.55 else 0))
-    herr = scene('herramienta', hb, hj, H_DUR)
+      <div id="h-ringp" class="ring"></div>
+      {rings}
+      <svg class="abs" style="left:0;top:0;z-index:56" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" stroke="{COB}" stroke-width="6" stroke-linecap="butt" data-layout-ignore>{paths}</svg>
+      <div id="h-drop" class="drop"><div><i></i>No Cursada</div><div><i></i>Cursando</div><div id="h-op2"><i></i>Regular</div><div id="h-op3"><i></i>Aprobada</div></div>
+      <div id="h-k0" class="kp" style="left:55px;top:1380px"><div class="l">Prom. sin aplazos</div><div id="h-k0v" class="v">—</div></div>
+      <div id="h-k1" class="kp" style="left:555px;top:1380px"><div class="l">Prom. con aplazos</div><div id="h-k1v" class="v">—</div></div>
+      {fh}
+      {caps('h', [('c1', 'Tu carrera, en una <em>planilla</em>', None),
+                  ('c2', 'Sin <em>cuentas</em>', 'Tus datos quedan en tu dispositivo.'),
+                  ('c3', 'Marcá tus <em>materias</em>', None),
+                  ('c4', 'Se habilitan sus <em>correlativas</em>', None),
+                  ('c5', 'Cargá tus <em>finales</em>', 'Los promedios se calculan solos.'),
+                  ('c6', 'Todo tu avance, al <em>día</em>', None)])}
+      <div id="h-claim" class="cap" style="white-space:normal;font-size:92px">Marcá tus materias.<br>La planilla hace <em>el resto</em>.</div>
+      <div id="h-tap" class="tap"></div><div id="h-tap2" class="tap"></div>'''
 
-    # ───── escena «cierre» ─────
-    C_START, C_DUR = 19.4, 6.4
-    cb, cj = cierre('c', 'Marcá tus materias.', 'La planilla calcula el resto.',
-                    'Tus datos quedan en tu dispositivo.',
-                    'Recursos académicos › Seguimiento de Carrera', 'También en Excel y Google Sheets', C_DUR)
+    def kpis(nombre):
+        return [v for _, v in V[nombre]['kpis']]
+    k_aga, k_fin = kpis('t_aga'), kpis('f_fis3')
+
+    hj = Template(r"""
+  const vals = QA('#seg-dashboard .seg-kpi__value');
+  vals.forEach((v) => { v.style.display = 'inline-block'; v.style.transformOrigin = '0% 60%'; });
+  // los paneles ocultos pasan a manejarse con display (se deshace bien al retroceder)
+  const panelSeg = Q('#seg-panel-seguimiento'), panelFin = Q('#seg-panel-finales');
+  panelFin.hidden = false; panelFin.style.display = 'none';
+  // geometría medida en la página real, dentro del iframe (px CSS del teléfono)
+  const Z = $Z, PT = $PT;
+  const RR = (el) => el.getBoundingClientRect();
+  const sy = (y, S) => PT + (y - S) * Z;
+  const priv = RR(Q('.seguimiento__nota-privacidad'));
+  const S_PRIV = priv.top - (660 - PT) / Z;
+  Object.assign(document.getElementById('h-ringp').style, { left: (priv.left * Z - 6) + 'px', top: (660 - 6) + 'px', width: (priv.width * Z + 12) + 'px', height: (priv.height * Z + 12) + 'px' });
+  const S_TAB = RR(Q('#seg-tabla-seguimiento thead')).top - (414 - PT) / Z;
+  const filaR = (n) => RR(Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"]'));
+  const tw = RR(Q('#seg-tabla-seguimiento .seg-table-scroll'));
+  [10, 11, 12, 13, 14].forEach((n) => { const r = filaR(n); Object.assign(document.getElementById('h-rg' + n).style, { left: (tw.left * Z + 4) + 'px', top: (sy(r.top, S_TAB) + 2) + 'px', width: (tw.width * Z - 8) + 'px', height: (r.height * Z - 4) + 'px' }); });
+  [[6, 11], [6, 14], [4, 13], [5, 13], [3, 10], [3, 12]].forEach((ab) => {
+    const ra = filaR(ab[0]), rb = filaR(ab[1]);
+    const ya = sy(ra.top + ra.height / 2, S_TAB), yb = sy(rb.top + rb.height / 2, S_TAB), bx = 24 - Math.abs(yb - ya) / 160;
+    document.getElementById('h-ln' + ab[0] + '-' + ab[1]).setAttribute('d', 'M 52 ' + ya + ' C ' + bx + ' ' + ya + ', ' + bx + ' ' + yb + ', 52 ' + yb);
+  });
+  const SELC = {};
+  [3, 4, 5, 6].forEach((n) => { const r = RR(Q('#seg-estado-' + n)); SELC[n] = [(r.left + r.width / 2) * Z, sy(r.top + r.height / 2, S_TAB)]; });
+  const tSeg = Q('.seg-tabs__tab[data-tab="seguimiento"]'), tFin = Q('.seg-tabs__tab[data-tab="finales"]');
+  const S_FIN = RR(Q('.seg-tabs')).top - (412 - PT) / Z;
+  const tc = (el) => { const r = RR(el); return [(r.left + r.width / 2) * Z, sy(r.top + r.height / 2, S_FIN)]; };
+  const TF = tc(tFin), TS = tc(tSeg);
+  panelSeg.style.display = 'none'; panelFin.style.display = 'block';
+  const sc = Q('#seg-tabla-finales .seg-table-scroll');
+  const scR = RR(sc);
+  const fila = (n) => Q('#seg-tabla-finales tr[data-numero="' + n + '"]');
+  const ins = (n) => Array.from(fila(n).querySelectorAll('input')).filter((i) => getComputedStyle(i.parentElement).display !== 'none');
+  const INS = {}, SCR = {};
+  [3, 5].forEach((n) => {
+    INS[n] = ins(n).map(RR);
+    SCR[n] = [0, 1, 2].map((k) => Math.max(0, Math.ceil(INS[n][2 * k + 1].right - (scR.left + scR.width) + 16)));
+  });
+  const finBottom = RR(Q('#seg-tabla-finales')).bottom;
+  panelSeg.style.display = ''; panelFin.style.display = 'none';
+  const KT = sy(finBottom, S_FIN) + 34;
+  document.getElementById('h-k0').style.top = KT + 'px';
+  document.getElementById('h-k1').style.top = KT + 'px';
+  let tapN = 0;
+  const tapA = (x, y, t) => tap((tapN++ % 2) ? '#h-tap2' : '#h-tap', x, y, t);
+  const tapIn = (n, i, s, t) => { const r = INS[n][i]; tapA((r.left + r.width / 2 - s) * Z, sy(r.top + r.height / 2, S_FIN), t); };
+  const S_DASH = RR(QA('#seg-dashboard .seg-kpi')[4]).top - (430 - PT) / Z;
+
+  tl.fromTo('#h-screen', { y: 1500 }, { y: 0, duration: 0.55, ease: 'power3.out' }, 0.0);
+  blurIn('#h-c1', 0.3);
+  tl.to('#h-cam', { y: -S_PRIV * Z, duration: 1.25, ease: 'power2.inOut' }, 0.55);
+  capSwap('#h-c1', '#h-c2', 1.85); blurIn('#h-c2s', 2.05);
+  tl.fromTo('#h-ringp', { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'expo.out' }, 2.05);
+  tl.to('#h-ringp', { opacity: 0, duration: 0.25 }, 3.25);
+  blurOut('#h-c2s', 3.3);
+  // de la cabecera a la tabla, sin cortes
+  tl.to('#h-cam', { y: -S_TAB * Z, duration: 1.1, ease: 'power2.inOut' }, 3.35);
+  capSwap('#h-c2', '#h-c3', 3.6);
+  const marcar = (n, val, t, opt, dur) => {
+    const sel = Q('#seg-estado-' + n);
+    const c = SELC[n];
+    tapA(c[0], c[1], t);
+    tl.set('#h-drop', { left: c[0] - 150, top: c[1] + 46 }, t);
+    tl.fromTo('#h-drop', { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.16, ease: 'expo.out' }, t + 0.15);
+    tl.set(opt, { backgroundColor: 'rgba(146,47,161,0.12)' }, t + 0.15 + dur);
+    tl.set(opt + ' i', { borderColor: '$MAU', borderWidth: '9px' }, t + 0.15 + dur);
+    tapA(c[0], c[1] + 46 + (opt === '#h-op3' ? 238 : 170), t + 0.08 + dur);
+    tl.to('#h-drop', { opacity: 0, duration: 0.12 }, t + 0.3 + dur);
+    tl.set(opt, { backgroundColor: 'rgba(146,47,161,0)' }, t + 0.42 + dur);
+    tl.set(opt + ' i', { borderColor: '#9AA1AD', borderWidth: '3px' }, t + 0.42 + dur);
+    tl.set(sel, { value: val }, t + 0.32 + dur);
+    // la columna Disponible pasa a mostrar el estado de la materia, como en la herramienta
+    const bm = Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"] .seg-badge');
+    const ap = val === 'Aprobada';
+    tl.set(bm, { attr: { class: 'seg-badge seg-badge--' + (ap ? 'aprobada' : 'regular') } }, t + 0.32 + dur);
+    tl.set(bm.querySelector('.seg-badge__icon'), { innerHTML: ap ? '✓' : '◐' }, t + 0.32 + dur);
+    tl.set(bm.querySelector('.seg-badge__text'), { innerHTML: val }, t + 0.32 + dur);
+  };
+  const habilitar = (n, t) => {
+    const b = Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"] .seg-badge');
+    tl.set(b, { attr: { class: 'seg-badge seg-badge--disponible' } }, t);
+    tl.set(b.querySelector('.seg-badge__icon'), { innerHTML: '✓' }, t);
+    tl.set(b.querySelector('.seg-badge__text'), { innerHTML: 'Disponible' }, t);
+    tl.fromTo(b, { scale: 1.3 }, { scale: 1, duration: 0.32, ease: 'back.out(2.2)', immediateRender: false }, t);
+    tl.fromTo('#h-rg' + n, { opacity: 0 }, { opacity: 1, duration: 0.18 }, t);
+    tl.to('#h-rg' + n, { opacity: 0, duration: 0.3 }, t + 0.9);
+  };
+  const linea = (a, b, t) => {
+    tl.to('#h-ln' + a + '-' + b, { strokeDashoffset: 0, duration: 0.38, ease: 'power2.inOut' }, t);
+    tl.to('#h-ln' + a + '-' + b, { opacity: 0, duration: 0.3 }, t + 1.2);
+  };
+  // 1) Química aprobada: se habilitan Química Inorgánica y Química Orgánica
+  marcar(6, 'Aprobada', 4.7, '#h-op3', 0.5);
+  capSwap('#h-c3', '#h-c4', 5.65);
+  linea(6, 11, 5.6); linea(6, 14, 5.68);
+  habilitar(11, 5.92); habilitar(14, 6.04);
+  // 2) Análisis Matemático I aprobada y Física I regular: Física II
+  marcar(4, 'Aprobada', 7.0, '#h-op3', 0.3);
+  marcar(5, 'Regular', 7.6, '#h-op2', 0.3);
+  linea(4, 13, 8.2); linea(5, 13, 8.25); habilitar(13, 8.5);
+  // 3) Álgebra regular: Probabilidad y Estadística y Análisis Matemático II
+  marcar(3, 'Regular', 8.95, '#h-op2', 0.3);
+  linea(3, 10, 9.55); linea(3, 12, 9.6); habilitar(10, 9.85); habilitar(12, 9.97);
+  // el tablero (fuera de cuadro) ya refleja estos cambios, como en la herramienta real
+  const KAGA = $KAGA;
+  vals.forEach((v, i) => tl.set(v, { innerHTML: KAGA[i] }, 10.0));
+  // a la pestaña de exámenes finales
+  capSwap('#h-c4', '#h-c5', 10.6); blurIn('#h-c5s', 10.8);
+  tl.to('#h-cam', { y: -S_FIN * Z, duration: 1.0, ease: 'power2.inOut' }, 10.55);
+  tapA(TF[0], TF[1], 11.7);
+  tl.set(tSeg, { attr: { 'aria-selected': 'false' } }, 11.83);
+  tl.set(tFin, { attr: { 'aria-selected': 'true' } }, 11.83);
+  tl.set(panelSeg, { display: 'none' }, 11.83);
+  tl.set(panelFin, { display: 'block' }, 11.83);
+  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.08 }, 12.0);
+  const foco = (el, t, t2) => {
+    tl.set(el, { borderColor: '#1344A5', outline: '2px solid #1344A5', outlineOffset: '2px' }, t);
+    tl.set(el, { borderColor: '', outline: '', outlineOffset: '' }, t2);
+  };
+  const tipear = (el, txt, t, dt) => { for (let k = 1; k <= txt.length; k++) tl.set(el, { value: txt.slice(0, k) }, t + (k - 1) * dt); };
+  const prom = (sin, con, t) => {
+    if (sin) { tl.set('#h-k0v', { innerHTML: sin }, t); pop('#h-k0v', t); }
+    tl.set('#h-k1v', { innerHTML: con }, t); pop('#h-k1v', t);
+  };
+$FINALES
+  // de vuelta a Seguimiento: el tablero completo
+  capSwap('#h-c5', '#h-c6', 18.0); blurOut('#h-c5s', 18.0);
+  tapA(TS[0], TS[1], 18.15);
+  tl.set(tSeg, { attr: { 'aria-selected': 'true' } }, 18.28);
+  tl.set(tFin, { attr: { 'aria-selected': 'false' } }, 18.28);
+  tl.set(panelFin, { display: 'none' }, 18.28);
+  tl.set(panelSeg, { display: 'block' }, 18.28);
+  tl.to('#h-k0, #h-k1', { opacity: 0, y: 30, duration: 0.2 }, 18.25);
+$DASH
+  tl.to('#h-cam', { y: -S_DASH * Z, duration: 1.2, ease: 'power2.inOut' }, 18.95);
+  // cierre: la planilla se aleja y aparecen sus funciones
+  blurOut('#h-c6', 20.4);
+  tl.to('#h-screen', { scale: 0.56, y: 140, borderRadius: '44px', transformOrigin: '540px 0px', duration: 0.75, ease: 'power3.inOut' }, 20.4);
+$END
+""")
+    F_JS = ''
+    t = 12.3
+    seq = [(3, 0, '20/02/2024', '4', 'f_aga1'), (3, 1, '05/03/2024', '7', 'f_aga2'),
+           (5, 0, '24/07/2024', '2', 'f_fis1'), (5, 1, '11/12/2024', '5', 'f_fis2'), (5, 2, '19/02/2025', '8', 'f_fis3')]
+    scroll_now = '0'
+    sfx_fin = []
+
+    def desplazar(expr, t):
+        return f"\n  tl.to(sc, {{ scrollLeft: {expr}, duration: 0.34, ease: 'power2.inOut' }}, {t:.2f});"
+    for idx, (n, k, fecha, nota, vk) in enumerate(seq):
+        fast = n == 5
+        fi, ni = 2 * k, 2 * k + 1
+        if not (n == 3 and k == 0):
+            scroll_now = f'SCR[{n}][{k}]'
+            F_JS += desplazar(scroll_now, t)
+            t += 0.38
+        F_JS += f"\n  tapIn({n}, {fi}, {scroll_now}, {t:.2f});"
+        F_JS += f"\n  foco(ins({n})[{fi}], {t + 0.13:.2f}, {t + (0.55 if not fast else 0.3):.2f});"
+        if fast:
+            F_JS += f"\n  tl.set(ins({n})[{fi}], {{ value: '{fecha}' }}, {t + 0.15:.2f});"
+            t += 0.28
+        else:
+            F_JS += f"\n  tipear(ins({n})[{fi}], '{fecha}', {t + 0.16:.2f}, 0.028);"
+            sfx_fin += [('tecla', t + 0.16 + j * 0.056, 0.06) for j in range(5)]
+            t += 0.5
+        if n == 3 and k == 0:
+            scroll_now = 'SCR[3][0]'
+            F_JS += desplazar(scroll_now, t)
+            t += 0.38
+        F_JS += f"\n  tapIn({n}, {ni}, {scroll_now}, {t:.2f});"
+        F_JS += f"\n  foco(ins({n})[{ni}], {t + 0.13:.2f}, {t + 0.45:.2f});"
+        F_JS += f"\n  tl.set(ins({n})[{ni}], {{ value: '{nota}' }}, {t + 0.2:.2f});"
+        sfx_fin.append(('tecla', t + 0.2, 0.08))
+        kk = dict(V[vk]['kpis'])
+        sin = kk['Prom. sin aplazos']
+        prev_sin = dict(V[seq[idx - 1][4]]['kpis'])['Prom. sin aplazos'] if idx else '—'
+        F_JS += f"\n  prom({json.dumps(sin) if sin != prev_sin else 'null'}, '{kk['Prom. con aplazos']}', {t + 0.32:.2f});"
+        sfx_fin.append(('pop-a' if idx % 2 else 'pop-b', t + 0.33, 0.14))
+        t += 0.5 if not fast else 0.4
+        if (n == 3 and k == 1) or (n == 5 and k == 2):
+            F_JS += desplazar('0', t)
+            t += 0.38
+            scroll_now = '0'
+            nc = f"Q('#seg-tabla-finales tr[data-numero=\"{n}\"] [data-col=\"nota\"]')"
+            F_JS += (f"\n  tl.set({nc}, {{ innerHTML: '{V[vk]['notaFin'][str(n)]}', color: '{POS}', fontWeight: '600' }}, {t:.2f}); pop({nc}, {t:.2f});")
+            sfx_fin.append(('pop-b', t + 0.01, 0.14))
+            t += 0.42
+    fin_end = t
+    D_JS = ''
+    for i, (a, b) in enumerate(zip(k_aga, k_fin)):
+        if a == b:
+            continue
+        D_JS += f"\n  tl.set(vals[{i}], {{ innerHTML: '{b}' }}, {18.45 + i * 0.06:.2f}); pop(vals[{i}], {18.45 + i * 0.06:.2f});"
+    E_JS = "\n  blurIn('#h-claim', 20.6, 0.3);"
+    for i in range(len(feats)):
+        E_JS += f"\n  tl.fromTo('#h-f{i}', {{ opacity: 0, scale: 0.6, y: 30 }}, {{ opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }}, {20.95 + i * 0.12:.2f});"
+    E_JS += "\n  blurOut('#h-claim', 23.65);"
+    for i in range(len(feats)):
+        E_JS += f"\n  tl.to('#h-f{i}', {{ x: {540 - feats[i][1] - 160}, y: {900 - feats[i][2]}, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }}, {23.6 + i * 0.02:.2f});"
+    E_JS += "\n  tl.to('#h-screen', { scale: 0.12, y: 600, opacity: 0, duration: 0.45, ease: 'power3.in' }, 23.65);"
+    hj = hj.substitute(Z=f'{Z:.5f}', PT=PT, MAU=MAU, KAGA=json.dumps(k_aga), FINALES=F_JS, DASH=D_JS, END=E_JS)
+    delta = round(max(0.0, fin_end + 0.15 - 18.0), 2)
+    cut = hj.index('  // de vuelta a Seguimiento')
+    hj = hj[:cut] + shift(hj[cut:], lambda x: x + delta if x >= 17.95 else x)
+    H_DUR = round(24.25 + delta, 2)
+    herr = scene('herramienta', hb, hj, H_DUR, iframe_id='h-fr')
+
+    # ───── escena 3 · cierre ─────
+    C0 = round(H0 + 23.9 + delta, 2)
+    C_DUR = 3.4
+    cb, cj = cierre('c', 'Recursos académicos › Seguimiento de Carrera', 'También en Excel y Google Sheets', C_DUR)
     cierre_html = scene('cierre', cb, cj, C_DUR)
-    total = round(C_START + C_DUR, 2)
-    H = H_START
-    sfx = [('pop-a', 0.17, 0.42), ('pop-b', 0.43, 0.42), ('pop-c', 1.33, 0.42), ('pop-a', 1.59, 0.42),
-           ('pop-b', 2.48, 0.42), ('pop-c', 2.74, 0.42),
-           ('barrido-a', 3.4, 0.55),
-           ('toque-a', H + 1.33, 0.8), ('toque-b', H + 2.03, 0.8),
-           ('pop-a', H + 2.34, 0.5), ('pop-b', H + 2.72, 0.45), ('pop-c', H + 2.84, 0.45),
-           ('barrido-b', H + 4.98, 0.5), ('pop-a', H + 5.4, 0.35), ('pop-b', H + 5.67, 0.35), ('pop-c', H + 5.94, 0.35),
-           ('barrido-c', H + 9.0, 0.6),
-           ] + [(['pop-a', 'pop-b', 'pop-c'][j], H + ft + 0.42, 0.5) for j, ft in enumerate(fin_times)] + [
-           ('pop-a', H + p_time + 0.45, 0.4),
-           ('barrido-b', C_START - 0.05, 0.3),
-           ('impacto', C_START + 3.4 + 0.35 - 0.9, 0.75)]
-    os.makedirs(os.path.join(out, 'compositions'), exist_ok=True)
-    open(os.path.join(out, 'compositions/gancho.html'), 'w').write(gancho)
-    open(os.path.join(out, 'compositions/herramienta.html'), 'w').write(herr)
-    open(os.path.join(out, 'compositions/cierre.html'), 'w').write(cierre_html)
-    open(os.path.join(out, 'index.html'), 'w').write(
-        index_html('Seguimiento de Carrera — historia',
-                   [('gancho', 0, G_DUR), ('herramienta', H_START, H_DUR), ('cierre', C_START, C_DUR)], sfx, total, 'seguimiento'))
-    return total, fin_times, p_time
+    total = round(C0 + C_DUR, 2)
+
+    sfx = [('pop-a', 0.3, 0.12), ('pop-b', 0.6, 0.12), ('pop-a', 1.75, 0.14), ('pop-b', 3.3, 0.12), ('pop-a', 4.15, 0.14),
+           ('barrido-a', 4.35, 0.14)]
+    H = H0
+    sfx += [('barrido-b', H + 3.35, 0.1)]
+    for tt, d in [(4.7, 0.5), (7.0, 0.3), (7.6, 0.3), (8.95, 0.3)]:
+        sfx.append(('toque', H + tt + 0.13, 0.24))
+        sfx.append(('toque', H + tt + 0.21 + d, 0.2))
+    sfx += [('pop-a', H + 5.93, 0.13), ('pop-b', H + 6.05, 0.13), ('pop-a', H + 8.51, 0.13), ('pop-b', H + 9.86, 0.13), ('pop-a', H + 9.98, 0.13)]
+    sfx += [('barrido-a', H + 10.55, 0.1), ('toque', H + 11.83, 0.24)]
+    sfx += [(n, H + tt, v) for n, tt, v in sfx_fin]
+    sfx += [('toque', H + 18.28 + delta, 0.24), ('barrido-b', H + 20.4 + delta, 0.12), ('cierre', C0 + 0.35 - 0.8, 0.32)]
+    write_project(proj, {'gancho': gancho, 'herramienta': herr, 'cierre': cierre_html}, index_html(
+        'Seguimiento de Carrera — historia', [('gancho', 0, G_DUR), ('herramienta', H0, H_DUR), ('cierre', C0, C_DUR)], sfx, total, 'seguimiento'))
+    return total, fin_end, delta
 
 
 if __name__ == '__main__':

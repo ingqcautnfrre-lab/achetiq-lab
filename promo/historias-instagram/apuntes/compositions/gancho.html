@@ -1,0 +1,140 @@
+<template>
+  <style>
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0;z-index:40}
+.cap em{font-style:normal;color:#1344A5}
+.cap-sub{position:absolute;left:72px;top:338px;font-size:40px;line-height:1.3;color:#4A4F59;white-space:nowrap;opacity:0;z-index:40}
+.screen{position:absolute;left:0;width:1080px;height:1600px;overflow:hidden;border-radius:44px 44px 0 0;background:#F2F4F8;box-shadow:0 -14px 44px rgba(19,23,32,.10)}
+.cam{position:absolute;left:0;top:0;width:1080px}
+.cam iframe{display:block;border:0;background:#F2F4F8}
+.tap{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;background:rgba(19,23,32,.20);opacity:0;pointer-events:none;z-index:60}
+.ring{position:absolute;border:4px solid #1344A5;border-radius:20px;box-shadow:0 0 0 8px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
+.drop{position:absolute;width:300px;background:#FFFFFF;border-radius:14px;box-shadow:0 18px 44px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
+.drop div{position:relative;height:68px;display:flex;align-items:center;gap:18px;padding:0 24px;font-size:31px}
+.drop i{width:26px;height:26px;border-radius:50%;border:3px solid #9AA1AD;flex:0 0 26px}
+.flood{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
+/* chat */
+.chat{position:absolute;left:48px;top:470px;width:984px;height:1110px;background:#FFFFFF;border-radius:40px;box-shadow:0 18px 50px rgba(19,23,32,.10);overflow:hidden}
+.chat-h{position:absolute;left:0;top:0;width:100%;height:124px;display:flex;align-items:center;gap:22px;padding:0 34px;border-bottom:2px solid #F0EBE3;background:#FFFFFF;z-index:2}
+.av{width:72px;height:72px;border-radius:50%;background:#1344A5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:30px}
+.msgs{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:18px;padding:0 30px}
+.msg{max-width:720px;align-self:flex-start;opacity:0}
+.msg.me{align-self:flex-end}
+.msg .who{font-size:27px;font-weight:600;margin:0 0 6px 18px}
+.bub{padding:20px 28px;border-radius:30px 30px 30px 8px;background:#F1EEE8;font-size:37px;line-height:1.28}
+.msg.me .bub{background:#1344A5;color:#FFFFFF;border-radius:30px 30px 8px 30px}
+.typing{display:flex;gap:10px;padding:26px 30px;border-radius:30px 30px 30px 8px;background:#F1EEE8;align-self:flex-start;opacity:0}
+.typing span{width:14px;height:14px;border-radius:50%;background:#9AA1AD;display:block}
+.prev{margin-top:14px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:2px solid #E7DFD3}
+.prev img{display:block;width:100%;height:230px;object-fit:cover}
+.prev div{padding:14px 20px 18px}
+.prev b{display:block;font-size:32px;font-weight:600;color:#131720}
+.prev span{font-size:28px;color:#4A4F59}
+/* Drive simulado */
+.sheet{position:absolute;left:0;width:1080px;height:1500px;background:#FFFFFF;border-radius:44px 44px 0 0;box-shadow:0 -14px 44px rgba(19,23,32,.16);overflow:hidden}
+.handle{position:absolute;left:500px;top:22px;width:80px;height:8px;border-radius:4px;background:#DCD3C6}
+.dcrumb{position:absolute;left:60px;top:66px;font-size:32px;color:#4A4F59;white-space:nowrap}
+.dtitle{position:absolute;left:60px;top:116px;width:960px;font-size:52px;font-weight:600;line-height:1.18}
+.dhead{position:absolute;left:60px;width:960px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;padding-bottom:14px;border-bottom:2px solid #F0EBE3}
+.drow{position:absolute;left:44px;width:992px;height:132px;display:flex;align-items:center;gap:30px;padding:0 16px;border-radius:18px}
+.drow .ic{flex:0 0 64px;display:flex;justify-content:center}
+.drow .tx b{display:block;font-size:39px;font-weight:500;white-space:nowrap}
+.drow .tx span{font-size:29px;color:#4A4F59}
+.dhl{position:absolute;inset:0;border-radius:18px;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0}
+.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
+.viewer{position:absolute;left:0;top:0;width:1080px;height:1500px;background:#E9E3D9;opacity:0}
+.vbar{position:absolute;left:0;top:0;width:1080px;height:120px;background:#FFFFFF;display:flex;align-items:center;gap:24px;padding:0 60px;font-size:34px;border-bottom:2px solid #E7DFD3}
+.page{position:absolute;left:130px;top:170px;width:820px;height:1080px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:84px 74px}
+.ln{height:22px;border-radius:6px;background:#E1E4E9;margin-bottom:26px}
+.ln.t{height:40px;width:62%;background:#CED2D9;margin-bottom:52px}
+/* muro de materias */
+.tile{position:absolute;width:196px;height:110px;border-radius:12px;overflow:hidden;opacity:0}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+/* cierre */
+.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:240px}
+.end-logo{width:460px;height:460px;opacity:0}
+.end-name{font-size:124px;margin-top:6px;display:flex;line-height:1.05}
+.end-name span{display:inline-block;opacity:0}
+.end-url{font-size:48px;color:#1344A5;margin-top:18px;opacity:0}
+.end-sec{font-size:42px;color:#4A4F59;margin-top:20px;line-height:1.3;opacity:0}
+.end-extra{font-size:36px;color:#4A4F59;margin-top:12px;opacity:0}
+/* seguimiento */
+.clu{position:absolute;opacity:0;white-space:nowrap}
+.seg{position:absolute;top:0;width:18px;height:64px;border-radius:4px;background:#E7DFD3}
+.kp{position:absolute;width:470px;height:176px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:24px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12)}
+.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.08em;color:#4A4F59;text-transform:uppercase}
+.kp .v{font-family:'Fraunces',serif;font-size:80px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
+.feat{position:absolute;display:flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;background:#FFFFFF;border:2px solid #E7DFD3;box-shadow:0 14px 36px rgba(19,23,32,.12);font-size:38px;font-weight:500;white-space:nowrap;opacity:0;z-index:30}
+.feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
+</style>
+  <div id="root" data-composition-id="gancho" data-width="1080" data-height="1920">
+    <div id="gancho-all" class="clip" data-start="0" data-duration="4.45" data-track-index="1" style="position:absolute;inset:0">
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div id="g-q" class="cap" style="white-space:normal;font-size:96px;opacity:1">¿Otra vez buscando<br>apuntes?</div>
+      <div id="g-ok" class="cap" style="font-size:96px">Está todo <em>acá</em>.</div>
+      <div id="g-chat" class="chat" data-layout-allow-overlap data-layout-allow-occlusion>
+        <div class="chat-h" data-layout-allow-overlap><div class="av">IQ</div><div><div style="font-size:38px;font-weight:600">IQ · 4º año</div><div style="font-size:28px;color:#4A4F59">Grupo de la cursada</div></div></div>
+        <div id="g-msgs" class="msgs" data-layout-allow-overlap><div id="g-m0" class="msg me"><div class="bub">¿Alguien tiene la Serie 7 de Reacciones resuelta?</div></div><div id="g-m1" class="msg "><div class="who" style="color:#8E6AC7">Lu</div><div class="bub">creo que estaba en un drive viejo</div></div><div id="g-m2" class="msg "><div class="who" style="color:#039585">Tomi</div><div class="bub">a mí me la pasaron por mail y no la encuentro</div></div><div id="g-m3" class="msg me"><div class="bub">rindo esta semana y no tengo nada</div></div><div id="g-typ" class="typing"><span></span><span></span><span></span></div><div id="g-m4" class="msg"><div class="who" style="color:#AA7323">Agus</div><div class="bub">Está todo en la página de AChETIQ<div id="g-prev" class="prev"><img src="assets/img/og-image-achetiq.png" alt=""><div><b>Apuntes Académicos - AChETIQ</b><span>achetiq.github.io</span></div></div></div></div></div>
+      </div>
+      <div id="g-morph" class="abs" style="left:0;top:430px;width:1080px;height:1490px;background:#F2F4F8;border-radius:44px 44px 0 0;opacity:0;z-index:30"></div>
+      <div id="g-tap" class="tap"></div>
+    </div>
+  </div>
+  <script>
+  document.fonts.ready.then(() => {
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d || 0.24, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d || 0.18, ease: 'power2.in' }, t);
+  const tap = (s, x, y, t) => {
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+  const pop = (s, t) => tl.fromTo(s, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(2.2)', immediateRender: false }, t);
+  const capSwap = (a, b, t) => { if (a) blurOut(a, t, 0.16); blurIn(b, t + 0.12, 0.26); };
+
+  // el chat se arma desde abajo: cada mensaje nuevo empuja a los anteriores
+  const ids = ['#g-m0', '#g-m1', '#g-m2', '#g-m3', '#g-typ', '#g-m4'];
+  const hs = ids.map((s) => document.querySelector(s).offsetHeight + 18);
+  const AV = 1110 - 150 - 30;
+  // desplazamiento de la lista cuando lo visible supera el alto del chat (el indicador de escritura se reemplaza)
+  const upto = (k) => { let h = 0; for (let j = 0; j <= k; j++) { if (j === 4 && k === 5) continue; h += hs[j]; } return -Math.max(0, h - AV); };
+  tl.set('#g-msgs', { y: 0 }, 0);
+  tl.set('#g-m0, #g-m1', { opacity: 1 }, 0);
+  const reveal = (k, t) => {
+    tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
+    tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
+  };
+  reveal(2, 0.7); reveal(3, 1.35);
+  reveal(4, 2.05);
+  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.15);
+  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 2.48);
+  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 2.5);
+  tl.set('#g-typ', { display: 'none' }, 2.5);
+  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 2.5);
+  capSwap('#g-q', '#g-ok', 2.8);
+  const pr = document.querySelector('#g-prev').getBoundingClientRect();
+  const rr = document.querySelector('#gancho-all').getBoundingClientRect();
+  const sx = 1080 / rr.width;
+  const px = (pr.left - rr.left) * sx, py = (pr.top - rr.top) * sx, pw = pr.width * sx, ph = pr.height * sx;
+  tap('#g-tap', px + pw * 0.5, py + ph * 0.45, 3.3);
+  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 3.42);
+  // la vista previa del enlace se convierte en la pantalla del sitio
+  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px, y: py - 430, scaleX: pw / 1080, scaleY: ph / 1490, borderRadius: '20px', opacity: 1 }, 3.58);
+  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: '44px 44px 0px 0px', duration: 0.62, ease: 'power3.inOut' }, 3.58);
+  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 3.6);
+  blurOut('#g-ok', 3.95, 0.2);
+
+  window.__timelines['gancho'] = tl;
+  });
+
+  </script>
+</template>

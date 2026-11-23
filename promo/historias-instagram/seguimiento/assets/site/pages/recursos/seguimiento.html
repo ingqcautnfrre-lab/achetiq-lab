@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es-AR"><head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEC:CSP — generado por scripts/build-csp.mjs · no editar a mano -->
+  
+  <!-- /SEC:CSP -->
+
+  <title>Seguimiento de Carrera - AChETIQ</title>
+  <meta name="description" content="Planilla de seguimiento de carrera para Ingeniería Química, UTN FRRe: estado de cada materia, avance y verificación de correlativas. Plan 2023.">
+
+  <link rel="canonical" href="https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/seguimiento">
+  
+  
+  
+  
+  
+  <meta name="theme-color" content="#1344A5">
+
+  
+  
+
+  <link rel="stylesheet" href="../../assets/css/main.bundle.css">
+
+  <!-- Precarga del camino crítico de fetch (S6): navbar.js pide partial +
+       config recién en DOMContentLoaded; precargarlos arranca esas descargas
+       junto con el HTML y el chrome aparece antes (crossorigin = mismo modo
+       de credenciales que fetch(..., credentials: 'same-origin')). Se suman
+       los JSON de datos que la página consume sobre el primer viewport. -->
+  
+  
+  
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AChETIQ">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="Seguimiento de Carrera - AChETIQ">
+  <meta property="og:description" content="Planilla de seguimiento de carrera para Ingeniería Química, UTN FRRe: estado de cada materia, avance y verificación de correlativas. Plan 2023.">
+  <meta property="og:url" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/pages/recursos/seguimiento">
+  <meta property="og:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Seguimiento de Carrera - AChETIQ">
+  <meta name="twitter:description" content="Planilla de seguimiento de carrera para Ingeniería Química, UTN FRRe: estado de cada materia, avance y verificación de correlativas. Plan 2023.">
+  <meta name="twitter:image" content="https://ingqcautnfrre-lab.github.io/achetiq-lab/assets/img/og-image-achetiq.png">
+  
+  
+  
+
+  <!-- SEO:JSON-LD — generado por scripts/build-jsonld.mjs · no editar a mano -->
+  
+  
+  
+  <!-- /SEO:JSON-LD -->
+<style id="prep-video">
+*,*::before,*::after{transition:none!important;animation:none!important;caret-color:transparent!important}
+.skip-link,[data-loader="footer"],footer.footer,#global-loader,.loader--overlay{display:none!important}
+html{scroll-behavior:auto!important}
+
+#seg-tabla-seguimiento [data-col="nivel"],#seg-tabla-seguimiento [data-col="curs"],#seg-tabla-seguimiento [data-col="aprob"],
+#seg-tabla-seguimiento [data-col="nota"],#seg-tabla-seguimiento [data-col="falt"],#seg-tabla-seguimiento [data-col="hs"]{display:none!important}
+#seg-tabla-finales th:nth-child(2),#seg-tabla-finales td:nth-child(2),#seg-tabla-finales th:nth-child(4),#seg-tabla-finales td:nth-child(4),
+#seg-tabla-finales th:nth-child(n+12),#seg-tabla-finales td:nth-child(n+12){display:none!important}
+#seg-tabla-finales .seg-fin__fecha::placeholder{color:#6B6E76}
+.seg-table-scroll{scrollbar-width:none}.seg-table-scroll::-webkit-scrollbar{display:none}
+</style></head>
+<body>
+
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+  <header class="navbar" data-navbar-root="">
+  <nav class="navbar__inner" aria-label="Principal">
+
+    <a class="navbar__brand" href="../../" data-navbar-brand="" aria-label="AChETIQ">
+      <img class="navbar__logo" src="../../assets/img/logo/achetiq-logo.svg" alt="" width="36" height="36" aria-hidden="true" data-navbar-logo="">
+      <span class="navbar__wordmark" data-navbar-wordmark="">AChETIQ</span>
+    </a>
+
+    <ul class="navbar__list" role="list" data-navbar-list=""><li class="navbar__item"><a class="nav-link nav-link--ghost navbar__label" href="../../">Inicio</a></li><li class="navbar__item navbar__item--has-submenu"><a class="nav-link nav-link--ghost navbar__label" href="../../pages/sobre-achetiq" aria-haspopup="menu" aria-expanded="false" aria-controls="navbar-submenu-1">Sobre Nosotros<span class="navbar__chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></a><ul class="navbar__submenu" role="menu" id="navbar-submenu-1" aria-label="Sobre Nosotros"><li role="none"><a class="navbar__sublink" href="../../pages/sobre-achetiq#asociacion" role="menuitem">Asociación</a></li><li role="none"><a class="navbar__sublink" href="../../pages/sobre-achetiq#galeria" role="menuitem">Galería</a></li></ul></li><li class="navbar__item navbar__item--has-submenu"><a class="nav-link nav-link--ghost navbar__label" href="../../pages/gabinetes" aria-haspopup="menu" aria-expanded="false" aria-controls="navbar-submenu-2">Gabinetes<span class="navbar__chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></a><ul class="navbar__submenu" role="menu" id="navbar-submenu-2" aria-label="Gabinetes"><li role="none"><a class="navbar__sublink" href="../../pages/gabinetes/cursos-y-conferencias" role="menuitem">Cursos y Conferencias</a></li><li role="none"><a class="navbar__sublink" href="../../pages/gabinetes/eventos" role="menuitem">Eventos</a></li><li role="none"><a class="navbar__sublink" href="../../pages/gabinetes/prensa-y-difusion" role="menuitem">Prensa y Difusión</a></li><li role="none"><a class="navbar__sublink" href="../../pages/gabinetes/solidario" role="menuitem">Solidario</a></li></ul></li><li class="navbar__item navbar__item--has-submenu"><a class="nav-link nav-link--ghost navbar__label" href="../../pages/recursos" aria-haspopup="menu" aria-expanded="false" aria-controls="navbar-submenu-3">Recursos Académicos<span class="navbar__chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></a><ul class="navbar__submenu" role="menu" id="navbar-submenu-3" aria-label="Recursos Académicos"><li role="none"><a class="navbar__sublink" href="../../pages/recursos/apuntes" role="menuitem">Apuntes Académicos</a></li><li role="none"><a class="navbar__sublink" href="../../pages/recursos/seguimiento" role="menuitem">Seguimiento de Carrera</a></li><li role="none"><a class="navbar__sublink" href="../../pages/recursos/series-resueltas" role="menuitem">Series Resueltas</a></li><li role="none"><a class="navbar__sublink" href="../../pages/recursos/simulaciones" role="menuitem">Simulaciones</a></li></ul></li><li class="navbar__item"><a class="nav-link nav-link--primary navbar__label" href="../../pages/contacto">Contacto</a></li></ul>
+
+    <button class="navbar__toggle" type="button" aria-controls="navbar-mobile-panel" aria-expanded="false" aria-label="Abrir menú principal" data-navbar-toggle="">
+      <span class="navbar__toggle-icon" aria-hidden="true">
+        <span class="navbar__toggle-bar navbar__toggle-bar--top"></span>
+        <span class="navbar__toggle-bar navbar__toggle-bar--mid"></span>
+        <span class="navbar__toggle-bar navbar__toggle-bar--bot"></span>
+      </span>
+    </button>
+
+  </nav>
+
+  <div class="navbar__overlay" hidden="" data-navbar-overlay="" tabindex="-1"></div>
+
+  <aside class="navbar__panel" id="navbar-mobile-panel" hidden="" aria-label="Menú principal" data-navbar-panel="">
+    <div class="navbar__panel-header">
+      <img class="navbar__logo" src="../../assets/img/logo/achetiq-logo.svg" alt="" width="36" height="36" aria-hidden="true" data-navbar-panel-logo="">
+      <span class="navbar__wordmark" data-navbar-panel-wordmark="">AChETIQ</span>
+    </div>
+    <ul class="navbar__panel-list" role="list" data-navbar-panel-list=""><li class="navbar__panel-item"><div class="navbar__panel-row"><a class="navbar__panel-link" href="../../">Inicio</a></div></li><li class="navbar__panel-item navbar__panel-item--has-submenu"><div class="navbar__panel-row"><a class="navbar__panel-link" href="../../pages/sobre-achetiq">Sobre Nosotros</a><button class="navbar__panel-toggle" type="button" aria-expanded="false" aria-controls="navbar-panel-submenu-1" aria-label="Mostrar opciones de Sobre Nosotros"><span class="navbar__chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></button></div><ul class="navbar__panel-submenu" role="menu" id="navbar-panel-submenu-1" aria-label="Sobre Nosotros"><li role="none"><a class="navbar__panel-sublink" href="../../pages/sobre-achetiq#asociacion" role="menuitem">Asociación</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/sobre-achetiq#galeria" role="menuitem">Galería</a></li></ul></li><li class="navbar__panel-item navbar__panel-item--has-submenu"><div class="navbar__panel-row"><a class="navbar__panel-link" href="../../pages/gabinetes">Gabinetes</a><button class="navbar__panel-toggle" type="button" aria-expanded="false" aria-controls="navbar-panel-submenu-2" aria-label="Mostrar opciones de Gabinetes"><span class="navbar__chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></button></div><ul class="navbar__panel-submenu" role="menu" id="navbar-panel-submenu-2" aria-label="Gabinetes"><li role="none"><a class="navbar__panel-sublink" href="../../pages/gabinetes/cursos-y-conferencias" role="menuitem">Cursos y Conferencias</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/gabinetes/eventos" role="menuitem">Eventos</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/gabinetes/prensa-y-difusion" role="menuitem">Prensa y Difusión</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/gabinetes/solidario" role="menuitem">Solidario</a></li></ul></li><li class="navbar__panel-item navbar__panel-item--has-submenu"><div class="navbar__panel-row"><a class="navbar__panel-link" href="../../pages/recursos">Recursos Académicos</a><button class="navbar__panel-toggle" type="button" aria-expanded="false" aria-controls="navbar-panel-submenu-3" aria-label="Mostrar opciones de Recursos Académicos"><span class="navbar__chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></button></div><ul class="navbar__panel-submenu" role="menu" id="navbar-panel-submenu-3" aria-label="Recursos Académicos"><li role="none"><a class="navbar__panel-sublink" href="../../pages/recursos/apuntes" role="menuitem">Apuntes Académicos</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/recursos/seguimiento" role="menuitem">Seguimiento de Carrera</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/recursos/series-resueltas" role="menuitem">Series Resueltas</a></li><li role="none"><a class="navbar__panel-sublink" href="../../pages/recursos/simulaciones" role="menuitem">Simulaciones</a></li></ul></li><li class="navbar__panel-item"><div class="navbar__panel-row"><a class="navbar__panel-link navbar__panel-link--primary" href="../../pages/contacto">Contacto</a></div></li></ul>
+  </aside>
+</header>
+
+  <main id="main-content" class="page" tabindex="-1">
+
+    <!-- ════════════════════════════════════════════════════════
+         BREADCRUMBS
+         ════════════════════════════════════════════════════════ -->
+    <nav class="breadcrumbs" aria-label="Ruta de navegación">
+      <ol class="breadcrumbs__list">
+        <li><a href="../../">Inicio</a></li>
+        <li><a href="../recursos">Recursos académicos</a></li>
+        <li aria-current="page">Seguimiento de Carrera</li>
+      </ol>
+    </nav>
+
+    <!-- ════════════════════════════════════════════════════════
+         [1] PAGE-HEADER
+         ════════════════════════════════════════════════════════ -->
+    <header class="page-header page-header--split">
+      <div class="page-header__main">
+        <h1 class="page-header__title">Seguimiento de Carrera</h1>
+        <p class="page-header__lead">
+          Planilla para registrar el estado de cada materia, calcular el avance en la carrera y verificar correlativas del Plan 2023. Los datos quedan en tu dispositivo; AChETIQ no los almacena.
+        </p>
+      </div>
+
+      <!-- Descargas: el Plan de estudios 2023 (Diseño Curricular oficial,
+           Ordenanza UTN) y la misma planilla de la herramienta web en
+           formatos de hoja de cálculo. Desde 1280 px el plan ocupa una
+           columna propia a la altura de las dos plantillas (headers.css
+           §2.2b). Estilo editorial (no botón sólido): superficie blanca,
+           filete de 1 px, acento. -->
+      <aside class="header-resources header-resources--con-plan" aria-label="Descargas">
+        <a class="header-resource header-resource--plan" href="../../docs/Disenio_Curricular_IQ.pdf" download="Plan_2023_Ingenieria_Quimica_UTN.pdf">
+          <span class="header-resource__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path>
+              <path d="M14 3v5h5"></path>
+              <path d="M9 13h6"></path>
+              <path d="M9 17h4"></path>
+            </svg>
+          </span>
+          <span class="header-resource__text">
+            <span class="header-resource__title">Plan de estudios 2023</span>
+            <span class="header-resource__meta">Diseño Curricular · PDF</span>
+          </span>
+        </a>
+
+        <a class="header-resource" href="../../assets/docs/Seguimiento_de_Carrera.xlsx" download="">
+          <span class="header-resource__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12"></path>
+              <path d="m7 11 5 5 5-5"></path>
+              <path d="M5 20h14"></path>
+            </svg>
+          </span>
+          <span class="header-resource__text">
+            <span class="header-resource__title">Descargar Excel</span>
+            <span class="header-resource__meta">Planilla .xlsx · Plan 2023</span>
+          </span>
+        </a>
+
+        <a class="header-resource" href="https://docs.google.com/spreadsheets/d/1MFIjuzfRVrku-i1ES4ohiMvF_bxBL6WH9wR3k5BBK5A/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+          <span class="header-resource__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 4h6v6"></path>
+              <path d="M20 4 10 14"></path>
+              <path d="M19 14v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path>
+            </svg>
+          </span>
+          <span class="header-resource__text">
+            <span class="header-resource__title">Abrir en Google Sheets</span>
+            <span class="header-resource__meta">Copia editable online</span>
+          </span>
+        </a>
+      </aside>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════════
+         [2] HERRAMIENTA DE SEGUIMIENTO  (spec_seguimiento.md)
+         La estructura estática (nota de privacidad, acciones,
+         pestañas, prosa de «Nota al estudiante») vive en el HTML;
+         el dashboard de KPIs y las tablas las construye
+         assets/js/seguimiento.js a partir de data/plan_academico.json.
+         ════════════════════════════════════════════════════════ -->
+    <section class="seguimiento" data-seguimiento="" aria-labelledby="seguimiento-title">
+      <h2 id="seguimiento-title" class="sr-only">Herramienta de seguimiento de carrera</h2>
+
+      <!-- Nota de privacidad visible (spec §12). -->
+      <p class="seguimiento__nota-privacidad">
+        <svg class="seguimiento__nota-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>
+          <strong>Tus datos se guardan únicamente en este dispositivo.</strong>
+          Todo lo que cargues queda en el almacenamiento local de este navegador;
+          AChETIQ no lo recibe ni puede acceder a él. Para conservarlo o usarlo en
+          otro equipo, exportá un respaldo. Si borrás los datos del navegador, se
+          pierde sin recuperación.
+        </span>
+      </p>
+
+      <!-- Aviso de divergencia de versión de plan (spec §10.2), oculto por defecto. -->
+      <p class="seguimiento__aviso-version" id="seg-aviso-version" role="status" hidden=""></p>
+
+      <!-- Región de anuncios para lectores de pantalla (cambios de estado, KPIs). -->
+      <div id="seg-anuncio" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+      <!-- Barra de acciones globales (spec §8.4). -->
+      <div class="seguimiento__actions">
+        <button type="button" class="btn btn-primary" id="seg-btn-exportar">Exportar respaldo</button>
+        <button type="button" class="btn btn-secondary" id="seg-btn-importar">Importar respaldo</button>
+        <button type="button" class="btn seg-btn-ghost" id="seg-btn-reiniciar">Reiniciar progreso</button>
+        <input type="file" id="seg-file-input" accept="application/json,.json" class="sr-only" aria-hidden="true" tabindex="-1">
+      </div>
+
+      <noscript>
+        <div class="loader-error" role="alert">
+          <p class="loader-error__message">
+            Esta herramienta necesita JavaScript para registrar y calcular tu avance.
+            Activalo para usarla, o volvé al
+            <a href="../recursos">hub de Recursos académicos</a>.
+          </p>
+        </div>
+      </noscript>
+
+      <!-- Pestañas — selector de hojas (spec §3.1). E05: los emojis
+           decorativos se retiran (la voz de marca veta emojis,
+           PRODUCT.md §Brand Personality) y las etiquetas pasan a caja
+           de título; el data-tab —seleccionado por el JS— no cambia,
+           de modo que la lógica de pestañas queda intacta. -->
+      <div class="seg-tabs" role="tablist" aria-label="Vistas de la herramienta">
+        <button type="button" class="seg-tabs__tab" role="tab" id="seg-tab-seguimiento" data-tab="seguimiento" aria-controls="seg-panel-seguimiento" aria-selected="true" tabindex="0">Seguimiento</button>
+        <button type="button" class="seg-tabs__tab" role="tab" id="seg-tab-finales" data-tab="finales" aria-controls="seg-panel-finales" aria-selected="false" tabindex="-1">Exámenes finales</button>
+        <button type="button" class="seg-tabs__tab" role="tab" id="seg-tab-nota" data-tab="nota" aria-controls="seg-panel-nota" aria-selected="false" tabindex="-1">Nota al estudiante</button>
+      </div>
+
+      <!-- Panel: SEGUIMIENTO -->
+      <div class="seg-panel" id="seg-panel-seguimiento" role="tabpanel" aria-labelledby="seg-tab-seguimiento" tabindex="0">
+        <div id="seg-status" role="status" hidden="">
+          <div class="loader loader--msg-right" aria-live="polite">
+            <div class="loader__dots">
+              <span class="loader__dot safe-motion"></span>
+              <span class="loader__dot safe-motion"></span>
+              <span class="loader__dot safe-motion"></span>
+            </div>
+            <p class="loader__message">Cargando el plan académico…</p>
+          </div>
+        </div>
+        <div id="seg-dashboard"><div class="seg-dashboard__grid"><div class="seg-kpi"><p class="seg-kpi__label">Aprobadas</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">0</span></p><p class="seg-kpi__hint caption">obligatorias + electivas</p></div><div class="seg-kpi"><p class="seg-kpi__label">Avance</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">0,0 %</span></p><p class="seg-kpi__hint caption">sobre 41 obligatorias</p></div><div class="seg-kpi"><p class="seg-kpi__label">No cursadas / cursando</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">41</span></p><p class="seg-kpi__hint caption">sólo obligatorias</p></div><div class="seg-kpi"><p class="seg-kpi__label">Disponibles</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">9</span></p><p class="seg-kpi__hint caption">sólo obligatorias</p></div><div class="seg-kpi"><p class="seg-kpi__label">Regulares</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">0</span></p><p class="seg-kpi__hint caption">obligatorias + electivas</p></div><div class="seg-kpi"><p class="seg-kpi__label">Prom. sin aplazos</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">—</span></p><p class="seg-kpi__hint caption">notas finales ≥ 6</p></div><div class="seg-kpi"><p class="seg-kpi__label">Prom. con aplazos</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">—</span></p><p class="seg-kpi__hint caption">intentos y promoción directa</p></div><div class="seg-kpi"><p class="seg-kpi__label">Hs. obligatorias aprob.</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">0</span><span class="seg-kpi__unit"> hs</span></p><p class="seg-kpi__hint caption">sin electivas</p></div><div class="seg-kpi"><p class="seg-kpi__label">Hs. electivas aprob.</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">0</span><span class="seg-kpi__unit"> hs</span></p><p class="seg-kpi__hint caption">sólo electivas</p></div><div class="seg-kpi"><p class="seg-kpi__label">% electivas completadas</p><p class="seg-kpi__value-wrap"><span class="seg-kpi__value">0,0 %</span></p><p class="seg-kpi__hint caption">sobre 24 hs requeridas</p></div></div></div>
+        <div id="seg-tabla-seguimiento"><div class="seg-table-scroll"><table class="seg-table seg-table--seguimiento" aria-label="Estado de las 54 materias del Plan 2023"><thead><tr><th scope="col" data-col="num">N°</th><th scope="col" data-col="nivel">Nivel</th><th scope="col" data-col="nombre">Asignatura</th><th scope="col" data-col="curs">Cursadas req.</th><th scope="col" data-col="aprob">Aprobadas req.</th><th scope="col" data-col="estado">Estado</th><th scope="col" data-col="nota">Nota final</th><th scope="col" data-col="disp">Disponible</th><th scope="col" data-col="falt">Materias faltantes</th><th scope="col" data-col="hs">Hs.</th></tr></thead><tbody class="seg-table__group" data-nivel="I"><tr class="seg-table__group-row"><th class="seg-table__group-th" scope="colgroup" colspan="10">Nivel I</th></tr><tr class="seg-table__row" data-numero="3"><th scope="row" data-col="num">3</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Álgebra y Geometría Analítica</td><td data-col="curs">—</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-3" aria-label="Estado de 3-Álgebra y Geometría Analítica"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-3" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 3-Álgebra y Geometría Analítica"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✓</span><span class="seg-badge__text">Disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Álgebra y Geometría Analítica"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">3 · Álgebra y Geometría Analítica</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>Sin faltantes</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>—</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">Sin faltantes</td><td data-col="hs">5</td></tr><tr class="seg-table__row" data-numero="4"><th scope="row" data-col="num">4</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Análisis Matemático I</td><td data-col="curs">—</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-4" aria-label="Estado de 4-Análisis Matemático I"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-4" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 4-Análisis Matemático I"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✓</span><span class="seg-badge__text">Disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Análisis Matemático I"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">4 · Análisis Matemático I</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>Sin faltantes</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>—</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">Sin faltantes</td><td data-col="hs">5</td></tr><tr class="seg-table__row" data-numero="5"><th scope="row" data-col="num">5</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Física I</td><td data-col="curs">—</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-5" aria-label="Estado de 5-Física I"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-5" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 5-Física I"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✓</span><span class="seg-badge__text">Disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Física I"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">5 · Física I</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>Sin faltantes</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>—</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">Sin faltantes</td><td data-col="hs">5</td></tr><tr class="seg-table__row" data-numero="6"><th scope="row" data-col="num">6</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Química</td><td data-col="curs">—</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-6" aria-label="Estado de 6-Química"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-6" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 6-Química"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✓</span><span class="seg-badge__text">Disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Química"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">6 · Química</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>Sin faltantes</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>—</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">Sin faltantes</td><td data-col="hs">5</td></tr></tbody><tbody class="seg-table__group" data-nivel="II"><tr class="seg-table__group-row"><th class="seg-table__group-th" scope="colgroup" colspan="10">Nivel II</th></tr><tr class="seg-table__row" data-numero="10"><th scope="row" data-col="num">10</th><td data-col="nivel">II</td><td class="seg-table__nombre" data-col="nombre">Probabilidad y Estadística</td><td data-col="curs">3, 4</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-10" aria-label="Estado de 10-Probabilidad y Estadística"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-10" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 10-Probabilidad y Estadística"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--no-disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✕</span><span class="seg-badge__text">No disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Probabilidad y Estadística"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">10 · Probabilidad y Estadística</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>3-Álgebra y Geometría Analítica (regular); 4-Análisis Matemático I (regular);</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>3, 4</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">3-Álgebra y Geometría Analítica (regular); 4-Análisis Matemático I (regular);</td><td data-col="hs">3</td></tr><tr class="seg-table__row" data-numero="11"><th scope="row" data-col="num">11</th><td data-col="nivel">II</td><td class="seg-table__nombre" data-col="nombre">Química Inorgánica</td><td data-col="curs">6</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-11" aria-label="Estado de 11-Química Inorgánica"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-11" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 11-Química Inorgánica"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--no-disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✕</span><span class="seg-badge__text">No disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Química Inorgánica"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">11 · Química Inorgánica</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>6-Química (regular);</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>6</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">6-Química (regular);</td><td data-col="hs">4</td></tr><tr class="seg-table__row" data-numero="12"><th scope="row" data-col="num">12</th><td data-col="nivel">II</td><td class="seg-table__nombre" data-col="nombre">Análisis Matemático II</td><td data-col="curs">3, 4</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-12" aria-label="Estado de 12-Análisis Matemático II"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-12" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 12-Análisis Matemático II"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--no-disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✕</span><span class="seg-badge__text">No disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Análisis Matemático II"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">12 · Análisis Matemático II</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>3-Álgebra y Geometría Analítica (regular); 4-Análisis Matemático I (regular);</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>3, 4</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">3-Álgebra y Geometría Analítica (regular); 4-Análisis Matemático I (regular);</td><td data-col="hs">5</td></tr><tr class="seg-table__row" data-numero="13"><th scope="row" data-col="num">13</th><td data-col="nivel">II</td><td class="seg-table__nombre" data-col="nombre">Física II</td><td data-col="curs">4, 5</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-13" aria-label="Estado de 13-Física II"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-13" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 13-Física II"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--no-disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✕</span><span class="seg-badge__text">No disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Física II"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">13 · Física II</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>4-Análisis Matemático I (regular); 5-Física I (regular);</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>4, 5</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">4-Análisis Matemático I (regular); 5-Física I (regular);</td><td data-col="hs">5</td></tr><tr class="seg-table__row" data-numero="14"><th scope="row" data-col="num">14</th><td data-col="nivel">II</td><td class="seg-table__nombre" data-col="nombre">Química Orgánica</td><td data-col="curs">6</td><td data-col="aprob">—</td><td data-col="estado"><select class="form__input seg-table__select" id="seg-estado-14" aria-label="Estado de 14-Química Orgánica"><option value="No Cursada" selected="">No Cursada</option><option value="Cursando">Cursando</option><option value="Regular">Regular</option><option value="Aprobada">Aprobada</option></select></td><td data-col="nota"><div class="seg-table__nota"><input class="form__input seg-table__nota-input" id="seg-nota-14" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota final de 14-Química Orgánica"><svg class="seg-table__warn" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden=""><title>El valor manual no coincide con la última nota aprobatoria registrada en los intentos.</title><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div></td><td data-col="disp"><button class="seg-badge seg-badge--no-disponible" type="button" aria-expanded="false" aria-haspopup="true"><span class="seg-badge__icon" aria-hidden="true">✕</span><span class="seg-badge__text">No disponible</span></button><div class="seg-popover" role="region" hidden="" aria-label="Correlatividades de Química Orgánica"><button class="seg-popover__close" type="button" aria-label="Cerrar">×</button><p class="seg-popover__title">14 · Química Orgánica</p><p class="seg-popover__line"><span class="seg-popover__label">Faltantes: </span><span>6-Química (regular);</span></p><p class="seg-popover__line"><span class="seg-popover__label">Cursadas req.: </span><span>6</span></p><p class="seg-popover__line"><span class="seg-popover__label">Aprobadas req.: </span><span>—</span></p></div></td><td class="seg-table__faltantes" data-col="falt">6-Química (regular);</td><td data-col="hs">5</td></tr></tbody></table></div></div>
+      </div>
+
+      <!-- Panel: REGISTRO DE EXÁMENES FINALES -->
+      <div class="seg-panel" id="seg-panel-finales" role="tabpanel" aria-labelledby="seg-tab-finales" tabindex="0" hidden="">
+        <p class="seg-panel__intro">
+          Se aprueba con 6. Máximo 4 instancias en condición regular; las instancias
+          5.° y 6.° aplican a casos excepcionales (libres o por reválida). La nota final
+          calculada y los promedios se actualizan automáticamente en la pestaña Seguimiento.
+        </p>
+        <div id="seg-tabla-finales"><div class="seg-table-scroll"><table class="seg-table seg-table--finales" aria-label="Registro de exámenes finales por materia"><thead><tr><th scope="col">N°</th><th scope="col">Nivel</th><th scope="col">Asignatura</th><th scope="col">Estado</th><th scope="col">Nota final</th><th scope="col">Fecha 1°</th><th scope="col">1° Nota</th><th scope="col">Fecha 2°</th><th scope="col">2° Nota</th><th scope="col">Fecha 3°</th><th scope="col">3° Nota</th><th scope="col">Fecha 4°</th><th scope="col">4° Nota</th><th scope="col">Fecha 5°</th><th scope="col">5° Nota</th><th scope="col">Fecha 6°</th><th scope="col">6° Nota</th></tr></thead><tbody><tr data-numero="3"><th scope="row" data-col="num">3</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Álgebra y Geometría Analítica</td><td data-col="estado">No Cursada</td><td data-col="nota">—</td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 1 de 3-Álgebra y Geometría Analítica" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 1 de 3-Álgebra y Geometría Analítica"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 2 de 3-Álgebra y Geometría Analítica" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 2 de 3-Álgebra y Geometría Analítica"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 3 de 3-Álgebra y Geometría Analítica" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 3 de 3-Álgebra y Geometría Analítica"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 4 de 3-Álgebra y Geometría Analítica" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 4 de 3-Álgebra y Geometría Analítica"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 5 de 3-Álgebra y Geometría Analítica" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 5 de 3-Álgebra y Geometría Analítica"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 6 de 3-Álgebra y Geometría Analítica" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 6 de 3-Álgebra y Geometría Analítica"></td></tr><tr data-numero="4"><th scope="row" data-col="num">4</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Análisis Matemático I</td><td data-col="estado">No Cursada</td><td data-col="nota">—</td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 1 de 4-Análisis Matemático I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 1 de 4-Análisis Matemático I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 2 de 4-Análisis Matemático I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 2 de 4-Análisis Matemático I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 3 de 4-Análisis Matemático I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 3 de 4-Análisis Matemático I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 4 de 4-Análisis Matemático I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 4 de 4-Análisis Matemático I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 5 de 4-Análisis Matemático I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 5 de 4-Análisis Matemático I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 6 de 4-Análisis Matemático I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 6 de 4-Análisis Matemático I"></td></tr><tr data-numero="5"><th scope="row" data-col="num">5</th><td data-col="nivel">I</td><td class="seg-table__nombre" data-col="nombre">Física I</td><td data-col="estado">No Cursada</td><td data-col="nota">—</td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 1 de 5-Física I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 1 de 5-Física I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 2 de 5-Física I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 2 de 5-Física I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 3 de 5-Física I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 3 de 5-Física I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 4 de 5-Física I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 4 de 5-Física I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 5 de 5-Física I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 5 de 5-Física I"></td><td data-col="fecha"><input class="form__input seg-fin__fecha" type="text" aria-label="Fecha del intento 6 de 5-Física I" placeholder="dd/mm/aaaa"></td><td data-col="nota"><input class="form__input seg-fin__nota" type="number" min="1" max="10" step="1" inputmode="numeric" aria-label="Nota del intento 6 de 5-Física I"></td></tr></tbody></table></div></div>
+      </div>
+
+      <!-- Panel: NOTA AL ESTUDIANTE  (estático, spec §8.3, §12) -->
+      <div class="seg-panel" id="seg-panel-nota" role="tabpanel" aria-labelledby="seg-tab-nota" tabindex="0" hidden="">
+        <div class="seg-nota__prose">
+          <p>
+            Esta herramienta es la versión web de la planilla «Seguimiento de Carrera»:
+            te permite registrar el estado de cada materia del Plan 2023 (Ingeniería Química,
+            UTN FRRe), llevar las notas y los exámenes finales, ver qué materias tenés
+            disponibles según las correlatividades y consultar tus indicadores de avance.
+          </p>
+
+          <h3>Condición no oficial</h3>
+          <p>
+            La herramienta no se conecta con SysAcad ni con ningún sistema de UTN FRRe.
+            El estado de las materias lo cargás y mantenés vos; la fuente oficial sigue
+            siendo el sistema académico de la universidad.
+          </p>
+
+          <h3>Privacidad y portabilidad</h3>
+          <ol class="seg-nota__list">
+            <li><strong>Privacidad estricta del dispositivo.</strong> El estado académico
+              cargado en esta herramienta se guarda exclusivamente en el navegador del
+              dispositivo desde el cual se ingresa. No se transmite a ningún servidor;
+              AChETIQ no recibe, almacena ni puede acceder a esta información. No es
+              necesario crear una cuenta para usar la herramienta.</li>
+            <li><strong>Aislamiento por navegador y dispositivo.</strong> Cada navegador
+              (Chrome, Firefox, Safari, etc.) y cada dispositivo (PC, notebook, teléfono,
+              tablet) mantiene su propio almacenamiento aislado. Cargar el progreso en una
+              PC no lo hace visible en el teléfono, ni viceversa.</li>
+            <li><strong>Aislamiento por modo de navegación.</strong> El modo incógnito o
+              privado no persiste datos: cualquier información cargada en una pestaña
+              incógnito se pierde al cerrarla.</li>
+            <li><strong>Riesgo de pérdida por limpieza de almacenamiento.</strong> Borrar
+              el caché del navegador, limpiar los datos del sitio, desinstalar el navegador,
+              formatear el equipo o cualquier acción que elimine el almacenamiento local del
+              dominio de AChETIQ destruye el progreso sin recuperación posible desde el sitio.</li>
+            <li><strong>Mitigación: respaldo manual.</strong> Se recomienda exportar el
+              estado a JSON periódicamente y guardar el archivo en un lugar seguro
+              (almacenamiento en la nube personal, correo a uno mismo, pendrive). El archivo
+              JSON es la única forma de migrar el progreso entre dispositivos o de recuperarlo
+              tras una pérdida.</li>
+            <li><strong>Condición no oficial.</strong> Esta herramienta es de uso personal y
+              voluntario. No reemplaza el sistema académico oficial de UTN FRRe; los datos
+              cargados no se sincronizan con el legajo oficial del estudiante y no tienen
+              validez administrativa.</li>
+          </ol>
+
+          <h3>Cómo respaldar e importar</h3>
+          <p>
+            Usá <strong>Exportar respaldo → JSON</strong> para descargar un archivo con todo
+            tu progreso; guardalo en un lugar seguro. Para restaurarlo (o moverlo a otro
+            dispositivo o navegador), entrá a esta herramienta, elegí <strong>Importar
+            respaldo</strong> y seleccioná ese archivo: reemplazará el progreso actual previa
+            confirmación. La opción <strong>Excel (.xlsx)</strong> genera la planilla de
+            seguimiento completa con tus datos cargados, lista para abrir en Excel,
+            LibreOffice o Google Sheets, pero no es reimportable.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo" data-footer-root="">
+  <div class="footer__inner">
+
+    <!-- Columna 1 · Identidad institucional -->
+    <div class="footer__col footer__col--brand">
+      <a class="footer__brand" href="../../" aria-label="AChETIQ — Inicio">
+        <img class="footer__logo" src="../../assets/img/logo/achetiq-logo.svg" alt="" width="48" height="48" aria-hidden="true">
+        <span class="footer__wordmark">AChETIQ</span>
+      </a>
+      <p class="footer__legal-name">
+        Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química
+      </p>
+    </div>
+
+    <!-- Columna 2 · Navegación secundaria -->
+    <nav class="footer__col" aria-label="Navegación de pie de página">
+      <h2 class="footer__heading">Navegación</h2>
+      <ul class="footer__list" role="list">
+        <li><a class="footer__link" href="../../">Inicio</a></li>
+        <li><a class="footer__link" href="../../pages/sobre-achetiq">Sobre Nosotros</a></li>
+        <li><a class="footer__link" href="../../pages/gabinetes">Gabinetes</a></li>
+        <li><a class="footer__link" href="../../pages/recursos/apuntes">Apuntes Académicos</a></li>
+        <li><a class="footer__link" href="../../pages/recursos/seguimiento">Seguimiento de Carrera</a></li>
+        <li><a class="footer__link" href="../../pages/recursos/series-resueltas">Series Resueltas</a></li>
+        <li><a class="footer__link" href="../../pages/recursos/simulaciones">Simulaciones</a></li>
+        <li><a class="footer__link" href="../../pages/contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <!-- Columna 3 · Contacto (poblada desde data/redes.json) -->
+    <div class="footer__col">
+      <h2 class="footer__heading">Contacto</h2>
+      <ul class="footer__list footer__list--contact" role="list" data-footer-contact=""><li class="footer__contact-item"><span class="footer__contact-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span><div class="footer__contact-body"><span class="footer__contact-label">Correo institucional</span><a class="footer__contact-link" href="mailto:achetiq.resistencia@aneiqa.org">achetiq.resistencia@aneiqa.org</a></div></li><li class="footer__contact-item"><span class="footer__contact-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg></span><div class="footer__contact-body"><span class="footer__contact-label">Sede — UTN FRRe</span><p class="footer__contact-value">Calle French 414, H3506 Resistencia, Chaco</p></div></li><li class="footer__contact-item"><span class="footer__contact-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg></span><div class="footer__contact-body"><span class="footer__contact-label">Sitio de la facultad</span><a class="footer__contact-link" href="https://www.frre.utn.edu.ar/" target="_blank" rel="noopener noreferrer">www.frre.utn.edu.ar</a></div></li></ul>
+    </div>
+
+    <!-- Columna 4 · Redes sociales (poblada desde data/redes.json) -->
+    <div class="footer__col">
+      <h2 class="footer__heading">Redes sociales</h2>
+      <ul class="footer__social" role="list" data-footer-social=""><li class="footer__social-item"><a class="footer__social-link" href="https://www.instagram.com/achetiq/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg></a></li></ul>
+    </div>
+
+  </div>
+
+  <div class="footer__bottom">
+    <p class="footer__legal">
+      © <span data-footer-year="">2026</span> Asociación Chaqueña de Estudiantes Tecnológicos de Ingeniería Química
+      <span class="footer__legal-sep" aria-hidden="true">·</span>
+      <span class="footer__faculty">UTN FRRe</span>
+    </p>
+  </div>
+</footer>
+
+  <div class="loader loader--overlay loader--msg-bottom" id="global-loader" role="status" aria-live="polite" hidden="">
+    <div class="loader__dots">
+      <span class="loader__dot safe-motion"></span>
+      <span class="loader__dot safe-motion"></span>
+      <span class="loader__dot safe-motion"></span>
+    </div>
+    <p class="loader__message">Cargando…</p>
+  </div>
+
+  
+  
+  
+  <!-- xlsx-populate: el navegador no puede manipular binarios .xlsx de
+       forma nativa. Esta librería muta el ZIP subyacente SIN reconstruir
+       el workbook, así que todas las hojas, fórmulas y objetos visuales
+       de la plantilla (assets/docs) quedan intactos al inyectar sólo los
+       valores del estudiante.
+       CARGA BAJO DEMANDA (S03 — rendimiento): pesa ≈193 KB gzip / 642 KB
+       planos y sólo se necesita al EXPORTAR a Excel, así que YA NO se
+       enlaza aquí. La inyecta seguimiento.js (ensureXlsxPopulate) la
+       primera vez que el usuario exporta — quitándola del coste de cada
+       visita (descarga + parse) sin perder la función.
+       AUTOALOJADA (assets/js/vendor/, v1.21.0): mismo origen, sin SRI
+       necesario, sin dependencia de terceros y CSP en script-src 'self'.
+       Provenencia y hashes en assets/js/vendor/README.md. -->
+  
+  
+
+
+
+</body></html>

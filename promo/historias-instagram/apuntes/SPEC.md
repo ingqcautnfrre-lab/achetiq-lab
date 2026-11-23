@@ -1,61 +1,54 @@
-# SPEC — Historia 1: Apuntes Académicos
+# SPEC — Historia 1: Apuntes Académicos (versión 3)
 
-Base: boceto B («Un toque abre la materia») con una introducción breve, según la devolución del 23/11/2026.
+Devolución del 23/11/2026 aplicada: sonido y efecto más suaves, recorrido continuo, introducción
+con emoción, página sin espacio vacío arriba, desplazamiento continuo con una pausa breve, zoom de
+la portada de IRQ, carpeta más completa, PDF con líneas grises, afirmación más emocionante, sin
+«bibliografía», cierre centrado con el logo más grande.
 
 ```text
-GOAL:    que el estudiante entienda en un vistazo que cada materia abre su carpeta de Drive
-         y que el archivo que busca está ahí, a tres toques.
-OUTPUT:  HyperFrames, 1080 x 1920 (9:16, historia de Instagram), 30 fps, MP4.
-TIME:    18,0 s x 30 = 540 cuadros. Sin música (se agrega en Instagram); solo efectos.
-LOOK:    fondo crema #FCF7F0 (pedido explícito; reemplaza la porcelana del sitio en estos videos);
-         superficies #FFFFFF con filete #E7DFD3 de 2 px y radio 16-20 px; tinta #131720,
-         tinta secundaria #4A4F59; cobalto #1344A5 estructural (enlaces, píldora activa);
-         mauveína #922FA1 solo en el resaltado del archivo encontrado (una vez).
-         Titulares Fraunces 400, 104-116 px, tracking -1,5 %; cuerpo Hanken Grotesk 400-500,
-         36-46 px; etiquetas técnicas Geist Mono 26-34 px.
-         Medio: la interfaz real del sitio a ~2,4x su tamaño móvil y una vista de Drive
-         simulada con los nombres reales de la carpeta. Sin sombras salvo el papel del PDF
-         (0 18 40, 14 % cobalto profundo). Sin grano ni viñeta.
-OBJECTS: portadas reales de 16 materias (assets/img/materias del sitio); tarjeta de materia
-         con «Acceder al repositorio →»; fila de Drive con ícono de carpeta gris y de PDF rojo;
-         hoja de PDF con el encabezado real de la Serie 7 y trazos de resolución manuscrita.
-MOTION:  llegadas expo.out 0,35-0,5 s; inmersiones power3.in 0,6-0,7 s (escala 1 -> 7-8);
-         el nivel siguiente nace en escala 0,2 -> 1 con expo.out 0,5 s, superpuesto los
-         últimos 0,25 s de la inmersión; paneo de cámara power2.inOut 1,7 s; títulos con
-         desenfoque 10 -> 0 px en 0,22-0,28 s; filas en cascada de 70 ms; toques: punto de
-         88 px que aparece en 0,12 s, se hunde a 0,78 y sale en 0,24 s.
-SHOTS:   0,0-2,3   Gancho. «¿Dónde quedaron los apuntes?» ya en pantalla en el cuadro 0;
-                   ocho fragmentos reales (carpetas y archivos de Drive, «Apuntes»,
-                   «Guías de ejercicios», «Bibliografía») caen dispersos y rotados.
-                   Sonido: tres pops alternados. Pasa a: paneo hacia abajo.
-         2,3-4,7   Paneo continuo: el gancho sale hacia arriba con desenfoque y sube la página
-                   real (migas, «Apuntes Académicos», bajada real abreviada); la cámara
-                   recorre la grilla de portadas y frena en Ingeniería de las Reacciones
-                   Químicas. Sonido: barrido. Pasa a: toque.
-         4,7-5,7   Toque en la portada y primera inmersión. Sonido: toque + barrido.
-         5,6-7,0   Carpeta de la materia: «03. Práctica», «05. Presentaciones». Toque.
-         7,0-8,7   Segunda inmersión: «Guías de Estudio», «2024 - GS - Resolución Serie 07.pdf»,
-                   «2024 - SMR - Resolución Series.pdf». Toque en Serie 07, resalte mauveína.
-         8,7-10,9  Tercera inmersión: visor del PDF; la hoja muestra el encabezado real
-                   («Serie 7: Reacciones heterogéneas fluido-fluido») y los trazos se dibujan.
-         10,9-12,4 Alejamiento continuo hasta la grilla completa. Sonido: barrido inverso.
-         12,4-15,6 Afirmación: «38 materias. Una carpeta cada una.» + «Apuntes, guías y
-                   bibliografía aportados por la comunidad estudiantil.»
-         15,6-18,0 Cierre: logo, AChETIQ, achetiq.github.io, «Recursos académicos › Apuntes»;
-                   zona libre para el sticker de enlace (y = 1180-1400). Sonido: impacto suave.
-BANNED:  vacío oscuro; brillos, partículas, degradados violeta; tarjetas de vidrio; tres
-         tarjetas en fila; títulos que siguen moviéndose tras aterrizar; logo en una esquina;
-         palabras en itálica de acento; etiquetas numeradas «01 / 02»; marcos y corchetes
-         decorativos; horarios o relojes (pedido explícito); logotipo de Google.
-QA:      cuadro 0 con la pregunta legible; 4,7 s la portada de IRQ centrada; 6,4 s carpeta
-         legible; 8,2 s el archivo Serie 07 resaltado; 10,2 s hoja del PDF legible;
-         13,5 s afirmación; 17,0 s cierre con la zona del sticker despejada.
+GOAL:    el estudiante se reconoce en la búsqueda desesperada de apuntes y ve que en la página de
+         AChETIQ cada materia lo lleva a su carpeta de Drive.
+OUTPUT:  HyperFrames, 1080 x 1920 (historia de Instagram), 30 fps, MP4. Duración: 23,6 s.
+LOOK:    fondo crema #FCF7F0; la página real del sitio (DOM, CSS, tipografías e imágenes) dentro de
+         un iframe de 450 px CSS, zoom 2,4, en una «pantalla» con esquinas superiores de 44 px.
+         Títulos de paso en Fraunces 84 px con una palabra en cobalto #1344A5; mauveína solo en el
+         archivo encontrado. Drive simulado (no existe interfaz real accesible).
+MOTION:  una sola toma continua: chat -> vista previa del enlace que crece hasta ser la página ->
+         desplazamiento -> filtro -> desplazamiento -> zoom de portada -> hoja de Drive -> carpeta ->
+         PDF -> la hoja vuelve a ser una portada en el muro de 38 materias -> el muro se reúne en el
+         logo. Toques: punto de 70 px al 20 % de opacidad.
+SOUND:   efectos sintetizados sin tono, picos a −6 dBFS y volúmenes 0,12-0,32 (más suaves que v2).
+SHOTS:   0,0-4,4    Gancho: «¿Otra vez buscando apuntes?»; chat «IQ · 4º año» (dramatización):
+                    «¿Alguien tiene la Serie 7 de Reacciones resuelta?», «creo que estaba en un drive
+                    viejo», «a mí me la pasaron por mail y no la encuentro», «rindo esta semana y no
+                    tengo nada»; Agus responde con el enlace de la página (vista previa real: título
+                    y og-image del sitio). «Está todo acá.» Toque en la vista previa.
+         4,4-6,6    Página real: «Apuntes de cada materia»; desplazamiento lento hasta el filtro.
+         6,0-6,9    «Filtrá por año»: toque en «4º año»; el filtro real oculta las demás tarjetas.
+         6,8-8,8    «Elegí tu materia»: desplazamiento continuo hasta Ingeniería de las Reacciones
+                    Químicas; toque.
+         9,0-10,7   La portada real de la materia se acerca hasta llenar el cuadro; rótulo «4º año».
+         10,7-12,4  La carpeta de Drive sube como una hoja: «03. Práctica», «05. Presentaciones».
+         12,0-13,6  «Guías y series resueltas»: los 4 elementos reales de 03. Práctica (la carpeta más
+                    completa de la materia): Guías de Estudio, Serie 07 (GS), Serie 06 (NCMQ),
+                    Resolución Series (SMR), con fecha y tamaño reales.
+         13,6-15,7  Toque en la Serie 07; la fila crece hasta el visor; hoja con líneas grises.
+                    «La Serie 7, encontrada.»
+         15,7-18,0  La hoja se convierte en la portada de IRQ en un muro de 38 portadas reales que
+                    aparecen en ondas; el contador sube de 1 a 38: «38 materias, cada una con su
+                    carpeta de Drive».
+         18,0-20,0  «Toda la carrera, a un toque.» + «Apuntes y guías aportados por estudiantes.»
+         20,3-23,6  El muro se reúne en el centro; cierre centrado: logo de 460 px, AChETIQ,
+                    achetiq.github.io, Recursos académicos › Apuntes; zona libre para el sticker.
+BANNED:  horarios; «bibliografía»; logotipo de Google; vacío oscuro; brillos; títulos que se
+         mueven tras aterrizar; itálicas de acento.
 ```
 
-## Datos que aparecen en pantalla (fuente)
+## Fuentes de lo que se ve
 
-- 38 materias con carpeta: `data/recursos.json` (38 entradas con año, más «Respaldo»).
-- Nombres de la carpeta de IRQ y de la Serie 07: conector de Google Drive, 23/11/2026.
-- Encabezado del PDF: fragmento de contenido devuelto por Drive para el archivo de la Serie 7.
-- Bajada: `pages/recursos/apuntes.html` («Cada materia del Plan 2023 enlaza a su carpeta de
-  Google Drive…», «aportados por la comunidad estudiantil»).
+- Página: `pages/recursos/apuntes.html` capturada por `herramientas/preparar_sitio.cjs` a 450 px.
+  La bajada se editó solo en la captura para quitar «bibliografía» (pedido del 23/11/2026).
+- Drive: nombres, fechas y tamaños leídos con el conector de Google Drive el 23/11/2026.
+- 38 materias con carpeta: `data/recursos.json`. Termodinámica usa el color del año porque su
+  imagen del sitio es de terceros.
+- El chat es una dramatización: nombres y mensajes son ilustrativos.

@@ -120,6 +120,9 @@ Los cuatro bocetos (A, B, C, A+B) están en `bocetos/` como proyecto HyperFrames
   exámenes finales. Fondo crema #FCF7F0 para ambas historias.
 - Versiones finales: `apuntes/` y `seguimiento/` (cada una con `SPEC.md` y `REVIEW.md`),
   generadas por `generar_historias.py`.
+- Versión 3 (23/11/2026): ambas historias incrustan la página real del sitio (iframe) en lugar de
+  redibujarla; la captura y los valores salen de `herramientas/preparar_sitio.cjs`. Gancho de chat
+  en Apuntes; correlativas, finales tipeados con promedios en vivo y tablero en Seguimiento.
 
 ## 5. Supuestos de producción
 
