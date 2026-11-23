@@ -15,6 +15,13 @@
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "83485963700bcf11d5bf78118facb301676b69d918fee2e45a95e7f1a2840f6c"
     },
+    "hyperframes": {
+      "source": "heygen-com/hyperframes",
+      "commit": "de4c73264e98f27f8f312fa55edc46f5446c48cf",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes/SKILL.md",
+      "computedHash": "2410221fb18d256b900c9ea8b15b8e3e7f119c7da153d24c55f9b854b7f07eb7"
+    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
