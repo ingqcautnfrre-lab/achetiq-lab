@@ -123,6 +123,11 @@ Los cuatro bocetos (A, B, C, A+B) están en `bocetos/` como proyecto HyperFrames
 - Versión 3 (23/11/2026): ambas historias incrustan la página real del sitio (iframe) en lugar de
   redibujarla; la captura y los valores salen de `herramientas/preparar_sitio.cjs`. Gancho de chat
   en Apuntes; correlativas, finales tipeados con promedios en vivo y tablero en Seguimiento.
+- Versión 4 (23/11/2026): vista web de escritorio (1200 px) dentro de una ventana de navegador,
+  con cámara que acerca cada zona; títulos en negro sin palabras en color; nombres del chat
+  «Paraguayo», «Ele P» y «Vicki G»; entrada a la materia con la portada que crece y se desvanece;
+  Drive debajo del título y ajustado al contenido; introducción de Seguimiento en lista compacta;
+  cierre con el logo animado por capas (port de la intro de Series Resueltas).
 
 ## 5. Supuestos de producción
 

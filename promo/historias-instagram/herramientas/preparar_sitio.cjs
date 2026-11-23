@@ -15,8 +15,8 @@ const path = require('path');
 
 const [REPO, PROMO] = process.argv.slice(2);
 const ORIGIN = 'http://127.0.0.1:8765/';
-const W_APUNTES = 450;         // ancho CSS del teléfono simulado (zoom 2,4 -> 1080 px)
-const W_SEG = 510;             // la tabla real necesita 462 px de ancho útil (zoom 2,118)
+const W_APUNTES = 1200;        // vista web de escritorio (decisión del usuario, 23/11/2026)
+const W_SEG = 1200;
 let W = W_APUNTES;
 const KEY = 'achetiq:seguimiento:estado:v1';
 
@@ -105,7 +105,7 @@ async function apuntes(ctx) {
   fs.writeFileSync(file, html);
   await p.close();
 
-  const H = 3600;
+  const H = 2600;
   const m = await measureFile(ctx, file, H, async (q) => {
     const o = {};
     o.h1 = await rect(q, '.page-header__title');
@@ -131,12 +131,9 @@ async function apuntes(ctx) {
 }
 
 // ─────────────── Historia 2 · Seguimiento ───────────────
-const TABLA = [3, 4, 5, 6, 10, 11, 12, 13, 14];
-const FINALES = [3, 4, 5];
+const NIVELES_TABLA = ['I', 'II'];
+const FINALES = [1, 2, 3, 4, 5, 6, 7, 8];
 const SEG_CSS = `
-#seg-tabla-seguimiento [data-col="nivel"],#seg-tabla-seguimiento [data-col="curs"],#seg-tabla-seguimiento [data-col="aprob"],
-#seg-tabla-seguimiento [data-col="nota"],#seg-tabla-seguimiento [data-col="falt"],#seg-tabla-seguimiento [data-col="hs"]{display:none!important}
-#seg-tabla-finales th:nth-child(2),#seg-tabla-finales td:nth-child(2),#seg-tabla-finales th:nth-child(4),#seg-tabla-finales td:nth-child(4),
 #seg-tabla-finales th:nth-child(n+12),#seg-tabla-finales td:nth-child(n+12){display:none!important}
 #seg-tabla-finales .seg-fin__fecha::placeholder{color:#6B6E76}
 .seg-table-scroll{scrollbar-width:none}.seg-table-scroll::-webkit-scrollbar{display:none}
@@ -154,19 +151,18 @@ async function seguimiento(ctx) {
   await p.reload({ waitUntil: 'networkidle' }); await p.waitForTimeout(700);
   await p.evaluate(([tabla, fin]) => {
     // subconjunto real de la tabla (mismas filas, estilos y controles del sitio)
-    document.querySelectorAll('#seg-tabla-seguimiento tr.seg-table__row').forEach((tr) => { if (!tabla.includes(+tr.dataset.numero)) tr.remove(); });
-    document.querySelectorAll('#seg-tabla-seguimiento tbody.seg-table__group').forEach((g) => { if (!['I', 'II'].includes(g.dataset.nivel)) g.remove(); });
+    document.querySelectorAll('#seg-tabla-seguimiento tbody.seg-table__group').forEach((g) => { if (!tabla.includes(g.dataset.nivel)) g.remove(); });
     document.querySelectorAll('#seg-tabla-finales tbody tr').forEach((tr) => { if (!fin.includes(+tr.dataset.numero)) tr.remove(); });
     // fechas como en un navegador es-AR (dd/mm/aaaa)
     document.querySelectorAll('.seg-fin__fecha').forEach((i) => { i.type = 'text'; i.placeholder = 'dd/mm/aaaa'; });
-  }, [TABLA, FINALES]);
+  }, [NIVELES_TABLA, FINALES]);
   const html = await serialize(p, SEG_CSS);
   const file = path.join(proj, 'assets/site/pages/recursos/seguimiento.html');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, html);
   await p.close();
 
-  const H = 4200;
+  const H = 3400;
   const m = await measureFile(ctx, file, H, async (q) => {
     const o = {};
     o.h1 = await rect(q, '.page-header__title');
@@ -179,7 +175,7 @@ async function seguimiento(ctx) {
     o.kpis = await q.$$eval('#seg-dashboard .seg-kpi', (els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y + window.scrollY, r.width, r.height]; }));
     o.tabla = await rect(q, '#seg-tabla-seguimiento');
     o.filas = {};
-    for (const n of TABLA) {
+    for (const n of [1, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14]) {
       o.filas[n] = {
         fila: await rect(q, `#seg-tabla-seguimiento tr[data-numero="${n}"]`),
         sel: await rect(q, `#seg-estado-${n}`),
@@ -213,7 +209,7 @@ async function seguimiento(ctx) {
   // valores de la herramienta real en cada paso de la historia
   const AGA = [{ fecha: '2024-02-20', nota: 4 }, { fecha: '2024-03-05', nota: 7 }];
   const FIS = [{ fecha: '2024-07-24', nota: 2 }, { fecha: '2024-12-11', nota: 5 }, { fecha: '2025-02-19', nota: 8 }];
-  const base = () => ({ 1: REC('Aprobada'), 3: REC('Regular'), 4: REC('Aprobada'), 5: REC('Regular'), 6: REC('Aprobada') });
+  const base = () => ({ 3: REC('Regular'), 4: REC('Aprobada'), 5: REC('Regular'), 6: REC('Aprobada') });   // estado al terminar de marcar en el video (t_aga)
   const pasos = [];
   pasos.push(['inicial', {}]);
   pasos.push(['t_quimica', { 6: REC('Aprobada') }]);
@@ -230,6 +226,7 @@ async function seguimiento(ctx) {
     valores[nombre] = await q.evaluate(() => ({
       kpis: Array.from(document.querySelectorAll('#seg-dashboard .seg-kpi')).map((k) => [k.querySelector('.seg-kpi__label').textContent, k.querySelector('.seg-kpi__value').textContent]),
       disp: Object.fromEntries(Array.from(document.querySelectorAll('#seg-tabla-seguimiento tr.seg-table__row')).map((tr) => [tr.dataset.numero, tr.querySelector('.seg-badge__text').textContent])),
+      falt: Object.fromEntries(Array.from(document.querySelectorAll('#seg-tabla-seguimiento tr.seg-table__row')).map((tr) => [tr.dataset.numero, tr.querySelector('[data-col="falt"]').textContent])),
       notaFin: Object.fromEntries(Array.from(document.querySelectorAll('#seg-tabla-finales tbody tr')).map((tr) => [tr.dataset.numero, tr.querySelector('[data-col="nota"]').textContent])),
       estadoFin: Object.fromEntries(Array.from(document.querySelectorAll('#seg-tabla-finales tbody tr')).map((tr) => [tr.dataset.numero, tr.querySelector('[data-col="estado"]').textContent])),
     }));

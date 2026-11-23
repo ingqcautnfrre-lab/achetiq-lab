@@ -7,17 +7,22 @@
 .abs{position:absolute}
 .serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
 .mono{font-family:'Geist Mono',monospace}
-.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0;z-index:40}
-.cap em{font-style:normal;color:#1344A5}
+.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;color:#131720;opacity:0;z-index:40}
+.cap em{font-style:normal;color:inherit}
 .cap-sub{position:absolute;left:72px;top:338px;font-size:40px;line-height:1.3;color:#4A4F59;white-space:nowrap;opacity:0;z-index:40}
-.screen{position:absolute;left:0;width:1080px;height:1600px;overflow:hidden;border-radius:44px 44px 0 0;background:#F2F4F8;box-shadow:0 -14px 44px rgba(19,23,32,.10)}
-.cam{position:absolute;left:0;top:0;width:1080px}
-.cam iframe{display:block;border:0;background:#F2F4F8}
-.tap{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;background:rgba(19,23,32,.20);opacity:0;pointer-events:none;z-index:60}
-.ring{position:absolute;border:4px solid #1344A5;border-radius:20px;box-shadow:0 0 0 8px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
-.drop{position:absolute;width:300px;background:#FFFFFF;border-radius:14px;box-shadow:0 18px 44px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
-.drop div{position:relative;height:68px;display:flex;align-items:center;gap:18px;padding:0 24px;font-size:31px}
-.drop i{width:26px;height:26px;border-radius:50%;border:3px solid #9AA1AD;flex:0 0 26px}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0}
+.win{position:absolute;left:30px;top:430px;width:1020px;height:1100px;border-radius:28px;overflow:hidden;background:#F2F4F8;border:1px solid #E1DACE;box-shadow:0 26px 64px rgba(19,23,32,.16)}
+.wbar{position:absolute;left:0;top:0;width:100%;height:76px;background:#FFFFFF;border-bottom:1px solid #E7DFD3;display:flex;align-items:center;gap:16px;padding:0 24px;z-index:3}
+.wbar i{width:15px;height:15px;border-radius:50%;background:#E2DDD4;flex:0 0 15px}
+.url{flex:1;height:48px;margin-left:12px;border-radius:999px;background:#F1EEE8;display:flex;align-items:center;gap:12px;padding:0 22px;font-size:25px;color:#4A4F59;white-space:nowrap;overflow:hidden}
+.wbody{position:absolute;left:0;top:76px;width:100%;bottom:0;overflow:hidden}
+.scroller{position:absolute;left:0;top:0;width:100%}
+.scroller iframe{display:block;border:0;background:#F2F4F8}
+.tap{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(19,23,32,.22);opacity:0;pointer-events:none;z-index:60}
+.ring{position:absolute;border:3px solid #1344A5;border-radius:10px;box-shadow:0 0 0 6px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
+.drop{position:absolute;width:190px;background:#FFFFFF;border-radius:10px;box-shadow:0 14px 34px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
+.drop div{position:relative;height:40px;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:19px}
+.drop i{width:16px;height:16px;border-radius:50%;border:2px solid #9AA1AD;flex:0 0 16px}
 .flood{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
 /* chat */
 .chat{position:absolute;left:48px;top:470px;width:984px;height:1110px;background:#FFFFFF;border-radius:40px;box-shadow:0 18px 50px rgba(19,23,32,.10);overflow:hidden}
@@ -36,83 +41,75 @@
 .prev div{padding:14px 20px 18px}
 .prev b{display:block;font-size:32px;font-weight:600;color:#131720}
 .prev span{font-size:28px;color:#4A4F59}
-/* Drive simulado */
-.sheet{position:absolute;left:0;width:1080px;height:1500px;background:#FFFFFF;border-radius:44px 44px 0 0;box-shadow:0 -14px 44px rgba(19,23,32,.16);overflow:hidden}
-.handle{position:absolute;left:500px;top:22px;width:80px;height:8px;border-radius:4px;background:#DCD3C6}
-.dcrumb{position:absolute;left:60px;top:66px;font-size:32px;color:#4A4F59;white-space:nowrap}
-.dtitle{position:absolute;left:60px;top:116px;width:960px;font-size:52px;font-weight:600;line-height:1.18}
-.dhead{position:absolute;left:60px;width:960px;font-family:'Geist Mono',monospace;font-size:28px;color:#4A4F59;padding-bottom:14px;border-bottom:2px solid #F0EBE3}
-.drow{position:absolute;left:44px;width:992px;height:132px;display:flex;align-items:center;gap:30px;padding:0 16px;border-radius:18px}
-.drow .ic{flex:0 0 64px;display:flex;justify-content:center}
-.drow .tx b{display:block;font-size:39px;font-weight:500;white-space:nowrap}
-.drow .tx span{font-size:29px;color:#4A4F59}
-.dhl{position:absolute;inset:0;border-radius:18px;background:rgba(146,47,161,.09);border-left:8px solid #922FA1;opacity:0}
-.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
-.viewer{position:absolute;left:0;top:0;width:1080px;height:1500px;background:#E9E3D9;opacity:0}
-.vbar{position:absolute;left:0;top:0;width:1080px;height:120px;background:#FFFFFF;display:flex;align-items:center;gap:24px;padding:0 60px;font-size:34px;border-bottom:2px solid #E7DFD3}
-.page{position:absolute;left:130px;top:170px;width:820px;height:1080px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:84px 74px}
-.ln{height:22px;border-radius:6px;background:#E1E4E9;margin-bottom:26px}
-.ln.t{height:40px;width:62%;background:#CED2D9;margin-bottom:52px}
+/* Drive simulado (vista web) */
+.dv{position:absolute;inset:0;background:#FFFFFF}
+.dcrumb{position:absolute;left:40px;top:30px;font-size:24px;color:#4A4F59;white-space:nowrap}
+.dtitle{position:absolute;left:40px;top:66px;font-size:38px;font-weight:600;white-space:nowrap}
+.dhead{position:absolute;left:40px;top:144px;width:940px;height:46px;display:flex;align-items:center;font-size:22px;color:#4A4F59;border-bottom:1px solid #E7DFD3}
+.drow{position:absolute;left:24px;width:972px;height:78px;display:flex;align-items:center;font-size:27px;border-bottom:1px solid #F0EBE3;padding:0 16px;border-radius:10px}
+.drow .nm{flex:0 0 560px;display:flex;align-items:center;gap:20px;white-space:nowrap}
+.drow .c2,.dhead .c2{flex:0 0 220px;font-size:22px;color:#4A4F59}
+.drow .c3,.dhead .c3{flex:0 0 140px;font-size:22px;color:#4A4F59;text-align:right}
+.dhead .nm{flex:0 0 560px;padding-left:16px}
+.dhl{position:absolute;inset:0;border-radius:10px;background:rgba(146,47,161,.09);opacity:0}
+.dhl + *{position:relative}
+.folder{width:40px;height:33px;flex:0 0 40px}
+.pdf{width:34px;height:42px;border-radius:5px;background:#D93025;color:#fff;font:600 12px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;flex:0 0 34px}
+.dsec{position:absolute;left:40px;font-size:24px;font-weight:600;color:#4A4F59}
+.chipf{position:absolute;left:40px;top:250px;width:440px;height:76px;border:1px solid #E1DACE;border-radius:14px;display:flex;align-items:center;gap:18px;padding:0 22px;font-size:27px;background:#FFFFFF}
+.fcard{position:absolute;top:396px;width:296px;height:330px;border:1px solid #E1DACE;border-radius:16px;overflow:hidden;background:#FFFFFF}
+.fthumb{position:absolute;left:0;top:0;width:100%;height:232px;background:#F1EEE8;display:flex;justify-content:center;align-items:flex-end}
+.fpage{width:180px;height:206px;background:#FFFFFF;box-shadow:0 4px 14px rgba(19,23,32,.10);padding:22px 18px}
+.fl{height:9px;border-radius:3px;background:#E1E4E9;margin-bottom:11px}
+.fname{position:absolute;left:0;top:232px;width:100%;height:98px;display:flex;align-items:center;gap:14px;padding:0 18px;font-size:21px;line-height:1.25;border-top:1px solid #E7DFD3}
+.fhl{position:absolute;inset:0;border:4px solid #922FA1;border-radius:16px;opacity:0}
+.viewer{position:absolute;inset:0;background:#E9E3D9;opacity:0}
+.vbar{position:absolute;left:0;top:0;width:100%;height:84px;background:#FFFFFF;display:flex;align-items:center;gap:20px;padding:0 36px;font-size:27px;border-bottom:1px solid #E7DFD3}
+.page{position:absolute;left:260px;top:112px;width:500px;height:610px;background:#FFFFFF;box-shadow:0 14px 34px rgba(11,41,100,.14);padding:54px 48px}
+.ln{height:14px;border-radius:4px;background:#E1E4E9;margin-bottom:17px}
+.ln.t{height:26px;width:62%;background:#CED2D9;margin-bottom:34px}
 /* muro de materias */
 .tile{position:absolute;width:196px;height:110px;border-radius:12px;overflow:hidden;opacity:0}
 .tile img{width:100%;height:100%;object-fit:cover;display:block}
 /* cierre */
-.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:240px}
-.end-logo{width:460px;height:460px;opacity:0}
-.end-name{font-size:124px;margin-top:6px;display:flex;line-height:1.05}
+.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:200px}
+.end svg{width:660px;height:660px;overflow:visible}
+.end-name{font-size:128px;margin-top:4px;display:flex;line-height:1.05}
 .end-name span{display:inline-block;opacity:0}
-.end-url{font-size:48px;color:#1344A5;margin-top:18px;opacity:0}
-.end-sec{font-size:42px;color:#4A4F59;margin-top:20px;line-height:1.3;opacity:0}
+.end-url{font-size:48px;color:#1344A5;margin-top:16px;opacity:0}
+.end-sec{font-size:42px;color:#4A4F59;margin-top:18px;line-height:1.3;opacity:0}
 .end-extra{font-size:36px;color:#4A4F59;margin-top:12px;opacity:0}
 /* seguimiento */
-.clu{position:absolute;opacity:0;white-space:nowrap}
-.seg{position:absolute;top:0;width:18px;height:64px;border-radius:4px;background:#E7DFD3}
-.kp{position:absolute;width:470px;height:176px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:24px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12)}
-.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.08em;color:#4A4F59;text-transform:uppercase}
-.kp .v{font-family:'Fraunces',serif;font-size:80px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
+.qq{position:absolute;left:72px;font-family:'Fraunces',serif;font-size:88px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0}
+.qh{position:absolute;left:76px;display:flex;align-items:center;gap:12px;font-size:34px;color:#4A4F59;white-space:nowrap;opacity:0}
+.pn{min-width:58px;height:58px;padding:0 14px;border-radius:14px;background:#FFFFFF;border:2px solid #E1DACE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:36px;color:#131720}
+.seg{width:12px;height:30px;border-radius:3px;background:#E1DACE}
+.kp{position:absolute;width:470px;height:170px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:22px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12);z-index:62}
+.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#4A4F59;text-transform:uppercase}
+.kp .v{font-family:'Fraunces',serif;font-size:78px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
 .feat{position:absolute;display:flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;background:#FFFFFF;border:2px solid #E7DFD3;box-shadow:0 14px 36px rgba(19,23,32,.12);font-size:38px;font-weight:500;white-space:nowrap;opacity:0;z-index:30}
 .feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
 </style>
   <div id="root" data-composition-id="recorrido" data-width="1080" data-height="1920">
-    <div id="recorrido-all" class="clip" data-start="0" data-duration="16.55" data-track-index="1" style="position:absolute;inset:0">
-      <div class="abs" style="inset:0;background:#FCF7F0"></div>
-      <div id="r-screen" class="screen" style="top:430px;opacity:0">
-        <div id="r-cam" class="cam"><iframe id="r-fr" src="assets/site/pages/recursos/apuntes.html" style="width:450px;height:3600px;zoom:2.4000" scrolling="no"></iframe></div>
+    <div id="recorrido-all" class="clip" data-start="0" data-duration="16.5" data-track-index="1" style="position:absolute;inset:0">
+      <div id="r-cam" class="cam">
+        <div id="r-win" class="win" style="opacity:0"><div class="wbar"><i></i><i></i><i></i><div class="url"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A4F59" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>achetiq.github.io/pages/recursos/apuntes</span></div></div><div class="wbody"><div id="r-scr" class="scroller"><iframe id="r-fr" src="assets/site/pages/recursos/apuntes.html" style="width:1200px;height:3687px;zoom:0.85000" scrolling="no"></iframe></div></div></div>
+        <div id="tap1" class="tap"></div><div id="tap2" class="tap"></div>
       </div>
-      <div id="r-zoom" class="abs" style="left:0;top:0;width:100px;height:56px;overflow:hidden;opacity:0;z-index:20"><img src="assets/site/assets/img/materias/ingenieria-de-las-reacciones-quimicas.webp" style="width:100%;height:100%;object-fit:cover;display:block" alt=""></div>
-      <div id="r-label" class="abs" style="left:60px;top:1330px;width:960px;padding:30px 36px;background:#FCF7F0;border-radius:26px;opacity:0;z-index:21">
-        <div class="mono" style="font-size:30px;letter-spacing:.12em;color:#4A4F59">4º AÑO</div>
-        <div class="serif" style="font-size:66px;line-height:1.08;margin-top:6px">Ingeniería de las Reacciones Químicas</div>
-      </div>
-      <div id="r-fade" class="abs" style="left:0;top:0;width:1080px;height:560px;background:linear-gradient(#FCF7F0 0%,#FCF7F0 62%,rgba(252,247,240,0) 100%);opacity:0;z-index:21"></div>
-      <div id="r-sheet" class="sheet" style="top:600px;z-index:22">
-        <div class="handle"></div>
-        <div id="r-l1">
-          <div class="dcrumb">Compartidos conmigo › AChETIQ</div>
-          <div class="dtitle">Ingeniería de las Reacciones Químicas</div>
-          <div class="dhead" style="top:300px">Nombre ↑</div>
-          <div id="r-d1" class="drow" style="top:360px"><div id="r-d1-hl" class="dhl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><div class="tx"><b>03. Práctica</b><span>Modificado: 3 sept 2026</span></div></div><div id="r-d2" class="drow" style="top:496px"><div id="r-d2-hl" class="dhl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><div class="tx"><b>05. Presentaciones</b><span>Modificado: 3 sept 2026</span></div></div>
-        </div>
-        <div id="r-l2" style="opacity:0">
-          <div class="dcrumb">… › Ingeniería de las Reacciones Químicas</div>
-          <div class="dtitle">03. Práctica</div>
-          <div class="dhead" style="top:196px">Nombre ↑</div>
-          <div id="r-e1" class="drow" style="top:250px"><div id="r-e1-hl" class="dhl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><div class="tx"><b>Guías de Estudio</b><span>Modificado: 3 sept 2026</span></div></div><div id="r-e2" class="drow" style="top:386px"><div id="r-e2-hl" class="dhl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><div class="tx"><b>2024 - GS - Resolución Serie 07.pdf</b><span>11 ago 2026 · 2,3 MB</span></div></div><div id="r-e3" class="drow" style="top:522px"><div id="r-e3-hl" class="dhl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><div class="tx"><b>2024 - NCMQ - Resolución Serie 06.pdf</b><span>11 ago 2026 · 28,1 MB</span></div></div><div id="r-e4" class="drow" style="top:658px"><div id="r-e4-hl" class="dhl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><div class="tx"><b>2024 - SMR - Resolución Series.pdf</b><span>11 ago 2026 · 56,2 MB</span></div></div>
-        </div>
-        <div id="r-morph" class="abs" style="left:0;top:0;width:1080px;height:1500px;background:#FFFFFF;opacity:0"></div>
-        <div id="r-view" class="viewer">
-          <div class="vbar"><div class="pdf" data-layout-ignore>PDF</div><span>2024 - GS - Resolución Serie 07.pdf</span></div>
-          <div id="r-page" class="page"><div class="ln t"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:98%"></div><div class="ln" style="width:72%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:96%"></div><div class="ln" style="width:60%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:91%"></div><div class="ln" style="width:97%"></div><div class="ln" style="width:83%"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:55%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:76%"></div></div>
-        </div>
-      </div>
+      <div id="r-win2" class="win" style="opacity:0;z-index:25;top:400px;height:470px"><div class="wbar"><i></i><i></i><i></i><div class="url"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A4F59" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>drive.google.com · Compartidos conmigo</span></div></div><div class="wbody"><div id="r-dv" class="dv">
+          <div id="r-l1" class="abs" style="inset:0"><div class="dcrumb">Compartidos conmigo › AChETIQ</div><div class="dtitle">Ingeniería de las Reacciones Químicas</div><div class="dhead"><div class="nm">Nombre ↑</div><div class="c2">Última modificación</div><div class="c3">Tamaño</div></div><div id="r-d1" class="drow" style="top:196px"><div id="r-d1-hl" class="dhl"></div><div class="nm"><svg class="folder" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg><span>03. Práctica</span></div><div class="c2">3 sept 2026</div><div class="c3">—</div></div><div id="r-d2" class="drow" style="top:274px"><div id="r-d2-hl" class="dhl"></div><div class="nm"><svg class="folder" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg><span>05. Presentaciones</span></div><div class="c2">3 sept 2026</div><div class="c3">—</div></div></div>
+          <div id="r-l2" class="abs" style="inset:0;opacity:0"><div class="dcrumb">… › Ingeniería de las Reacciones Químicas</div><div class="dtitle">03. Práctica</div><div class="dsec" style="top:206px">Carpetas</div><div id="r-e1" class="chipf"><svg class="folder" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg><span>Guías de Estudio</span></div><div class="dsec" style="top:354px">Archivos</div><div id="r-e2" class="fcard" style="left:40px"><div class="fthumb"><div class="fpage"><div class="fl" style="width:70%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:92%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:80%"></div><div class="fl" style="width:96%"></div><div class="fl" style="width:64%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:88%"></div></div></div><div class="fname"><div class="pdf" data-layout-ignore>PDF</div><span>2024 - GS - Resolución Serie 07.pdf</span></div><div id="r-e2-hl" class="fhl"></div></div><div id="r-e3" class="fcard" style="left:362px"><div class="fthumb"><div class="fpage"><div class="fl" style="width:70%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:92%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:80%"></div><div class="fl" style="width:96%"></div><div class="fl" style="width:64%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:88%"></div></div></div><div class="fname"><div class="pdf" data-layout-ignore>PDF</div><span>2024 - NCMQ - Resolución Serie 06.pdf</span></div><div id="r-e3-hl" class="fhl"></div></div><div id="r-e4" class="fcard" style="left:684px"><div class="fthumb"><div class="fpage"><div class="fl" style="width:70%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:92%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:80%"></div><div class="fl" style="width:96%"></div><div class="fl" style="width:64%"></div><div class="fl" style="width:100%"></div><div class="fl" style="width:88%"></div></div></div><div class="fname"><div class="pdf" data-layout-ignore>PDF</div><span>2024 - SMR - Resolución Series.pdf</span></div><div id="r-e4-hl" class="fhl"></div></div></div>
+          <div id="r-morph" class="abs" style="left:0;top:0;width:1020px;height:774px;background:#E9E3D9;opacity:0"></div>
+          <div id="r-view" class="viewer"><div class="vbar"><div class="pdf" data-layout-ignore>PDF</div><span>2024 - GS - Resolución Serie 07.pdf</span></div><div id="r-page" class="page"><div class="ln t"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:98%"></div><div class="ln" style="width:72%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:96%"></div><div class="ln" style="width:60%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:91%"></div><div class="ln" style="width:97%"></div><div class="ln" style="width:83%"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:55%"></div><div class="ln" style="width:0%;background:transparent"></div><div class="ln" style="width:100%"></div><div class="ln" style="width:76%"></div></div></div>
+        </div></div></div>
       <div id="r-flood" class="flood" style="z-index:23"></div>
-      <div id="r-wall" class="abs" style="left:0;top:0;width:1080px;height:1920px;z-index:24"><div id="r-t-introduccion-a-la-ingenieria-quimica" class="tile" data-layout-ignore style="left:30px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/introduccion-a-la-ingenieria-quimica.webp" alt=""></div><div id="r-t-ingenieria-y-sociedad" class="tile" data-layout-ignore style="left:238px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/ingenieria-y-sociedad.webp" alt=""></div><div id="r-t-algebra-y-geometria-analitica" class="tile" data-layout-ignore style="left:446px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/algebra-y-geometria-analitica.webp" alt=""></div><div id="r-t-analisis-matematico-i" class="tile" data-layout-ignore style="left:654px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/analisis-matematico-i.webp" alt=""></div><div id="r-t-fisica-i" class="tile" data-layout-ignore style="left:862px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/fisica-i.webp" alt=""></div><div id="r-t-quimica" class="tile" data-layout-ignore style="left:30px;top:642px;background:#E7CDAA"><img src="assets/site/assets/img/materias/quimica.webp" alt=""></div><div id="r-t-sistemas-de-representacion" class="tile" data-layout-ignore style="left:238px;top:642px;background:#E7CDAA"><img src="assets/site/assets/img/materias/sistemas-de-representacion.webp" alt=""></div><div id="r-t-fundamentos-de-informatica" class="tile" data-layout-ignore style="left:446px;top:642px;background:#E7CDAA"><img src="assets/site/assets/img/materias/fundamentos-de-informatica.webp" alt=""></div><div id="r-t-introduccion-a-equipos-y-procesos" class="tile" data-layout-ignore style="left:654px;top:642px;background:#D1A6D8"><img src="assets/site/assets/img/materias/introduccion-a-equipos-y-procesos.webp" alt=""></div><div id="r-t-probabilidad-y-estadistica" class="tile" data-layout-ignore style="left:862px;top:642px;background:#D1A6D8"><img src="assets/site/assets/img/materias/probabilidad-y-estadistica.webp" alt=""></div><div id="r-t-quimica-inorganica" class="tile" data-layout-ignore style="left:30px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/quimica-inorganica.webp" alt=""></div><div id="r-t-analisis-matematico-ii" class="tile" data-layout-ignore style="left:238px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/analisis-matematico-ii.webp" alt=""></div><div id="r-t-fisica-ii" class="tile" data-layout-ignore style="left:446px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/fisica-ii.webp" alt=""></div><div id="r-t-quimica-organica" class="tile" data-layout-ignore style="left:654px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/quimica-organica.webp" alt=""></div><div id="r-t-legislacion" class="tile" data-layout-ignore style="left:862px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/legislacion.webp" alt=""></div><div id="r-t-balances-de-masa-y-energia" class="tile" data-layout-ignore style="left:30px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/balances-de-masa-y-energia.webp" alt=""></div><div id="r-t-termodinamica" class="tile" data-layout-ignore style="left:238px;top:886px;background:#89AFD6"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:600 24px Hanken Grotesk;color:#0B2964">Termodinámica</div></div><div id="r-t-ingenieria-de-las-reacciones-quimicas" class="tile" data-layout-ignore style="left:446px;top:886px;background:#537ABB"><img src="assets/site/assets/img/materias/ingenieria-de-las-reacciones-quimicas.webp" alt=""></div><div id="r-t-ciencia-de-los-materiales" class="tile" data-layout-ignore style="left:654px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/ciencia-de-los-materiales.webp" alt=""></div><div id="r-t-fisicoquimica" class="tile" data-layout-ignore style="left:862px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/fisicoquimica.webp" alt=""></div><div id="r-t-fenomenos-de-transporte" class="tile" data-layout-ignore style="left:30px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/fenomenos-de-transporte.webp" alt=""></div><div id="r-t-quimica-analitica" class="tile" data-layout-ignore style="left:238px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/quimica-analitica.webp" alt=""></div><div id="r-t-microbiologia-y-quimica-biologica" class="tile" data-layout-ignore style="left:446px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/microbiologia-y-quimica-biologica.webp" alt=""></div><div id="r-t-quimica-aplicada" class="tile" data-layout-ignore style="left:654px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/quimica-aplicada.webp" alt=""></div><div id="r-t-diseno-simulacion-optimizacion-y-seguridad-de-procesos" class="tile" data-layout-ignore style="left:862px;top:1008px;background:#537ABB"><img src="assets/site/assets/img/materias/diseno-simulacion-optimizacion-y-seguridad-de-procesos.webp" alt=""></div><div id="r-t-operaciones-unitarias-i" class="tile" data-layout-ignore style="left:30px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/operaciones-unitarias-i.webp" alt=""></div><div id="r-t-tecnologia-de-la-energia-termica" class="tile" data-layout-ignore style="left:238px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/tecnologia-de-la-energia-termica.webp" alt=""></div><div id="r-t-operaciones-unitarias-ii" class="tile" data-layout-ignore style="left:446px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/operaciones-unitarias-ii.webp" alt=""></div><div id="r-t-matematica-superior-aplicada" class="tile" data-layout-ignore style="left:654px;top:1130px;background:#89AFD6"><img src="assets/site/assets/img/materias/matematica-superior-aplicada.webp" alt=""></div><div id="r-t-calidad-y-control-estadistico-de-procesos" class="tile" data-layout-ignore style="left:862px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/calidad-y-control-estadistico-de-procesos.webp" alt=""></div><div id="r-t-organizacion-industrial" class="tile" data-layout-ignore style="left:30px;top:1252px;background:#537ABB"><img src="assets/site/assets/img/materias/organizacion-industrial.webp" alt=""></div><div id="r-t-control-automatico-de-procesos" class="tile" data-layout-ignore style="left:238px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/control-automatico-de-procesos.webp" alt=""></div><div id="r-t-mecanica-industrial" class="tile" data-layout-ignore style="left:446px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/mecanica-industrial.webp" alt=""></div><div id="r-t-ingenieria-ambiental" class="tile" data-layout-ignore style="left:654px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/ingenieria-ambiental.webp" alt=""></div><div id="r-t-procesos-biotecnologicos" class="tile" data-layout-ignore style="left:862px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/procesos-biotecnologicos.webp" alt=""></div><div id="r-t-higiene-y-seguridad-en-el-trabajo" class="tile" data-layout-ignore style="left:238px;top:1374px;background:#264A8E"><img src="assets/site/assets/img/materias/higiene-y-seguridad-en-el-trabajo.webp" alt=""></div><div id="r-t-maquinas-e-instalaciones-electricas" class="tile" data-layout-ignore style="left:446px;top:1374px;background:#264A8E"><img src="assets/site/assets/img/materias/maquinas-e-instalaciones-electricas.webp" alt=""></div><div id="r-t-proyecto-final" class="tile" data-layout-ignore style="left:654px;top:1374px;background:#264A8E"><img src="assets/site/assets/img/materias/proyecto-final.webp" alt=""></div></div>
-      <div id="r-c1" class="cap">Apuntes de cada <em>materia</em></div><div id="r-c2" class="cap">Filtrá por <em>año</em></div><div id="r-c3" class="cap">Elegí tu <em>materia</em></div><div id="r-c4" class="cap">Su carpeta en <em>Drive</em></div><div id="r-c5" class="cap">Guías y series <em>resueltas</em></div><div id="r-c6" class="cap">La Serie 7, <em>encontrada</em>.</div>
-      <div id="r-cnt" class="cap" style="display:flex;align-items:baseline;gap:22px"><span id="r-n" style="font-size:170px;line-height:.9;color:#1344A5">1</span><span>materias</span></div>
+      <div id="r-wall" class="abs" style="left:0;top:0;width:1080px;height:1920px;z-index:24"><div id="r-t-introduccion-a-la-ingenieria-quimica" class="tile" data-layout-ignore style="left:30px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/introduccion-a-la-ingenieria-quimica.webp" alt=""></div><div id="r-t-ingenieria-y-sociedad" class="tile" data-layout-ignore style="left:238px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/ingenieria-y-sociedad.webp" alt=""></div><div id="r-t-algebra-y-geometria-analitica" class="tile" data-layout-ignore style="left:446px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/algebra-y-geometria-analitica.webp" alt=""></div><div id="r-t-analisis-matematico-i" class="tile" data-layout-ignore style="left:654px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/analisis-matematico-i.webp" alt=""></div><div id="r-t-fisica-i" class="tile" data-layout-ignore style="left:862px;top:520px;background:#E7CDAA"><img src="assets/site/assets/img/materias/fisica-i.webp" alt=""></div><div id="r-t-quimica" class="tile" data-layout-ignore style="left:30px;top:642px;background:#E7CDAA"><img src="assets/site/assets/img/materias/quimica.webp" alt=""></div><div id="r-t-sistemas-de-representacion" class="tile" data-layout-ignore style="left:238px;top:642px;background:#E7CDAA"><img src="assets/site/assets/img/materias/sistemas-de-representacion.webp" alt=""></div><div id="r-t-fundamentos-de-informatica" class="tile" data-layout-ignore style="left:446px;top:642px;background:#E7CDAA"><img src="assets/site/assets/img/materias/fundamentos-de-informatica.webp" alt=""></div><div id="r-t-introduccion-a-equipos-y-procesos" class="tile" data-layout-ignore style="left:654px;top:642px;background:#D1A6D8"><img src="assets/site/assets/img/materias/introduccion-a-equipos-y-procesos.webp" alt=""></div><div id="r-t-probabilidad-y-estadistica" class="tile" data-layout-ignore style="left:862px;top:642px;background:#D1A6D8"><img src="assets/site/assets/img/materias/probabilidad-y-estadistica.webp" alt=""></div><div id="r-t-quimica-inorganica" class="tile" data-layout-ignore style="left:30px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/quimica-inorganica.webp" alt=""></div><div id="r-t-analisis-matematico-ii" class="tile" data-layout-ignore style="left:238px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/analisis-matematico-ii.webp" alt=""></div><div id="r-t-fisica-ii" class="tile" data-layout-ignore style="left:446px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/fisica-ii.webp" alt=""></div><div id="r-t-quimica-organica" class="tile" data-layout-ignore style="left:654px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/quimica-organica.webp" alt=""></div><div id="r-t-legislacion" class="tile" data-layout-ignore style="left:862px;top:764px;background:#D1A6D8"><img src="assets/site/assets/img/materias/legislacion.webp" alt=""></div><div id="r-t-balances-de-masa-y-energia" class="tile" data-layout-ignore style="left:30px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/balances-de-masa-y-energia.webp" alt=""></div><div id="r-t-termodinamica" class="tile" data-layout-ignore style="left:238px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/termodinamica.webp" alt=""></div><div id="r-t-ingenieria-de-las-reacciones-quimicas" class="tile" data-layout-ignore style="left:446px;top:886px;background:#537ABB"><img src="assets/site/assets/img/materias/ingenieria-de-las-reacciones-quimicas.webp" alt=""></div><div id="r-t-ciencia-de-los-materiales" class="tile" data-layout-ignore style="left:654px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/ciencia-de-los-materiales.webp" alt=""></div><div id="r-t-fisicoquimica" class="tile" data-layout-ignore style="left:862px;top:886px;background:#89AFD6"><img src="assets/site/assets/img/materias/fisicoquimica.webp" alt=""></div><div id="r-t-fenomenos-de-transporte" class="tile" data-layout-ignore style="left:30px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/fenomenos-de-transporte.webp" alt=""></div><div id="r-t-quimica-analitica" class="tile" data-layout-ignore style="left:238px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/quimica-analitica.webp" alt=""></div><div id="r-t-microbiologia-y-quimica-biologica" class="tile" data-layout-ignore style="left:446px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/microbiologia-y-quimica-biologica.webp" alt=""></div><div id="r-t-quimica-aplicada" class="tile" data-layout-ignore style="left:654px;top:1008px;background:#89AFD6"><img src="assets/site/assets/img/materias/quimica-aplicada.webp" alt=""></div><div id="r-t-diseno-simulacion-optimizacion-y-seguridad-de-procesos" class="tile" data-layout-ignore style="left:862px;top:1008px;background:#537ABB"><img src="assets/site/assets/img/materias/diseno-simulacion-optimizacion-y-seguridad-de-procesos.webp" alt=""></div><div id="r-t-operaciones-unitarias-i" class="tile" data-layout-ignore style="left:30px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/operaciones-unitarias-i.webp" alt=""></div><div id="r-t-tecnologia-de-la-energia-termica" class="tile" data-layout-ignore style="left:238px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/tecnologia-de-la-energia-termica.webp" alt=""></div><div id="r-t-operaciones-unitarias-ii" class="tile" data-layout-ignore style="left:446px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/operaciones-unitarias-ii.webp" alt=""></div><div id="r-t-matematica-superior-aplicada" class="tile" data-layout-ignore style="left:654px;top:1130px;background:#89AFD6"><img src="assets/site/assets/img/materias/matematica-superior-aplicada.webp" alt=""></div><div id="r-t-calidad-y-control-estadistico-de-procesos" class="tile" data-layout-ignore style="left:862px;top:1130px;background:#537ABB"><img src="assets/site/assets/img/materias/calidad-y-control-estadistico-de-procesos.webp" alt=""></div><div id="r-t-organizacion-industrial" class="tile" data-layout-ignore style="left:30px;top:1252px;background:#537ABB"><img src="assets/site/assets/img/materias/organizacion-industrial.webp" alt=""></div><div id="r-t-control-automatico-de-procesos" class="tile" data-layout-ignore style="left:238px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/control-automatico-de-procesos.webp" alt=""></div><div id="r-t-mecanica-industrial" class="tile" data-layout-ignore style="left:446px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/mecanica-industrial.webp" alt=""></div><div id="r-t-ingenieria-ambiental" class="tile" data-layout-ignore style="left:654px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/ingenieria-ambiental.webp" alt=""></div><div id="r-t-procesos-biotecnologicos" class="tile" data-layout-ignore style="left:862px;top:1252px;background:#264A8E"><img src="assets/site/assets/img/materias/procesos-biotecnologicos.webp" alt=""></div><div id="r-t-higiene-y-seguridad-en-el-trabajo" class="tile" data-layout-ignore style="left:238px;top:1374px;background:#264A8E"><img src="assets/site/assets/img/materias/higiene-y-seguridad-en-el-trabajo.webp" alt=""></div><div id="r-t-maquinas-e-instalaciones-electricas" class="tile" data-layout-ignore style="left:446px;top:1374px;background:#264A8E"><img src="assets/site/assets/img/materias/maquinas-e-instalaciones-electricas.webp" alt=""></div><div id="r-t-proyecto-final" class="tile" data-layout-ignore style="left:654px;top:1374px;background:#264A8E"><img src="assets/site/assets/img/materias/proyecto-final.webp" alt=""></div></div>
+      <div id="r-c1" class="cap">Apuntes de cada materia</div><div id="r-c2" class="cap">Filtrá por año</div><div id="r-c3" class="cap">Elegí tu materia</div><div id="r-c4" class="cap">Su carpeta en Drive</div><div id="r-c5" class="cap">Guías y series resueltas</div><div id="r-c6" class="cap">La Serie 7, encontrada.</div>
+      <div id="r-cnt" class="cap" style="display:flex;align-items:baseline;gap:22px"><span id="r-n" style="font-size:170px;line-height:.9">1</span><span>materias</span></div>
       <div id="r-cnts" class="cap-sub" style="top:418px">cada una con su carpeta de Drive</div>
-      <div id="r-claim" class="cap" style="white-space:normal;font-size:96px">Toda la carrera,<br>a un <em>toque</em>.</div>
+      <div id="r-claim" class="cap" style="white-space:normal;font-size:96px">Toda la carrera,<br>a un toque.</div>
       <div id="r-claims" class="cap-sub" style="top:446px">Apuntes y guías aportados por estudiantes.</div>
-      <div id="r-tap" class="tap"></div>
+      <div id="tap3" class="tap"></div><div id="tap4" class="tap"></div>
     </div>
   </div>
   <script>
@@ -125,9 +122,19 @@
   const tl = gsap.timeline({ paused: true });
   const blurIn = (s, t, d) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d || 0.24, ease: 'power4.out' }, t);
   const blurOut = (s, t, d) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d || 0.18, ease: 'power2.in' }, t);
-  const tap = (s, x, y, t) => {
+  let tapN = 0;
+  const tap = (x, y, t) => {
+    const s = (tapN++ % 2) ? '#tap2' : '#tap1';
     tl.set(s, { left: x, top: y }, t);
-    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out', immediateRender: false }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  let tapM = 0;
+  const tapC = (x, y, t) => {
+    const s = (tapM++ % 2) ? '#tap4' : '#tap3';
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out', immediateRender: false }, t);
     tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
     tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
   };
@@ -135,163 +142,167 @@
   const pop = (s, t) => tl.fromTo(s, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(2.2)', immediateRender: false }, t);
   const capSwap = (a, b, t) => { if (a) blurOut(a, t, 0.16); blurIn(b, t + 0.12, 0.26); };
 
-  // geometría medida en la página real, dentro del iframe (px CSS del teléfono)
-  const Z = 2.40000, PT = 430;
+  const WX = 30, CT = 506, ZF = 0.85000;
   const RR = (el) => el.getBoundingClientRect();
+  const P = (x, y, S) => [WX + x * ZF, CT + (y - S) * ZF];            // px CSS del sitio -> px del cuadro
+  const enfoque = (x0, y0, x1, y1, S, k) => {
+    const a = P(x0, y0, S), b = P(x1, y1, S);
+    const kk = Math.min(k, 1000 / (b[0] - a[0]), 1060 / (b[1] - a[1]));
+    return { scale: kk, x: 540 - kk * (a[0] + b[0]) / 2, y: Math.max(1000 - kk * (a[1] + b[1]) / 2, 372 - kk * 430) };
+  };
+  const cam = (sel, t, d, st) => tl.to(sel, Object.assign({ duration: d, ease: 'power2.inOut' }, st), t);
+
   const p4 = Q('.pill-nav__pill[data-anio="4"]'), pT = Q('.pill-nav__pill[data-anio="all"]');
-  const pr = RR(p4);
-  const S1 = pr.top + pr.height / 2 - (1356 - PT) / Z;
-  const PX = (pr.left + pr.width / 2) * Z, PY = 1356;
+  const hd = RR(Q('.page-header')), fl = RR(Q('.apuntes-filter')), pr4 = RR(p4);
   const card = QA('.apuntes__grid > *').find((c) => (c.textContent || '').indexOf('Reacciones Químicas') >= 0);
   const otros = QA('.apuntes__grid > *').filter((c) => c.getAttribute('data-anio') !== '4');
   otros.forEach((c) => { c.style.display = 'none'; });
-  const cr = RR(card.querySelector('.card-materia__cover'));
+  const gr = RR(Q('.apuntes__grid')), cr = RR(card), cv = RR(card.querySelector('.card-materia__cover'));
   otros.forEach((c) => { c.style.display = ''; });
-  const S2 = cr.top - (520 - PT) / Z;
-  const zx = cr.left * Z, zy = 520, zw = cr.width * Z, zh = cr.height * Z;
-  Object.assign(document.getElementById('r-zoom').style, { left: zx + 'px', top: zy + 'px', width: zw + 'px', height: zh + 'px' });
-  const ZS = 1960 / zh, ZDY = 960 - (zy + zh / 2);
-  // pantalla: la página real (iframe) aparece donde terminó la vista previa del enlace
-  tl.fromTo('#r-screen', { opacity: 0 }, { opacity: 1, duration: 0.18 }, 0.22);
+  const S1 = Math.max(0, gr.top - 40);
+  // la ventana aparece donde terminó la vista previa del enlace
+  tl.fromTo('#r-win', { opacity: 0 }, { opacity: 1, duration: 0.18 }, 0.22);
   blurIn('#r-c1', 0.4);
-  tl.fromTo('#r-cam', { y: 0 }, { y: -S1 * Z, duration: 1.3, ease: 'power2.inOut' }, 0.6);
-  // filtro por año: el comportamiento real de apuntes.js (oculta las demás tarjetas)
+  // 1) cabecera real: se acerca para leer de qué se trata
+  cam('#r-cam', 0.6, 0.8, enfoque(hd.left - 10, hd.top - 30, hd.right * 0.62, hd.bottom + 10, 0, 1.7));
+  // 2) filtro por año
   capSwap('#r-c1', '#r-c2', 2.0);
-  tap('#r-tap', PX, PY, 2.2);
-  tl.set(pT, { attr: { class: 'pill-nav__pill', 'aria-pressed': 'false' } }, 2.35);
-  tl.set(p4, { attr: { class: 'pill-nav__pill is-active', 'aria-pressed': 'true' } }, 2.35);
+  const ef = enfoque(fl.left - 10, fl.top - 20, fl.left + 760, fl.bottom + 30, 0, 1.8);
+  cam('#r-cam', 2.0, 0.6, ef);
+  const p4c = P(pr4.left + pr4.width / 2, pr4.top + pr4.height / 2, 0);
+  tap(p4c[0], p4c[1], 2.75);
+  tl.set(pT, { attr: { class: 'pill-nav__pill', 'aria-pressed': 'false' } }, 2.9);
+  tl.set(p4, { attr: { class: 'pill-nav__pill is-active', 'aria-pressed': 'true' } }, 2.9);
   const grid = Q('.apuntes__grid');
-  tl.to(grid, { opacity: 0, duration: 0.1 }, 2.35);
-  QA('.apuntes__grid > *').forEach((c) => { if (c.getAttribute('data-anio') !== '4') tl.set(c, { display: 'none' }, 2.46); });
-  tl.to(grid, { opacity: 1, duration: 0.22 }, 2.48);
-  // desplazamiento continuo hasta la materia
-  capSwap('#r-c2', '#r-c3', 2.8);
-  tl.to('#r-cam', { y: -S2 * Z, duration: 1.85, ease: 'power2.inOut' }, 2.85);
-  tap('#r-tap', zx + zw / 2, zy + zh / 2, 4.8);
-  tl.to(card, { scale: 0.975, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' }, 4.92);
-  // la portada de la materia se acerca hasta llenar el cuadro
-  tl.set('#r-zoom', { opacity: 1 }, 5.08);
-  blurOut('#r-c3', 5.05, 0.16);
-  tl.to('#r-zoom', { scale: ZS, y: ZDY, duration: 0.9, ease: 'power2.inOut' }, 5.1);
-  tl.set('#r-screen', { opacity: 0 }, 6.05);
-  tl.fromTo('#r-label', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, 5.75);
-  // la carpeta de Drive sube como una hoja sobre la portada
-  tl.fromTo('#r-sheet', { y: 1400 }, { y: 0, duration: 0.65, ease: 'power3.inOut' }, 6.75);
-  tl.to('#r-zoom', { y: ZDY - 330, duration: 0.65, ease: 'power3.inOut' }, 6.75);
-  tl.to('#r-label', { y: -60, opacity: 0, duration: 0.35, ease: 'power2.in' }, 6.8);
-  tl.to('#r-fade', { opacity: 1, duration: 0.4 }, 6.95);
-  blurIn('#r-c4', 7.2);
-  tl.to('#r-fade', { opacity: 0, duration: 0.3 }, 11.75);
-  tl.fromTo('#r-d1, #r-d2', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.08 }, 7.15);
-  tap('#r-tap', 640, 1026, 8.1);
-  tl.to('#r-d1-hl', { opacity: 0.55, duration: 0.1 }, 8.22);
-  tl.to('#r-l1', { x: -1080, duration: 0.45, ease: 'power3.inOut' }, 8.35);
-  tl.fromTo('#r-l2', { x: 1080, opacity: 1 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.inOut' }, 8.35);
-  capSwap('#r-c4', '#r-c5', 8.45);
-  tl.fromTo('#r-e1, #r-e2, #r-e3, #r-e4', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.07 }, 8.6);
-  tap('#r-tap', 700, 1052, 9.65);
-  tl.to('#r-e2-hl', { opacity: 1, duration: 0.12 }, 9.77);
-  // el archivo se abre: la fila crece hasta el visor
-  tl.set('#r-morph', { transformOrigin: '0px 0px', x: 44, y: 386, scaleX: 992 / 1080, scaleY: 132 / 1500, opacity: 1 }, 9.95);
-  tl.to('#r-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.5, ease: 'power3.inOut' }, 9.95);
-  tl.to('#r-view', { opacity: 1, duration: 0.25 }, 10.3);
-  tl.fromTo('#r-page', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'expo.out' }, 10.35);
-  tl.fromTo('#r-page .ln', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.25, stagger: 0.03, ease: 'power2.out' }, 10.45);
-  capSwap('#r-c5', '#r-c6', 10.3);
-  // alejamiento: la hoja vuelve a ser una portada en el muro de las 38 materias
-  tl.to('#r-page', { x: 316.0, y: 116.0, scaleX: 0.2390, scaleY: 0.1019, transformOrigin: '0px 0px', duration: 0.6, ease: 'power3.inOut' }, 11.75);
-  tl.to('#r-view .vbar, #r-l2, #r-morph', { opacity: 0, duration: 0.25 }, 11.75);
-  tl.to('#r-sheet', { backgroundColor: 'rgba(255,255,255,0)', boxShadow: '0 0 0 rgba(0,0,0,0)', duration: 0.4 }, 11.75);
-  tl.to('#r-view', { backgroundColor: 'rgba(233,227,217,0)', duration: 0.4 }, 11.75);
-  tl.to('#r-zoom', { opacity: 0, duration: 0.4 }, 11.8);
-  blurOut('#r-c6', 11.8, 0.16);
-  tl.fromTo('#r-t-ingenieria-de-las-reacciones-quimicas', { opacity: 0 }, { opacity: 1, duration: 0.25 }, 12.25);
-  tl.to('#r-page', { opacity: 0, duration: 0.2 }, 12.3);
-  tl.set('#r-sheet', { opacity: 0 }, 12.5);
+  tl.to(grid, { opacity: 0, duration: 0.1 }, 2.9);
+  otros.forEach((c) => tl.set(c, { display: 'none' }, 3.0));
+  tl.to(grid, { opacity: 1, duration: 0.22 }, 3.02);
+  // 3) desplazamiento continuo hasta las tarjetas de 4º año y acercamiento a IRQ
+  capSwap('#r-c2', '#r-c3', 3.3);
+  cam('#r-cam', 3.25, 1.1, { scale: 1, x: 0, y: 0 });
+  tl.to('#r-scr', { y: -S1 * ZF, duration: 1.4, ease: 'power2.inOut' }, 3.3);
+  const ei = enfoque(cr.left - 20, cr.top - 20, cr.right + 20, cr.bottom + 20, S1, 1.6);
+  cam('#r-cam', 4.6, 0.7, ei);
+  const cc = P(cv.left + cv.width / 2, cv.top + cv.height / 2, S1);
+  tap(cc[0], cc[1], 5.45);
+  tl.to(card, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' }, 5.57);
+  // 4) se entra a la materia: la portada se agranda y desaparece
+  blurOut('#r-c3', 5.7, 0.16);
+  tl.to(card.querySelector('.card-materia__body'), { opacity: 0, duration: 0.14 }, 5.72);
+  tl.to(card, { borderColor: 'rgba(0,0,0,0)', boxShadow: 'none', backgroundColor: 'rgba(0,0,0,0)', duration: 0.14 }, 5.72);
+  const kd = 7.5;
+  cam('#r-cam', 5.75, 0.72, { scale: kd, x: 540 - kd * cc[0], y: 960 - kd * cc[1], ease: 'power2.in' });
+  tl.to('#r-cam', { opacity: 0, filter: 'blur(14px)', duration: 0.26, ease: 'power1.in' }, 6.22);
+  tl.fromTo('#r-win2', { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'expo.out' }, 6.4);
+  blurIn('#r-c4', 6.55);
+  tl.fromTo('#r-d1, #r-d2', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.34, ease: 'expo.out', stagger: 0.08 }, 6.6);
+  // 5) carpeta 03. Práctica (la más completa de la materia)
+  tapC(430, 711, 7.7);
+  tl.to('#r-d1-hl', { opacity: 1, duration: 0.1 }, 7.82);
+  tl.to('#r-l1', { x: -1020, duration: 0.42, ease: 'power3.inOut' }, 7.95);
+  tl.to('#r-win2', { height: 850, duration: 0.42, ease: 'power3.inOut' }, 7.95);
+  tl.set('#r-l1', { opacity: 0 }, 8.4);
+  tl.fromTo('#r-l2', { x: 1020, opacity: 1 }, { x: 0, opacity: 1, duration: 0.42, ease: 'power3.inOut' }, 7.95);
+  capSwap('#r-c4', '#r-c5', 8.05);
+  tl.fromTo('#r-e1, #r-e2, #r-e3, #r-e4', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.34, ease: 'expo.out', stagger: 0.07 }, 8.2);
+  // 6) se abre la Serie 7: la tarjeta crece hasta el visor
+  tapC(218, 1012, 9.45);
+  tl.to('#r-e2-hl', { opacity: 1, duration: 0.12 }, 9.57);
+  tl.set('#r-morph', { transformOrigin: '0px 0px', x: 40, y: 396, scaleX: 296 / 1020, scaleY: 330 / 774, opacity: 1 }, 9.75);
+  tl.set('#r-l2', { opacity: 0 }, 10.4);
+  tl.to('#r-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.48, ease: 'power3.inOut' }, 9.75);
+  tl.to('#r-view', { opacity: 1, duration: 0.22 }, 10.1);
+  tl.fromTo('#r-page', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'expo.out' }, 10.15);
+  tl.fromTo('#r-page .ln', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.25, stagger: 0.03, ease: 'power2.out' }, 10.25);
+  capSwap('#r-c5', '#r-c6', 10.1);
+  // 7) la ventana vuelve a ser una portada: el muro de las 38 materias
+  tl.to('#r-win2', { x: 416.0, y: 486.0, scaleX: 0.1922, scaleY: 0.1294, transformOrigin: '0px 0px', opacity: 0.0, duration: 0.6, ease: 'power3.inOut' }, 11.45);
+  tl.fromTo('#r-flood', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 11.5);
+  blurOut('#r-c6', 11.5, 0.16);
+  tl.fromTo('#r-t-ingenieria-de-las-reacciones-quimicas', { opacity: 0 }, { opacity: 1, duration: 0.25 }, 11.85);
 
-  tl.fromTo('#r-t-introduccion-a-la-ingenieria-quimica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.85);
-  tl.fromTo('#r-t-ingenieria-y-sociedad', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.73);
-  tl.fromTo('#r-t-algebra-y-geometria-analitica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.68);
-  tl.fromTo('#r-t-analisis-matematico-i', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.73);
-  tl.fromTo('#r-t-fisica-i', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.85);
-  tl.fromTo('#r-t-quimica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.79);
-  tl.fromTo('#r-t-sistemas-de-representacion', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.64);
-  tl.fromTo('#r-t-fundamentos-de-informatica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.57);
-  tl.fromTo('#r-t-introduccion-a-equipos-y-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.64);
-  tl.fromTo('#r-t-probabilidad-y-estadistica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.79);
-  tl.fromTo('#r-t-quimica-inorganica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.74);
-  tl.fromTo('#r-t-analisis-matematico-ii', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.57);
-  tl.fromTo('#r-t-fisica-ii', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.46);
-  tl.fromTo('#r-t-quimica-organica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.57);
-  tl.fromTo('#r-t-legislacion', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.74);
-  tl.fromTo('#r-t-balances-de-masa-y-energia', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.73);
-  tl.fromTo('#r-t-termodinamica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.54);
-  tl.fromTo('#r-t-ciencia-de-los-materiales', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.54);
-  tl.fromTo('#r-t-fisicoquimica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.73);
-  tl.fromTo('#r-t-fenomenos-de-transporte', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.74);
-  tl.fromTo('#r-t-quimica-analitica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.57);
-  tl.fromTo('#r-t-microbiologia-y-quimica-biologica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.46);
-  tl.fromTo('#r-t-quimica-aplicada', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.57);
-  tl.fromTo('#r-t-diseno-simulacion-optimizacion-y-seguridad-de-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.74);
-  tl.fromTo('#r-t-operaciones-unitarias-i', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.79);
-  tl.fromTo('#r-t-tecnologia-de-la-energia-termica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.64);
-  tl.fromTo('#r-t-operaciones-unitarias-ii', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.57);
-  tl.fromTo('#r-t-matematica-superior-aplicada', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.64);
-  tl.fromTo('#r-t-calidad-y-control-estadistico-de-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.79);
-  tl.fromTo('#r-t-organizacion-industrial', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.85);
-  tl.fromTo('#r-t-control-automatico-de-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.73);
-  tl.fromTo('#r-t-mecanica-industrial', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.68);
-  tl.fromTo('#r-t-ingenieria-ambiental', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.73);
-  tl.fromTo('#r-t-procesos-biotecnologicos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.85);
-  tl.fromTo('#r-t-higiene-y-seguridad-en-el-trabajo', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.83);
-  tl.fromTo('#r-t-maquinas-e-instalaciones-electricas', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.79);
-  tl.fromTo('#r-t-proyecto-final', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.83);
-  blurIn('#r-cnt', 12.3); blurIn('#r-cnts', 12.45);
-  steps('#r-n', 12.35, ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38"], 0.033);
-  // cierre: la carrera entera, a un toque
-  blurOut('#r-cnt', 14.0); blurOut('#r-cnts', 14.0);
-  blurIn('#r-claim', 14.15, 0.28); blurIn('#r-claims', 14.45);
-  tl.to('#r-wall', { y: 70, scale: 0.94, transformOrigin: '540px 1000px', duration: 0.6, ease: 'power2.inOut' }, 14.0);
-  blurOut('#r-claim', 16.0); blurOut('#r-claims', 16.0);
+  tl.fromTo('#r-t-introduccion-a-la-ingenieria-quimica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.50);
+  tl.fromTo('#r-t-ingenieria-y-sociedad', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.38);
+  tl.fromTo('#r-t-algebra-y-geometria-analitica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.33);
+  tl.fromTo('#r-t-analisis-matematico-i', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.38);
+  tl.fromTo('#r-t-fisica-i', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.50);
+  tl.fromTo('#r-t-quimica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.44);
+  tl.fromTo('#r-t-sistemas-de-representacion', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.29);
+  tl.fromTo('#r-t-fundamentos-de-informatica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.22);
+  tl.fromTo('#r-t-introduccion-a-equipos-y-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.29);
+  tl.fromTo('#r-t-probabilidad-y-estadistica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.44);
+  tl.fromTo('#r-t-quimica-inorganica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.39);
+  tl.fromTo('#r-t-analisis-matematico-ii', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.22);
+  tl.fromTo('#r-t-fisica-ii', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.11);
+  tl.fromTo('#r-t-quimica-organica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.22);
+  tl.fromTo('#r-t-legislacion', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.39);
+  tl.fromTo('#r-t-balances-de-masa-y-energia', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.38);
+  tl.fromTo('#r-t-termodinamica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.19);
+  tl.fromTo('#r-t-ciencia-de-los-materiales', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.19);
+  tl.fromTo('#r-t-fisicoquimica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.38);
+  tl.fromTo('#r-t-fenomenos-de-transporte', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.39);
+  tl.fromTo('#r-t-quimica-analitica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.22);
+  tl.fromTo('#r-t-microbiologia-y-quimica-biologica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.11);
+  tl.fromTo('#r-t-quimica-aplicada', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.22);
+  tl.fromTo('#r-t-diseno-simulacion-optimizacion-y-seguridad-de-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.39);
+  tl.fromTo('#r-t-operaciones-unitarias-i', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.44);
+  tl.fromTo('#r-t-tecnologia-de-la-energia-termica', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.29);
+  tl.fromTo('#r-t-operaciones-unitarias-ii', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.22);
+  tl.fromTo('#r-t-matematica-superior-aplicada', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.29);
+  tl.fromTo('#r-t-calidad-y-control-estadistico-de-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.44);
+  tl.fromTo('#r-t-organizacion-industrial', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.50);
+  tl.fromTo('#r-t-control-automatico-de-procesos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.38);
+  tl.fromTo('#r-t-mecanica-industrial', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.33);
+  tl.fromTo('#r-t-ingenieria-ambiental', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.38);
+  tl.fromTo('#r-t-procesos-biotecnologicos', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.50);
+  tl.fromTo('#r-t-higiene-y-seguridad-en-el-trabajo', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.48);
+  tl.fromTo('#r-t-maquinas-e-instalaciones-electricas', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.44);
+  tl.fromTo('#r-t-proyecto-final', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, 12.48);
+  blurIn('#r-cnt', 11.95); blurIn('#r-cnts', 12.1);
+  steps('#r-n', 12.0, ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38"], 0.033);
+  blurOut('#r-cnt', 13.65); blurOut('#r-cnts', 13.65);
+  blurIn('#r-claim', 13.8, 0.28); blurIn('#r-claims', 14.1);
+  tl.to('#r-wall', { y: 70, scale: 0.94, transformOrigin: '540px 1000px', duration: 0.6, ease: 'power2.inOut' }, 13.65);
+  blurOut('#r-claim', 15.65); blurOut('#r-claims', 15.65);
 
-  tl.to('#r-t-introduccion-a-la-ingenieria-quimica', { x: 412, y: 305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.20);
-  tl.to('#r-t-ingenieria-y-sociedad', { x: 204, y: 305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-algebra-y-geometria-analitica', { x: -4, y: 305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.23);
-  tl.to('#r-t-analisis-matematico-i', { x: -212, y: 305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-fisica-i', { x: -420, y: 305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.20);
-  tl.to('#r-t-quimica', { x: 412, y: 183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-sistemas-de-representacion', { x: 204, y: 183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.24);
-  tl.to('#r-t-fundamentos-de-informatica', { x: -4, y: 183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-introduccion-a-equipos-y-procesos', { x: -212, y: 183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.24);
-  tl.to('#r-t-probabilidad-y-estadistica', { x: -420, y: 183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-quimica-inorganica', { x: 412, y: 61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-analisis-matematico-ii', { x: 204, y: 61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-fisica-ii', { x: -4, y: 61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.28);
-  tl.to('#r-t-quimica-organica', { x: -212, y: 61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-legislacion', { x: -420, y: 61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-balances-de-masa-y-energia', { x: 412, y: -61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.23);
-  tl.to('#r-t-termodinamica', { x: 204, y: -61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-ciencia-de-los-materiales', { x: -212, y: -61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-fisicoquimica', { x: -420, y: -61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.23);
-  tl.to('#r-t-fenomenos-de-transporte', { x: 412, y: -183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-quimica-analitica', { x: 204, y: -183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-microbiologia-y-quimica-biologica', { x: -4, y: -183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.28);
-  tl.to('#r-t-quimica-aplicada', { x: -212, y: -183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-diseno-simulacion-optimizacion-y-seguridad-de-procesos', { x: -420, y: -183, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-operaciones-unitarias-i', { x: 412, y: -305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-tecnologia-de-la-energia-termica', { x: 204, y: -305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.24);
-  tl.to('#r-t-operaciones-unitarias-ii', { x: -4, y: -305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.26);
-  tl.to('#r-t-matematica-superior-aplicada', { x: -212, y: -305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.24);
-  tl.to('#r-t-calidad-y-control-estadistico-de-procesos', { x: -420, y: -305, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-organizacion-industrial', { x: 412, y: -427, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.20);
-  tl.to('#r-t-control-automatico-de-procesos', { x: 204, y: -427, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-mecanica-industrial', { x: -4, y: -427, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.23);
-  tl.to('#r-t-ingenieria-ambiental', { x: -212, y: -427, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.22);
-  tl.to('#r-t-procesos-biotecnologicos', { x: -420, y: -427, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.20);
-  tl.to('#r-t-higiene-y-seguridad-en-el-trabajo', { x: 204, y: -549, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-maquinas-e-instalaciones-electricas', { x: -4, y: -549, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-proyecto-final', { x: -212, y: -549, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.21);
-  tl.to('#r-t-ingenieria-de-las-reacciones-quimicas', { x: -4, y: -61, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 16.3);
+  tl.to('#r-t-introduccion-a-la-ingenieria-quimica', { x: 412, y: 225, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.85);
+  tl.to('#r-t-ingenieria-y-sociedad', { x: 204, y: 225, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-algebra-y-geometria-analitica', { x: -4, y: 225, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.88);
+  tl.to('#r-t-analisis-matematico-i', { x: -212, y: 225, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-fisica-i', { x: -420, y: 225, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.85);
+  tl.to('#r-t-quimica', { x: 412, y: 103, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-sistemas-de-representacion', { x: 204, y: 103, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.89);
+  tl.to('#r-t-fundamentos-de-informatica', { x: -4, y: 103, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-introduccion-a-equipos-y-procesos', { x: -212, y: 103, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.89);
+  tl.to('#r-t-probabilidad-y-estadistica', { x: -420, y: 103, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-quimica-inorganica', { x: 412, y: -19, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-analisis-matematico-ii', { x: 204, y: -19, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-fisica-ii', { x: -4, y: -19, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.93);
+  tl.to('#r-t-quimica-organica', { x: -212, y: -19, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-legislacion', { x: -420, y: -19, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-balances-de-masa-y-energia', { x: 412, y: -141, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.88);
+  tl.to('#r-t-termodinamica', { x: 204, y: -141, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-ciencia-de-los-materiales', { x: -212, y: -141, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-fisicoquimica', { x: -420, y: -141, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.88);
+  tl.to('#r-t-fenomenos-de-transporte', { x: 412, y: -263, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-quimica-analitica', { x: 204, y: -263, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-microbiologia-y-quimica-biologica', { x: -4, y: -263, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.93);
+  tl.to('#r-t-quimica-aplicada', { x: -212, y: -263, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-diseno-simulacion-optimizacion-y-seguridad-de-procesos', { x: -420, y: -263, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-operaciones-unitarias-i', { x: 412, y: -385, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-tecnologia-de-la-energia-termica', { x: 204, y: -385, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.89);
+  tl.to('#r-t-operaciones-unitarias-ii', { x: -4, y: -385, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.91);
+  tl.to('#r-t-matematica-superior-aplicada', { x: -212, y: -385, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.89);
+  tl.to('#r-t-calidad-y-control-estadistico-de-procesos', { x: -420, y: -385, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-organizacion-industrial', { x: 412, y: -507, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.85);
+  tl.to('#r-t-control-automatico-de-procesos', { x: 204, y: -507, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-mecanica-industrial', { x: -4, y: -507, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.88);
+  tl.to('#r-t-ingenieria-ambiental', { x: -212, y: -507, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.87);
+  tl.to('#r-t-procesos-biotecnologicos', { x: -420, y: -507, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.85);
+  tl.to('#r-t-higiene-y-seguridad-en-el-trabajo', { x: 204, y: -629, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-maquinas-e-instalaciones-electricas', { x: -4, y: -629, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-proyecto-final', { x: -212, y: -629, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.86);
+  tl.to('#r-t-ingenieria-de-las-reacciones-quimicas', { x: -4, y: -141, scale: 0.2, opacity: 0, duration: 0.42, ease: 'power3.in' }, 15.95);
 
     window.__timelines['recorrido'] = tl;
   }
