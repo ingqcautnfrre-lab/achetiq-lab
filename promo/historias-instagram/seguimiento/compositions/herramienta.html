@@ -199,7 +199,14 @@
   const INS = {}, SCR = {};
   [3, 5].forEach((n) => { INS[n] = ins(n).map(RR); SCR[n] = [0, 1, 2].map((k) => Math.max(0, Math.ceil(INS[n][2 * k + 1].right - (scR.left + scR.width) + 12))); });
   panelSeg.style.display = ''; panelFin.style.display = 'none';
-  const EF = enfoque(finTbl.left, tabsR.top - 6, finTbl.right, finTbl.bottom + 6, S_FIN, 1.3);
+  // finales: la ventana entra completa en el cuadro y las tarjetas de promedios quedan dentro de
+  // ella, alineadas con los bordes de la tabla
+  const EF = enfoque(finTbl.left, tabsR.top - 6, finTbl.right, finTbl.bottom + 6, S_FIN, 1.0);
+  (function () {
+    const a = P(finTbl.left, finTbl.bottom, S_FIN), b = P(finTbl.right, finTbl.bottom, S_FIN);
+    const x0 = EF.x + EF.scale * a[0], x1 = EF.x + EF.scale * b[0], yb = EF.y + EF.scale * a[1], g = 24, w = (x1 - x0 - g) / 2;
+    [['h-k0', x0], ['h-k1', x0 + w + g]].forEach((k) => Object.assign(document.getElementById(k[0]).style, { left: k[1] + 'px', top: (yb + 44) + 'px', width: w + 'px' }));
+  })();
   const tapIn = (n, i, s, t) => { const r = INS[n][i]; const a = P(r.left + r.width / 2 - s, r.top + r.height / 2, S_FIN); tap(a[0], a[1], t); };
   const dash = RR(Q('#seg-dashboard'));
   const S_DASH = Math.max(0, dash.top - 40);
@@ -279,7 +286,7 @@
   tl.set(panelSeg, { display: 'none' }, 11.88);
   tl.set(panelFin, { display: 'block' }, 11.88);
   cam('#h-cam', 12.0, 0.6, EF);
-  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.08 }, 12.2);
+  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.08 }, 12.55);
   const foco = (el, t, t2) => {
     tl.set(el, { borderColor: '#1344A5', outline: '2px solid #1344A5', outlineOffset: '2px' }, t);
     tl.set(el, { borderColor: '', outline: '', outlineOffset: '' }, t2);
@@ -347,7 +354,7 @@
     tl.set(b.querySelector('.seg-badge__text'), { innerHTML: 'Aprobada' }, 18.76);
     if (ni) tl.set(ni, { value: nv[1] }, 18.76);
   });
-  tl.to('#h-k0, #h-k1', { opacity: 0, y: 30, duration: 0.2 }, 18.73);
+  tl.to('#h-k0, #h-k1', { opacity: 0, y: 30, duration: 0.22 }, 18.10);
   tl.to('#h-scr', { y: -S_DASH * ZF, duration: 0.7, ease: 'power2.inOut' }, 18.83);
   cam('#h-cam', 18.88, 0.7, ED);
 

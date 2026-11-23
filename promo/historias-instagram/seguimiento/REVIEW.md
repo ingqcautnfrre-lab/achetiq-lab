@@ -1,4 +1,4 @@
-# REVIEW — Historia 2: Seguimiento de Carrera (versión 4 y 5)
+# REVIEW — Historia 2: Seguimiento de Carrera (versiones 4 a 6)
 
 ## Decisiones
 
@@ -42,6 +42,14 @@
   cambiar el texto de «materias faltantes» cambia la altura de las filas de Nivel II, y antes los
   recuadros quedaban desplazados. Los conectores se actualizan en el mismo instante.
 - Las tarjetas de promedios de la carga de finales bajan 85 px y quedan separadas de la planilla.
+
+## Ajuste de la versión 6
+
+- Carga de finales: la ventana entra completa en el cuadro (sin acercamiento) y las tarjetas de
+  promedios se ubican dentro de ella, alineadas con los bordes de la tabla de finales y 44 px por
+  debajo. Aparecen cuando la cámara ya se detuvo y se retiran cuando vuelve a moverse, de modo que
+  nunca quedan fuera de la ventana.
+- Audio: −40,4 LUFS integrados, pico −16,5 dBFS.
 
 ## Uso en Instagram
 
