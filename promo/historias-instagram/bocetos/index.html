@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es-AR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/lib/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #F2F4F8; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="97.8" data-width="1080" data-height="1920">
+      <div id="intro" data-composition-id="intro" data-composition-src="compositions/intro.html" data-start="0.00" data-duration="3.2" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="prop-a" data-composition-id="prop-a" data-composition-src="compositions/prop-a.html" data-start="3.20" data-duration="26.8" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="prop-b" data-composition-id="prop-b" data-composition-src="compositions/prop-b.html" data-start="30.00" data-duration="21.4" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="prop-c" data-composition-id="prop-c" data-composition-src="compositions/prop-c.html" data-start="51.40" data-duration="19.8" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <div id="prop-ab" data-composition-id="prop-ab" data-composition-src="compositions/prop-ab.html" data-start="71.20" data-duration="26.6" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

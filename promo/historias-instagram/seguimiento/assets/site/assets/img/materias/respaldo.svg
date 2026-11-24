@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Respaldo de archivos en la nube">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EEF3FC"/>
+      <stop offset="1" stop-color="#DCE6F8"/>
+    </linearGradient>
+    <linearGradient id="cloud" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E4ECF8"/>
+    </linearGradient>
+    <linearGradient id="folder" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2E6BF7"/>
+      <stop offset="1" stop-color="#1656F4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <!-- Geometría sutil esquina superior derecha -->
+  <g fill="#FFFFFF" opacity="0.45">
+    <path d="M1280 0 L1280 230 L1010 0 Z"/>
+  </g>
+  <g fill="#FFFFFF" opacity="0.30">
+    <path d="M1280 95 L1280 250 L1110 95 Z"/>
+  </g>
+
+  <!-- Nube -->
+  <g fill="url(#cloud)">
+    <circle cx="640" cy="360" r="150"/>
+    <circle cx="470" cy="430" r="120"/>
+    <circle cx="810" cy="430" r="120"/>
+    <circle cx="560" cy="300" r="105"/>
+    <circle cx="730" cy="300" r="105"/>
+    <rect x="360" y="430" width="560" height="130" rx="65"/>
+  </g>
+  <ellipse cx="640" cy="560" rx="300" ry="26" fill="#C9D6EE" opacity="0.5"/>
+
+  <!-- ===== Carpeta izquierda ===== -->
+  <!-- Documento que asoma -->
+  <g transform="rotate(-7 320 330)">
+    <rect x="248" y="225" width="150" height="195" rx="10" fill="#FFFFFF"/>
+    <g fill="#BBD0F4">
+      <rect x="270" y="262" width="106" height="11" rx="5"/>
+      <rect x="270" y="289" width="106" height="11" rx="5"/>
+      <rect x="270" y="316" width="80" height="11" rx="5"/>
+    </g>
+  </g>
+  <!-- Cuerpo carpeta -->
+  <path d="M168 360 h95 q12 0 18 10 l14 22 h128 q22 0 22 22 v8 H168 Z" fill="#173FA6"/>
+  <path d="M150 405 h318 q20 0 17 20 l-20 132 q-3 18 -22 18 H175 q-19 0 -22 -18 l-20 -132 q-3 -20 17 -20 Z" fill="url(#folder)"/>
+
+  <!-- ===== Iconos flotantes ===== -->
+  <!-- Video -->
+  <g transform="rotate(-9 472 250)">
+    <rect x="420" y="198" width="104" height="104" rx="22" fill="#AFCAF5"/>
+    <path d="M460 232 v36 l32 -18 Z" fill="#E7F0FD"/>
+  </g>
+  <!-- Imagen / foto -->
+  <g transform="rotate(4 712 215)">
+    <rect x="612" y="120" width="200" height="190" rx="22" fill="#AFCAF5"/>
+    <circle cx="762" cy="178" r="22" fill="#D8E5FB"/>
+    <path d="M624 296 l66 -86 46 50 38 -30 50 66 Z" fill="#86ADF0"/>
+  </g>
+  <!-- Sobre / correo (asoma de la carpeta derecha) -->
+  <g transform="rotate(7 980 300)">
+    <rect x="892" y="250" width="180" height="124" rx="14" fill="#AFCAF5"/>
+    <path d="M892 262 l90 66 90 -66" fill="none" stroke="#E7F0FD" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+
+  <!-- ===== Carpeta derecha ===== -->
+  <path d="M812 360 h95 q12 0 18 10 l14 22 h128 q22 0 22 22 v8 H812 Z" fill="#173FA6"/>
+  <path d="M794 405 h318 q20 0 17 20 l-20 132 q-3 18 -22 18 H819 q-19 0 -22 -18 l-20 -132 q-3 -20 17 -20 Z" fill="url(#folder)"/>
+
+  <!-- ===== Flechas de sincronización ===== -->
+  <svg x="556" y="386" width="168" height="168" viewBox="0 0 24 24" fill="none"
+       stroke="#9CBDF2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+    <path d="M21 3v5h-5"/>
+    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+    <path d="M3 21v-5h5"/>
+  </svg>
+</svg>

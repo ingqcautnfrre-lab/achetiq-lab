@@ -1,0 +1,375 @@
+<template>
+  <style>
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;background:#F2F4F8;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.part{position:absolute;inset:0;background:#F2F4F8;overflow:hidden}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.blabel{position:absolute;z-index:40;left:60px;top:1680px;padding:8px 12px;border-radius:8px;background:rgba(242,244,248,.92);font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#5B5F69}
+.tap{position:absolute;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;background:rgba(19,23,32,.28);box-shadow:0 6px 18px rgba(11,41,100,.25);opacity:0;pointer-events:none;z-index:20}
+/* tarjeta de título */
+.tc{position:absolute;left:72px;top:380px;width:936px;display:flex;flex-direction:column;gap:26px}
+.tc-letter{font-size:300px;line-height:.9;color:#1344A5}
+.tc-name{font-size:96px;line-height:1.05}
+.tc-desc{font-size:44px;line-height:1.35;color:#444953}
+.tc-label{margin-top:36px;font-size:28px;letter-spacing:.08em;color:#5B5F69}
+/* gancho */
+.hook{left:72px;top:300px;width:936px}
+.hook-day{font-size:46px;color:#444953}
+.hook-time{font-size:270px;line-height:.95;margin-top:6px}
+.hook-need{font-size:54px;font-weight:500;margin-top:18px}
+.bubbles{left:72px;top:840px;width:936px;display:flex;flex-direction:column;gap:22px}
+.bubble{align-self:flex-start;max-width:780px;padding:26px 36px;border-radius:36px 36px 36px 10px;background:#FFFFFF;border:2px solid #E1E4E9;font-size:42px;line-height:1.3;opacity:0}
+.bubble.me{align-self:flex-end;background:#1344A5;color:#F9FAFC;border-color:#1344A5;border-radius:36px 36px 10px 36px}
+.q{left:72px;top:820px;width:936px;font-size:92px;line-height:1.05}
+.tok{font-size:38px;color:#444953;white-space:nowrap;opacity:0}
+.tok b{color:#131720;font-weight:500}
+.chip{left:72px;top:262px;height:66px;padding:0 28px;border-radius:999px;background:#FFFFFF;border:2px solid #CED2D9;font-size:34px;display:flex;align-items:center;gap:14px;opacity:0;z-index:15}
+.chip-dot{width:14px;height:14px;border-radius:50%;background:#1344A5}
+.chip-win{position:relative;width:104px;height:42px;overflow:hidden}
+.chip-win span{position:absolute;left:0;top:0;line-height:42px}
+/* página de apuntes */
+.page{left:72px;top:350px;width:936px}
+.crumbs{font-size:32px;color:#444953;margin-bottom:14px}
+.page-h1{font-size:116px;line-height:1.02;margin:0 0 34px}
+.pills{display:flex;flex-wrap:wrap;gap:16px}
+.pill{position:relative;height:76px;padding:0 34px;border-radius:999px;border:2px solid #CED2D9;background:#F9FAFC;font-size:34px;display:flex;align-items:center}
+.pill.on{background:#1344A5;border-color:#1344A5;color:#FFFFFF}
+.card{left:72px;top:900px;width:936px;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px;overflow:hidden}
+.card-cover{height:380px;overflow:hidden}
+.card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.card-body{position:relative;padding:32px 40px 36px}
+.card-year{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.12em;color:#5B5F69}
+.card-name{font-size:46px;font-weight:500;line-height:1.2;margin:10px 0 14px}
+.card-cta{font-family:'Geist Mono',monospace;font-size:30px;color:#1344A5;display:flex;gap:12px}
+.card-cta span{display:inline-block}
+.zoom{left:74px;top:902px;width:932px;height:380px;overflow:hidden;opacity:0;z-index:12}
+.zoom img{width:100%;height:100%;object-fit:cover;display:block}
+/* Drive simulado */
+.drive{left:0;top:0;width:1080px;height:1920px;background:#FFFFFF;padding:350px 72px 0;opacity:0;z-index:13}
+.drv-search{height:96px;border-radius:999px;background:#EEF1F6;font-size:36px;color:#5B5F69;padding:0 40px;display:flex;align-items:center;gap:22px}
+.drv-crumb{margin-top:44px;font-size:34px;color:#5B5F69;line-height:1.3}
+.drv-title{margin-top:10px;font-size:56px;font-weight:600;line-height:1.18}
+.drv-head{margin-top:38px;padding-bottom:16px;border-bottom:2px solid #E1E4E9;font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#5B5F69}
+.drv-row{position:relative;height:124px;display:flex;align-items:center;gap:30px;border-bottom:2px solid #EEF0F3;font-size:40px;padding:0 12px}
+.drv-row .ic{flex:0 0 64px;display:flex;justify-content:center}
+.pdf{width:52px;height:64px;border-radius:7px;background:#D93025;color:#fff;font:600 17px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px}
+.hl{position:absolute;inset:0;background:#E3ECFB;opacity:0;z-index:0}
+.drv-row > *:not(.hl){position:relative;z-index:1}
+.drv-row > .tap{position:absolute;z-index:20}
+.viewer{left:0;top:0;width:1080px;height:1920px;background:#E3E6EC;opacity:0;z-index:14}
+.viewer-bar{position:absolute;left:0;top:250px;width:1080px;height:116px;background:#FFFFFF;display:flex;align-items:center;gap:26px;padding:0 72px;font-size:36px;border-bottom:2px solid #E1E4E9}
+.viewer-page{position:absolute;left:130px;top:430px;width:820px;height:1080px;background:#FFFFFF;box-shadow:0 18px 40px rgba(11,41,100,.14);padding:80px 70px}
+.ln{height:22px;border-radius:6px;background:#E1E4E9;margin-bottom:26px}
+.ln.t{height:40px;width:62%;background:#CED2D9;margin-bottom:52px}
+/* cierre */
+.flood{left:0;top:0;width:1080px;height:1920px;background:#F2F4F8;opacity:0;z-index:16}
+.claim{left:72px;top:560px;width:936px;font-size:104px;line-height:1.06;opacity:0;z-index:17}
+.claim-sub{left:72px;top:1010px;width:936px;font-size:44px;line-height:1.35;color:#444953;opacity:0;z-index:17}
+.endcard{left:72px;top:470px;width:936px;display:flex;flex-direction:column;align-items:center;gap:22px;opacity:0;z-index:18}
+.end-logo{width:300px;height:300px}
+.end-name{font-size:92px}
+.end-url{font-size:38px;color:#1344A5}
+.end-sticker{margin-top:56px;width:640px;height:150px;border:3px dashed #9AA1AD;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#5B5F69;font-family:'Geist Mono',monospace}
+/* seguimiento */
+.tool{left:72px;top:340px;width:936px}
+.tool-h1{font-size:96px;line-height:1.04;margin:0}
+.kpis{display:flex;gap:24px;margin-top:30px}
+.kpi{flex:1;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px;padding:24px 30px}
+.kpi-l{font-family:'Geist Mono',monospace;font-size:26px;letter-spacing:.1em;color:#5B5F69}
+.kpi-v{font-size:96px;line-height:1.08}
+.kpi-h{font-family:'Geist Mono',monospace;font-size:23px;color:#5B5F69}
+.tbl{margin-top:30px;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px}
+.lvl{height:64px;padding:0 28px;display:flex;align-items:center;font-size:32px;font-weight:500}
+.trow{position:relative;height:96px;display:flex;align-items:center;padding:0 28px;gap:22px;border-top:1px solid #E1E4E9;font-size:36px}
+.trow .n{font-family:'Geist Mono',monospace;font-size:30px;width:56px;color:#444953}
+.trow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tint{position:absolute;inset:0;background:#EBF3EE;opacity:0;z-index:0}
+.trow > *:not(.tint){position:relative;z-index:1}
+.trow .sel .tap{position:absolute}
+.sel{position:relative;height:64px;width:270px;padding:0 20px;border:2px solid #CED2D9;border-radius:12px;font-size:30px;display:flex;align-items:center;justify-content:space-between;background:#FFFFFF}
+.sel-win{position:relative;width:200px;height:40px;overflow:hidden}
+.sel-win span{position:absolute;left:0;top:0;line-height:40px;white-space:nowrap}
+.dd{position:absolute;right:0;top:72px;width:300px;background:#FFFFFF;border:2px solid #CED2D9;border-radius:14px;box-shadow:0 18px 40px rgba(11,41,100,.18);opacity:0;z-index:30;overflow:hidden}
+.dd div{position:relative;height:70px;display:flex;align-items:center;padding:0 24px;font-size:30px}
+.bwrap{position:relative;width:290px;height:58px}
+.badge{position:absolute;right:0;top:0;height:58px;padding:0 22px;border-radius:999px;font-size:28px;font-weight:500;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.b-no{color:#9B171F;background:#F8ECEC;border:2px solid rgba(155,23,31,.3)}
+.b-si{color:#165E2E;background:#EAF3ED;border:2px solid rgba(22,94,46,.35);opacity:0}
+.b-ok{color:#165E2E;background:#EAF3ED;border:2px solid rgba(22,94,46,.35)}
+.note{left:72px;top:1480px;width:936px;font-family:'Geist Mono',monospace;font-size:28px;color:#5B5F69;opacity:0}
+/* grilla de portadas */
+.cam{left:0;top:0;width:1080px;height:3400px}
+.grid2{position:absolute;left:72px;top:300px;width:936px;display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:28px}
+.gcell{position:relative}
+.gimg{height:256px;border-radius:16px;overflow:hidden;background:#E7CDAA}
+.gimg img{width:100%;height:100%;object-fit:cover;display:block}
+.gname{margin-top:12px;height:76px;font-size:30px;font-weight:500;line-height:1.25}
+/* banda de KPI fija y ventana de la tabla */
+.kband{left:72px;top:262px;width:936px;background:#F9FAFC;border:2px solid #E1E4E9;border-radius:20px;padding:22px 30px 26px;z-index:6}
+.kband-row{display:flex;justify-content:space-between;align-items:flex-end}
+.bar{margin-top:16px;height:14px;border-radius:7px;background:#E1E4E9;overflow:hidden}
+.bar-fill{height:100%;width:100%;background:#1344A5}
+.win{left:72px;top:540px;width:936px;height:1040px;overflow:hidden;border:2px solid #E1E4E9;border-radius:20px;background:#F9FAFC}
+.strip{position:absolute;left:0;top:0;width:100%}
+.srow{position:relative;height:84px;display:flex;align-items:center;gap:20px;padding:0 24px;border-top:1px solid #E1E4E9;font-size:33px}
+.srow .n{font-family:'Geist Mono',monospace;font-size:28px;width:52px;color:#444953}
+.srow .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st{position:relative;flex:0 0 280px;width:280px;height:52px}
+.st span{position:absolute;right:0;top:0;height:52px;padding:0 18px;border-radius:999px;font-size:26px;font-weight:500;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.st-gray{color:#444953;background:#FFFFFF;border:2px solid #CED2D9}
+.readline{left:72px;top:1080px;width:936px;height:4px;background:#1344A5;opacity:0;z-index:7}
+.pop{left:300px;top:1220px;width:708px;background:#FFFFFF;border:2px solid #CED2D9;border-radius:18px;box-shadow:0 18px 40px rgba(11,41,100,.18);padding:26px 30px;font-size:34px;line-height:1.35;opacity:0;z-index:9}
+/* tabla periódica */
+.ptitle{left:72px;top:330px;width:936px;font-size:88px;line-height:1.05}
+.psub{left:72px;top:444px;width:936px;font-size:28px;letter-spacing:.04em;color:#5B5F69}
+.cell{position:absolute;width:90px;height:104px;border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between}
+.cell .cn{font-family:'Geist Mono',monospace;font-size:20px;line-height:1}
+.cell .ca{font-family:'Fraunces',serif;font-size:36px;line-height:1;text-align:center;letter-spacing:-0.02em}
+.cell .cf{position:absolute;right:6px;top:6px;width:20px;height:16px;opacity:0}
+.plegend{left:72px;top:1210px;width:936px;font-size:27px;line-height:1.5;color:#5B5F69}
+.hero{width:90px;height:104px;border-radius:10px;background:#922FA1;color:#FFFFFF;padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between;opacity:0;z-index:12}
+.hero .cn{font-family:'Geist Mono',monospace;font-size:20px;line-height:1}
+.hero .ca{font-family:'Fraunces',serif;font-size:36px;line-height:1;text-align:center}
+.bigfolder{left:360px;top:800px;width:360px;height:300px;opacity:0;z-index:12}
+.cnt{left:72px;top:1300px;width:936px;opacity:0}
+.cnt-l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.1em;color:#5B5F69}
+.cnt-v{font-size:150px;line-height:1}
+.bonds{left:0;top:0;width:1080px;height:1920px;z-index:9;pointer-events:none}
+</style>
+  <div id="root" data-composition-id="prop-a" data-width="1080" data-height="1920">
+    <div id="a-title" class="clip part" data-start="0" data-duration="2.8" data-track-index="1">
+      <div id="a-tc" class="tc">
+        <div id="a-tc-letter" class="serif tc-letter">A</div>
+        <div id="a-tc-name" class="serif tc-name">Domingo, 23:47</div>
+        <div id="a-tc-desc" class="tc-desc">Un estudiante resuelve un problema real en un minuto.</div>
+        <div id="a-tc-label" class="mono tc-label">PROPUESTA 1 DE 4</div>
+      </div>
+    </div>
+    <div id="a-ap" class="clip part" data-start="2.8" data-duration="13.0" data-track-index="1">
+      
+      <div id="a-hook" class="abs hook">
+        <div class="hook-day">Domingo</div>
+        <div id="a-time" class="serif hook-time">23:47</div>
+        <div class="hook-need">Parcial de Reacciones mañana</div>
+      </div>
+      <div id="a-bubbles" class="abs bubbles"><div id="a-bb0" class="bubble me">¿Alguien tiene la Serie 7 resuelta?</div><div id="a-bb1" class="bubble ">creo que estaba en un drive viejo</div><div id="a-bb2" class="bubble ">a mí me la pasaron por mail</div><div id="a-bb3" class="bubble ">¿de qué año era?</div><div id="a-bb4" class="bubble ">preguntá en el grupo de 4º</div></div>
+      
+      <div id="a-chip" class="abs chip mono"><span class="chip-dot"></span><span class="chip-win"><span id="a-chip-a">23:47</span><span id="a-chip-b">23:48</span></span></div>
+      
+      <div id="a-page" class="abs page">
+        <div class="crumbs">Inicio › Recursos académicos › Apuntes</div>
+        <div class="serif page-h1">Apuntes Académicos</div>
+        <div class="pills"><div id="a-pill-all" class="pill on">Todos</div><div id="a-pill-1" class="pill">1º año</div><div id="a-pill-2" class="pill">2º año</div><div id="a-pill-3" class="pill">3º año</div><div id="a-pill-4" class="pill">4º año<div id="a-tap-pill" class="tap" style="left:50%;top:50%"></div></div><div id="a-pill-5" class="pill">5º año</div></div>
+      </div>
+      
+      <div id="a-cardA" class="abs card">
+        <div class="card-cover"><img src="assets/img/introduccion-a-la-ingenieria-quimica.webp" alt=""></div>
+        <div class="card-body">
+          <div class="card-year">1º AÑO</div>
+          <div class="card-name">Introducción a la Ingeniería Química</div>
+          <div class="card-cta">Acceder al repositorio <span id="a-cardA-arrow">→</span></div>
+          <div id="a-cardA-tap" class="tap" style="left:62%;top:40%"></div>
+        </div>
+      </div>
+      
+      <div id="a-cardB" class="abs card">
+        <div class="card-cover"><img src="assets/img/ingenieria-de-las-reacciones-quimicas.webp" alt=""></div>
+        <div class="card-body">
+          <div class="card-year">4º AÑO</div>
+          <div class="card-name">Ingeniería de las Reacciones Químicas</div>
+          <div class="card-cta">Acceder al repositorio <span id="a-cardB-arrow">→</span></div>
+          <div id="a-cardB-tap" class="tap" style="left:62%;top:40%"></div>
+        </div>
+      </div>
+      <div id="a-zoom" class="abs zoom"><img src="assets/img/ingenieria-de-las-reacciones-quimicas.webp" alt=""></div>
+      
+      <div id="a-drv1" class="abs drive ">
+        <div class="drv-search"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5B5F69" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><span>Buscar en Drive</span></div>
+        <div class="drv-crumb">Compartidos conmigo › AChETIQ</div>
+        <div class="drv-title">Ingeniería de las Reacciones Químicas</div>
+        <div class="drv-head">Nombre</div>
+        <div id="a-r-prac" class="drv-row"><div id="a-r-prac-hl" class="hl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><span>03. Práctica</span><div id="a-r-prac-tap" class="tap" style="left:60%;top:50%"></div></div><div id="a-r-pres" class="drv-row"><div id="a-r-pres-hl" class="hl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><span>05. Presentaciones</span><div id="a-r-pres-tap" class="tap" style="left:60%;top:50%"></div></div>
+      </div>
+      
+      <div id="a-drv2" class="abs drive ">
+        <div class="drv-search"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5B5F69" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg><span>Buscar en Drive</span></div>
+        <div class="drv-crumb">… › Ingeniería de las Reacciones Químicas</div>
+        <div class="drv-title">03. Práctica</div>
+        <div class="drv-head">Nombre</div>
+        <div id="a-r-guias" class="drv-row"><div id="a-r-guias-hl" class="hl"></div><div class="ic"><svg width="64" height="52" viewBox="0 0 64 52"><path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v30a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#5F6368"/></svg></div><span>Guías de Estudio</span><div id="a-r-guias-tap" class="tap" style="left:60%;top:50%"></div></div><div id="a-r-s07" class="drv-row"><div id="a-r-s07-hl" class="hl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><span>2024 - GS - Resolución Serie 07.pdf</span><div id="a-r-s07-tap" class="tap" style="left:60%;top:50%"></div></div><div id="a-r-smr" class="drv-row"><div id="a-r-smr-hl" class="hl"></div><div class="ic"><div class="pdf" data-layout-ignore>PDF</div></div><span>2024 - SMR - Resolución Series.pdf</span><div id="a-r-smr-tap" class="tap" style="left:60%;top:50%"></div></div>
+      </div>
+      
+      <div id="a-flood" class="abs flood"></div>
+      <div id="a-claim" class="abs claim serif">38 materias.<br>Una carpeta cada una.</div>
+      
+      <div id="a-end" class="abs endcard">
+        <img class="end-logo" src="assets/img/achetiq-logo.svg" alt="">
+        <div class="serif end-name">AChETIQ</div>
+        <div class="end-url mono">achetiq.github.io</div>
+        <div class="end-sticker">zona del sticker de enlace</div>
+      </div>
+      <div class="blabel">BOCETO A · HISTORIA 1: APUNTES</div>
+    </div>
+    <div id="a-sg" class="clip part" data-start="15.8" data-duration="11.0" data-track-index="1">
+      
+      <div id="ag-hook" class="abs hook">
+        <div class="hook-day">Lunes</div>
+        <div id="ag-time" class="serif hook-time">08:10</div>
+        <div class="hook-need">Inscripción a cursado</div>
+      </div>
+      <div id="ag-q" class="abs q serif">¿Qué puedo cursar?</div>
+      <div id="ag-tok0" class="abs tok mono" style="left:70px;top:1010px">Cursadas req. <b>6, 7, 8, 9, 13</b></div><div id="ag-tok1" class="abs tok mono" style="left:330px;top:1100px">Aprobadas req. <b>1, 3, 4</b></div><div id="ag-tok2" class="abs tok mono" style="left:120px;top:1205px"><b>11, 12, 13</b></div><div id="ag-tok3" class="abs tok mono" style="left:400px;top:1290px">Aprobadas req. <b>3, 4, 6</b></div><div id="ag-tok4" class="abs tok mono" style="left:690px;top:1010px"><b>9, 12, 13</b></div><div id="ag-tok5" class="abs tok mono" style="left:110px;top:1390px">Cursadas req. <b>16, 17, 21</b></div><div id="ag-tok6" class="abs tok mono" style="left:820px;top:1195px"><b>4, 6</b></div><div id="ag-tok7" class="abs tok mono" style="left:740px;top:1470px"><b>25, 29</b></div>
+      
+      <div id="ag-chip" class="abs chip mono"><span class="chip-dot"></span><span class="chip-win"><span id="ag-chip-a">08:10</span><span id="ag-chip-b">08:11</span></span></div>
+      
+      <div id="ag-tool" class="abs tool">
+        <div class="serif tool-h1">Seguimiento de Carrera</div>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-l">AVANCE</div><div class="serif kpi-v"><span id="ag-av">0,0</span> %</div><div class="kpi-h">sobre 41 obligatorias</div></div>
+          <div class="kpi"><div class="kpi-l">APROBADAS</div><div id="ag-ap" class="serif kpi-v">0</div><div class="kpi-h">obligatorias + electivas</div></div>
+        </div>
+        <div class="tbl">
+          <div class="lvl" style="border-top:5px solid #507ED3;background:#EEF4FD;color:#315393;border-radius:18px 18px 0 0">Nivel I</div>
+          <div id="ag-r4" class="trow" style=""><div id="ag-r4-tint" class="tint"></div><div class="n">4</div><div class="nm">Análisis Matemático I</div>
+          <div id="ag-r4-sel" class="sel"><div class="sel-win"><span id="ag-r4-s0">No Cursada</span><span id="ag-r4-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span>
+          </div></div>
+          <div id="ag-r5" class="trow" style=""><div id="ag-r5-tint" class="tint"></div><div class="n">5</div><div class="nm">Física I</div>
+          <div id="ag-r5-sel" class="sel"><div class="sel-win"><span id="ag-r5-s0">No Cursada</span><span id="ag-r5-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span>
+          </div></div>
+          <div id="ag-r6" class="trow" style="z-index:5"><div id="ag-r6-tint" class="tint"></div><div class="n">6</div><div class="nm">Química</div>
+          <div id="ag-r6-sel" class="sel"><div class="sel-win"><span id="ag-r6-s0">No Cursada</span><span id="ag-r6-s1" style="opacity:0;color:#165E2E;font-weight:500">Aprobada ✓</span></div><span>▾</span><div id="ag-tap-sel" class="tap" style="left:40%;top:50%"></div><div id="ag-dd" class="dd" data-layout-allow-overlap data-layout-allow-occlusion><div id="ag-dd0">No Cursada</div><div id="ag-dd1">Cursando</div><div id="ag-dd2">Regular</div><div id="ag-dd3">Aprobada<div id="ag-tap-dd" class="tap" style="left:40%;top:50%"></div></div></div>
+          </div></div>
+          <div class="lvl" style="border-top:5px solid #8E6AC7;background:#F5F2FC;color:#5F4489">Nivel II</div>
+          <div id="ag-r11" class="trow"><div class="n">11</div><div class="nm">Química Inorgánica</div>
+          <div class="bwrap"><div id="ag-r11-no" class="badge b-no">✕ No disponible</div><div id="ag-r11-si" class="badge b-si">✓ Disponible</div></div></div>
+          <div id="ag-r14" class="trow"><div class="n">14</div><div class="nm">Química Orgánica</div>
+          <div class="bwrap"><div id="ag-r14-no" class="badge b-no">✕ No disponible</div><div id="ag-r14-si" class="badge b-si">✓ Disponible</div></div></div>
+        </div>
+      </div>
+      <div id="ag-note" class="abs note">Ejemplo: Nivel I completo · valores calculados con la lógica real</div>
+      
+      <div id="ag-flood" class="abs flood"></div>
+      <div id="ag-claim" class="abs claim serif">Marcá tus materias.<br>La planilla calcula el resto.</div><div id="ag-claimsub" class="abs claim-sub">Tus datos quedan en tu dispositivo.</div>
+      
+      <div id="ag-end" class="abs endcard">
+        <img class="end-logo" src="assets/img/achetiq-logo.svg" alt="">
+        <div class="serif end-name">AChETIQ</div>
+        <div class="end-url mono">achetiq.github.io</div>
+        <div class="end-sticker">zona del sticker de enlace</div>
+      </div>
+      <div class="blabel">BOCETO A · HISTORIA 2: SEGUIMIENTO</div>
+    </div>
+  </div>
+  <script>
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d = 0.22) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d = 0.18) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d, ease: 'power2.in' }, t);
+  const popIn = (s, t) => tl.fromTo(s, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.7)' }, t);
+  const tap = (s, t) => {
+    tl.fromTo(s, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, t);
+    tl.to(s, { scale: 0.78, duration: 0.08, ease: 'power2.in' }, t + 0.14);
+    tl.to(s, { scale: 1.08, opacity: 0, duration: 0.24, ease: 'power2.out' }, t + 0.24);
+  };
+  const press = (s, t) => { tl.to(s, { scale: 0.965, duration: 0.09, ease: 'power2.in' }, t + 0.12); tl.to(s, { scale: 1, duration: 0.2, ease: 'power3.out' }, t + 0.22); };
+  const roll = (a, b, t, h) => { tl.to(a, { y: -h, opacity: 0, duration: 0.22, ease: 'power3.in' }, t); tl.fromTo(b, { y: h, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: 'expo.out' }, t + 0.12); };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+
+  blurIn('#a-tc-letter', 0.05, 0.26);
+  blurIn('#a-tc-name', 0.22);
+  blurIn('#a-tc-desc', 0.38);
+  blurIn('#a-tc-label', 0.5);
+  blurOut('#a-tc', 2.56, 0.2);
+  blurIn('#a-hook', 2.80, 0.15);
+  popIn('#a-bb0', 3.25);
+  popIn('#a-bb1', 3.75);
+  popIn('#a-bb2', 4.15);
+  popIn('#a-bb3', 4.50);
+  popIn('#a-bb4', 4.85);
+  tl.to('#a-bubbles', { x: -1150, filter: 'blur(12px)', opacity: 0, duration: 0.35, ease: 'power3.in' }, 5.55);
+  blurOut('#a-hook', 5.60, 0.22);
+  tl.fromTo('#a-chip', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 5.80);
+  tl.fromTo('#a-page', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out' }, 5.90);
+  tl.fromTo('#a-cardA', { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, 6.05);
+  tl.set('#a-cardB', { opacity: 0 }, 0);
+
+  tap('#a-tap-pill', 6.85);
+  tl.to('#a-pill-all', { backgroundColor: '#F9FAFC', color: '#131720', borderColor: '#CED2D9', duration: 0.18 }, 7.00);
+  tl.to('#a-pill-4', { backgroundColor: '#1344A5', color: '#FFFFFF', borderColor: '#1344A5', duration: 0.18 }, 7.00);
+  tl.to('#a-cardA', { x: -260, opacity: 0, filter: 'blur(8px)', duration: 0.26, ease: 'power3.in' }, 7.10);
+  tl.fromTo('#a-cardB', { x: 260, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'expo.out' }, 7.25);
+  tap('#a-cardB-tap', 8.10);
+  press('#a-cardB', 8.10);
+  tl.to('#a-cardB-arrow', { x: 16, duration: 0.2, ease: 'power3.out' }, 8.22);
+  tl.set('#a-zoom', { opacity: 1 }, 8.50);
+  tl.fromTo('#a-zoom', { scale: 1, y: 0 }, { scale: 5.2, y: -132, duration: 0.55, ease: 'power3.in' }, 8.50);
+  tl.fromTo('#a-drv1', { opacity: 0, filter: 'blur(14px)', scale: 1.06 }, { opacity: 1, filter: 'blur(0px)', scale: 1, duration: 0.35, ease: 'expo.out' }, 8.95);
+  tl.fromTo('#a-r-prac, #a-r-pres', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.07 }, 9.10);
+  tl.set('#a-page, #a-cardB, #a-zoom', { opacity: 0 }, 9.35);
+  tap('#a-r-prac-tap', 9.75);
+  tl.to('#a-r-prac-hl', { opacity: 1, duration: 0.12 }, 9.85);
+  tl.fromTo('#a-drv2', { opacity: 1, x: 1080 }, { x: 0, duration: 0.45, ease: 'expo.out' }, 10.05);
+  tl.set('#a-drv1', { opacity: 0 }, 10.55);
+  tl.fromTo('#a-r-guias, #a-r-s07, #a-r-smr', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.35, ease: 'expo.out', stagger: 0.07 }, 10.20);
+  tap('#a-r-s07-tap', 10.80);
+  tl.to('#a-r-s07-hl', { opacity: 1, duration: 0.14 }, 10.90);
+  roll('#a-chip-a', '#a-chip-b', 11.05, 42);
+  tl.set('#a-chip-b', { y: 42, opacity: 0 }, 0);
+
+  tl.fromTo('#a-flood', { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 11.60);
+  tl.set('#a-drv2, #a-chip', { opacity: 0 }, 11.92);
+  blurIn('#a-claim', 11.80, 0.26);
+  blurOut('#a-claim', 13.90);
+  tl.fromTo('#a-end', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, 14.10);
+  blurIn('#ag-hook', 15.80, 0.15);
+  blurIn('#ag-q', 16.30, 0.24);
+  tl.fromTo('#ag-tok0', { opacity: 0, scale: 0.6, rotation: -12 }, { opacity: 1, scale: 1, rotation: -4, duration: 0.3, ease: 'back.out(1.6)' }, 16.80);
+  tl.fromTo('#ag-tok1', { opacity: 0, scale: 0.6, rotation: 9 }, { opacity: 1, scale: 1, rotation: 3, duration: 0.3, ease: 'back.out(1.6)' }, 16.93);
+  tl.fromTo('#ag-tok2', { opacity: 0, scale: 0.6, rotation: 18 }, { opacity: 1, scale: 1, rotation: 6, duration: 0.3, ease: 'back.out(1.6)' }, 17.06);
+  tl.fromTo('#ag-tok3', { opacity: 0, scale: 0.6, rotation: -15 }, { opacity: 1, scale: 1, rotation: -5, duration: 0.3, ease: 'back.out(1.6)' }, 17.19);
+  tl.fromTo('#ag-tok4', { opacity: 0, scale: 0.6, rotation: -24 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.3, ease: 'back.out(1.6)' }, 17.32);
+  tl.fromTo('#ag-tok5', { opacity: 0, scale: 0.6, rotation: 6 }, { opacity: 1, scale: 1, rotation: 2, duration: 0.3, ease: 'back.out(1.6)' }, 17.45);
+  tl.fromTo('#ag-tok6', { opacity: 0, scale: 0.6, rotation: 30 }, { opacity: 1, scale: 1, rotation: 10, duration: 0.3, ease: 'back.out(1.6)' }, 17.58);
+  tl.fromTo('#ag-tok7', { opacity: 0, scale: 0.6, rotation: -9 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.3, ease: 'back.out(1.6)' }, 17.71);
+  tl.to('#ag-tok0', { x: 1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.250);
+  tl.to('#ag-tok1', { x: -1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.265);
+  tl.to('#ag-tok2', { x: 1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.280);
+  tl.to('#ag-tok3', { x: -1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.295);
+  tl.to('#ag-tok4', { x: 1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.310);
+  tl.to('#ag-tok5', { x: -1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.325);
+  tl.to('#ag-tok6', { x: 1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.340);
+  tl.to('#ag-tok7', { x: -1200, opacity: 0, filter: 'blur(12px)', duration: 0.34, ease: 'power3.in' }, 18.355);
+  blurOut('#ag-hook', 18.25, 0.2); blurOut('#ag-q', 18.25, 0.2);
+  tl.set('#ag-chip-b', { y: 42, opacity: 0 }, 0);
+  tl.fromTo('#ag-chip', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, ease: 'expo.out' }, 18.50);
+  tl.fromTo('#ag-tool', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out' }, 18.55);
+  tap('#ag-tap-sel', 19.40);
+  tl.fromTo('#ag-dd', { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.22, ease: 'expo.out' }, 19.58);
+  tap('#ag-tap-dd', 20.05);
+  tl.to('#ag-dd3', { backgroundColor: '#E3ECFB', duration: 0.1 }, 20.15);
+  tl.to('#ag-dd', { opacity: 0, duration: 0.15 }, 20.35);
+  roll('#ag-r6-s0', '#ag-r6-s1', 20.40, 40);
+  tl.to('#ag-r6-tint', { opacity: 1, duration: 0.25 }, 20.45);
+  steps('#ag-av', 20.50, ['0,8', '1,6', '2,4'], 0.05); tl.set('#ag-ap', { innerHTML: '1' }, 20.50);
+  tl.to('#ag-r11-no, #ag-r14-no', { opacity: 0, scale: 0.8, duration: 0.14, stagger: 0.12 }, 20.80);
+  tl.fromTo('#ag-r11-si, #ag-r14-si', { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)', stagger: 0.12 }, 20.88);
+  roll('#ag-r4-s0', '#ag-r4-s1', 21.50, 40); tl.to('#ag-r4-tint', { opacity: 1, duration: 0.2 }, 21.55);
+  roll('#ag-r5-s0', '#ag-r5-s1', 21.65, 40); tl.to('#ag-r5-tint', { opacity: 1, duration: 0.2 }, 21.70);
+  steps('#ag-av', 21.60, ['4,9', '7,3', '9,8', '12,2', '14,6', '17,1', '19,5'], 0.06);
+  steps('#ag-ap', 21.60, ['2', '3', '4', '5', '6', '7', '8'], 0.06);
+  blurIn('#ag-note', 21.80);
+  roll('#ag-chip-a', '#ag-chip-b', 22.10, 42);
+
+  tl.fromTo('#ag-flood', { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.inOut' }, 22.70);
+  tl.set('#ag-tool, #ag-chip, #ag-note', { opacity: 0 }, 23.02);
+  blurIn('#ag-claim', 22.90, 0.26);
+  blurIn('#ag-claimsub', 23.25, 0.22);
+  blurOut('#ag-claim', 25.00);
+  blurOut('#ag-claimsub', 25.00);
+  tl.fromTo('#ag-end', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, 25.20);
+  window.__timelines["prop-a"] = tl;
+  </script>
+</template>

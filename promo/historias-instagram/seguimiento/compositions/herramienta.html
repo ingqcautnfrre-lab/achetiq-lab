@@ -1,0 +1,402 @@
+<template>
+  <style>
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;color:#131720;opacity:0;z-index:40}
+.cap em{font-style:normal;color:inherit}
+.cap-sub{position:absolute;left:72px;top:338px;font-size:40px;line-height:1.3;color:#4A4F59;white-space:nowrap;opacity:0;z-index:40}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0}
+.win{position:absolute;left:30px;top:430px;width:1020px;height:1100px;border-radius:28px;overflow:hidden;background:#F2F4F8;border:1px solid #E1DACE;box-shadow:0 26px 64px rgba(19,23,32,.16)}
+.wbar{position:absolute;left:0;top:0;width:100%;height:76px;background:#FFFFFF;border-bottom:1px solid #E7DFD3;display:flex;align-items:center;gap:16px;padding:0 24px;z-index:3}
+.wbar i{width:15px;height:15px;border-radius:50%;background:#E2DDD4;flex:0 0 15px}
+.url{flex:1;height:48px;margin-left:12px;border-radius:999px;background:#F1EEE8;display:flex;align-items:center;gap:12px;padding:0 22px;font-size:25px;color:#4A4F59;white-space:nowrap;overflow:hidden}
+.wbody{position:absolute;left:0;top:76px;width:100%;bottom:0;overflow:hidden}
+.scroller{position:absolute;left:0;top:0;width:100%}
+.scroller iframe{display:block;border:0;background:#F2F4F8}
+.tap{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(19,23,32,.22);opacity:0;pointer-events:none;z-index:60}
+.ring{position:absolute;border:3px solid #1344A5;border-radius:10px;box-shadow:0 0 0 6px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
+.drop{position:absolute;width:190px;background:#FFFFFF;border-radius:10px;box-shadow:0 14px 34px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
+.drop div{position:relative;height:40px;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:19px}
+.drop i{width:16px;height:16px;border-radius:50%;border:2px solid #9AA1AD;flex:0 0 16px}
+.flood{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
+/* chat */
+.chat{position:absolute;left:48px;top:470px;width:984px;height:1110px;background:#FFFFFF;border-radius:40px;box-shadow:0 18px 50px rgba(19,23,32,.10);overflow:hidden}
+.chat-h{position:absolute;left:0;top:0;width:100%;height:124px;display:flex;align-items:center;gap:22px;padding:0 34px;border-bottom:2px solid #F0EBE3;background:#FFFFFF;z-index:2}
+.av{width:72px;height:72px;border-radius:50%;background:#1344A5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:30px}
+.msgs{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:18px;padding:0 30px}
+.msg{max-width:720px;align-self:flex-start;opacity:0}
+.msg.me{align-self:flex-end}
+.msg .who{font-size:27px;font-weight:600;margin:0 0 6px 18px}
+.bub{padding:20px 28px;border-radius:30px 30px 30px 8px;background:#F1EEE8;font-size:37px;line-height:1.28}
+.msg.me .bub{background:#1344A5;color:#FFFFFF;border-radius:30px 30px 8px 30px}
+.typing{display:flex;gap:10px;padding:26px 30px;border-radius:30px 30px 30px 8px;background:#F1EEE8;align-self:flex-start;opacity:0}
+.typing span{width:14px;height:14px;border-radius:50%;background:#9AA1AD;display:block}
+.prev{margin-top:14px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:2px solid #E7DFD3}
+.prev img{display:block;width:100%;height:230px;object-fit:cover}
+.prev div{padding:14px 20px 18px}
+.prev b{display:block;font-size:32px;font-weight:600;color:#131720}
+.prev span{font-size:28px;color:#4A4F59}
+/* Drive simulado (vista web) */
+.dv{position:absolute;inset:0;background:#FFFFFF}
+.dcrumb{position:absolute;left:40px;top:30px;font-size:24px;color:#4A4F59;white-space:nowrap}
+.dtitle{position:absolute;left:40px;top:66px;font-size:38px;font-weight:600;white-space:nowrap}
+.dhead{position:absolute;left:40px;top:144px;width:940px;height:46px;display:flex;align-items:center;font-size:22px;color:#4A4F59;border-bottom:1px solid #E7DFD3}
+.drow{position:absolute;left:24px;width:972px;height:78px;display:flex;align-items:center;font-size:27px;border-bottom:1px solid #F0EBE3;padding:0 16px;border-radius:10px}
+.drow .nm{flex:0 0 560px;display:flex;align-items:center;gap:20px;white-space:nowrap}
+.drow .c2,.dhead .c2{flex:0 0 220px;font-size:22px;color:#4A4F59}
+.drow .c3,.dhead .c3{flex:0 0 140px;font-size:22px;color:#4A4F59;text-align:right}
+.dhead .nm{flex:0 0 560px;padding-left:16px}
+.dhl{position:absolute;inset:0;border-radius:10px;background:rgba(146,47,161,.09);opacity:0}
+.dhl + *{position:relative}
+.folder{width:40px;height:33px;flex:0 0 40px}
+.pdf{width:34px;height:42px;border-radius:5px;background:#D93025;color:#fff;font:600 12px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;flex:0 0 34px}
+.dsec{position:absolute;left:40px;font-size:24px;font-weight:600;color:#4A4F59}
+.chipf{position:absolute;left:40px;top:250px;width:440px;height:76px;border:1px solid #E1DACE;border-radius:14px;display:flex;align-items:center;gap:18px;padding:0 22px;font-size:27px;background:#FFFFFF}
+.fcard{position:absolute;top:396px;width:296px;height:330px;border:1px solid #E1DACE;border-radius:16px;overflow:hidden;background:#FFFFFF}
+.fthumb{position:absolute;left:0;top:0;width:100%;height:232px;background:#F1EEE8;display:flex;justify-content:center;align-items:flex-end}
+.fpage{width:180px;height:206px;background:#FFFFFF;box-shadow:0 4px 14px rgba(19,23,32,.10);padding:22px 18px}
+.fl{height:9px;border-radius:3px;background:#E1E4E9;margin-bottom:11px}
+.fname{position:absolute;left:0;top:232px;width:100%;height:98px;display:flex;align-items:center;gap:14px;padding:0 18px;font-size:21px;line-height:1.25;border-top:1px solid #E7DFD3}
+.fhl{position:absolute;inset:0;border:4px solid #922FA1;border-radius:16px;opacity:0}
+.viewer{position:absolute;inset:0;background:#E9E3D9;opacity:0}
+.vbar{position:absolute;left:0;top:0;width:100%;height:84px;background:#FFFFFF;display:flex;align-items:center;gap:20px;padding:0 36px;font-size:27px;border-bottom:1px solid #E7DFD3}
+.page{position:absolute;left:260px;top:112px;width:500px;height:610px;background:#FFFFFF;box-shadow:0 14px 34px rgba(11,41,100,.14);padding:54px 48px}
+.ln{height:14px;border-radius:4px;background:#E1E4E9;margin-bottom:17px}
+.ln.t{height:26px;width:62%;background:#CED2D9;margin-bottom:34px}
+/* muro de materias */
+.tile{position:absolute;width:196px;height:110px;border-radius:12px;overflow:hidden;opacity:0}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+/* cierre */
+.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:200px}
+.end svg{width:660px;height:660px;overflow:visible}
+.end-name{font-size:128px;margin-top:4px;display:flex;line-height:1.05}
+.end-name span{display:inline-block;opacity:0}
+.end-url{font-size:48px;color:#1344A5;margin-top:16px;opacity:0}
+.end-sec{font-size:42px;color:#4A4F59;margin-top:18px;line-height:1.3;opacity:0}
+.end-extra{font-size:36px;color:#4A4F59;margin-top:12px;opacity:0}
+/* seguimiento */
+.qq{position:absolute;left:72px;font-family:'Fraunces',serif;font-size:88px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0}
+.qh{position:absolute;left:76px;display:flex;align-items:center;gap:12px;font-size:34px;color:#4A4F59;white-space:nowrap;opacity:0}
+.pn{min-width:58px;height:58px;padding:0 14px;border-radius:14px;background:#FFFFFF;border:2px solid #E1DACE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:36px;color:#131720}
+.seg{width:12px;height:30px;border-radius:3px;background:#E1DACE}
+.kp{position:absolute;width:470px;height:170px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:22px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12);z-index:62}
+.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#4A4F59;text-transform:uppercase}
+.kp .v{font-family:'Fraunces',serif;font-size:78px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
+.feat{position:absolute;display:flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;background:#FFFFFF;border:2px solid #E7DFD3;box-shadow:0 14px 36px rgba(19,23,32,.12);font-size:38px;font-weight:500;white-space:nowrap;opacity:0;z-index:30}
+.feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
+</style>
+  <div id="root" data-composition-id="herramienta" data-width="1080" data-height="1920">
+    <div id="herramienta-all" class="clip" data-start="0" data-duration="24.68" data-track-index="1" style="position:absolute;inset:0">
+      <div id="h-cam" class="cam">
+        <div id="h-win" class="win" style=""><div class="wbar"><i></i><i></i><i></i><div class="url"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A4F59" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>achetiq.github.io/pages/recursos/seguimiento</span></div></div><div class="wbody"><div id="h-scr" class="scroller"><iframe id="h-fr" src="assets/site/pages/recursos/seguimiento.html" style="width:1200px;height:3400px;zoom:0.85000" scrolling="no"></iframe></div></div></div>
+        <div id="h-ringp" class="ring"></div><div id="h-rk5" class="ring"></div><div id="h-rk6" class="ring"></div>
+        <div id="h-rg10" class="ring"></div><div id="h-rg11" class="ring"></div><div id="h-rg12" class="ring"></div><div id="h-rg13" class="ring"></div><div id="h-rg14" class="ring"></div>
+        <svg class="abs" style="left:0;top:0;z-index:56" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" stroke="#1344A5" stroke-width="3" stroke-linecap="butt" data-layout-ignore><path id="h-ln6-11" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln6-14" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln4-13" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln5-13" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln3-10" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/><path id="h-ln3-12" d="M 0 0" pathLength="1" stroke-dasharray="1 2" stroke-dashoffset="1"/></svg>
+        <div id="h-drop" class="drop"><div><i></i>No Cursada</div><div><i></i>Cursando</div><div id="h-op2"><i></i>Regular</div><div id="h-op3"><i></i>Aprobada</div></div>
+        <div id="tap1" class="tap"></div><div id="tap2" class="tap"></div>
+      </div>
+      <div id="h-k0" class="kp" style="left:55px;top:1415px"><div class="l">Prom. sin aplazos</div><div id="h-k0v" class="v">—</div></div>
+      <div id="h-k1" class="kp" style="left:555px;top:1415px"><div class="l">Prom. con aplazos</div><div id="h-k1v" class="v">—</div></div>
+      <div id="h-f0" class="feat" style="left:60px;top:560px"><i>✓</i>Correlativas</div><div id="h-f1" class="feat" style="left:540px;top:700px"><i>✓</i>Avance de carrera</div><div id="h-f2" class="feat" style="left:40px;top:860px"><i>✓</i>Promedios</div><div id="h-f3" class="feat" style="left:560px;top:1010px"><i>✓</i>Exámenes finales</div><div id="h-f4" class="feat" style="left:50px;top:1170px"><i>✓</i>Exportá a Excel</div><div id="h-f5" class="feat" style="left:600px;top:1320px"><i>✓</i>Google Sheets</div><div id="h-f6" class="feat" style="left:120px;top:1470px"><i>✓</i>Respaldo en JSON</div>
+      <div id="h-c1" class="cap">Tu carrera, en una planilla</div><div id="h-c2" class="cap">Sin cuentas</div><div id="h-c2s" class="cap-sub">Tus datos quedan en tu dispositivo.</div><div id="h-c3" class="cap">Marcá tus materias</div><div id="h-c4" class="cap">Se habilitan sus correlativas</div><div id="h-c5" class="cap">Cargá tus finales</div><div id="h-c5s" class="cap-sub">Los promedios se calculan solos.</div><div id="h-c6" class="cap">Todo tu avance, al día</div>
+      <div id="h-claim" class="cap" style="white-space:normal;font-size:92px">Marcá tus materias.<br>La planilla hace el resto.</div>
+    </div>
+  </div>
+  <script>
+  const fr = document.getElementById('h-fr');
+  function arrancar() {
+    const D = fr.contentDocument;
+    const Q = (s) => D.querySelector(s);
+    const QA = (s) => Array.from(D.querySelectorAll(s));
+
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d || 0.24, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d || 0.18, ease: 'power2.in' }, t);
+  let tapN = 0;
+  const tap = (x, y, t) => {
+    const s = (tapN++ % 2) ? '#tap2' : '#tap1';
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out', immediateRender: false }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  let tapM = 0;
+  const tapC = (x, y, t) => {
+    const s = (tapM++ % 2) ? '#tap4' : '#tap3';
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out', immediateRender: false }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+  const pop = (s, t) => tl.fromTo(s, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(2.2)', immediateRender: false }, t);
+  const capSwap = (a, b, t) => { if (a) blurOut(a, t, 0.16); blurIn(b, t + 0.12, 0.26); };
+
+  const WX = 30, CT = 506, ZF = 0.85000;
+  const RR = (el) => el.getBoundingClientRect();
+  const P = (x, y, S) => [WX + x * ZF, CT + (y - S) * ZF];            // px CSS del sitio -> px del cuadro
+  const enfoque = (x0, y0, x1, y1, S, k) => {
+    const a = P(x0, y0, S), b = P(x1, y1, S);
+    const kk = Math.min(k, 1000 / (b[0] - a[0]), 1060 / (b[1] - a[1]));
+    return { scale: kk, x: 540 - kk * (a[0] + b[0]) / 2, y: Math.max(1000 - kk * (a[1] + b[1]) / 2, 372 - kk * 430) };
+  };
+  const cam = (sel, t, d, st) => tl.to(sel, Object.assign({ duration: d, ease: 'power2.inOut' }, st), t);
+
+  const vals = QA('#seg-dashboard .seg-kpi__value');
+  vals.forEach((v) => { v.style.display = 'inline-block'; v.style.transformOrigin = '0% 60%'; });
+  const panelSeg = Q('#seg-panel-seguimiento'), panelFin = Q('#seg-panel-finales');
+  panelFin.hidden = false; panelFin.style.display = 'none';
+  const hd = RR(Q('.page-header')), priv = RR(Q('.seguimiento__nota-privacidad'));
+  const S_PRIV = Math.max(0, priv.top - 260);
+  Object.assign(document.getElementById('h-ringp').style, (function () { const a = P(priv.left, priv.top, S_PRIV); return { left: (a[0] - 5) + 'px', top: (a[1] - 5) + 'px', width: (priv.width * ZF + 10) + 'px', height: (priv.height * ZF + 10) + 'px' }; })());
+  const fila = (n) => Q('#seg-tabla-seguimiento tr[data-numero="' + n + '"]');
+  const filaR = (n) => RR(fila(n));
+  const tbl = RR(Q('#seg-tabla-seguimiento .seg-table-scroll'));
+  const S_TAB = Math.max(0, filaR(3).top - 120);
+  const colDisp = RR(Q('#seg-tabla-seguimiento thead th[data-col="disp"]'));
+  // rectángulo de la tabla que se acerca: de N° a Disponible, filas 3 a 14
+  const ET = enfoque(tbl.left, filaR(3).top - 10, colDisp.right + 6, filaR(14).bottom + 6, S_TAB, 1.6);
+  // las «materias faltantes» cambian de largo y con ellas la altura de las filas de Nivel II:
+  // se mide la tabla en cada paso para que anillos y conectores queden encuadrados
+  const FALT = {"t_quimica": {"1": "Sin faltantes", "2": "Sin faltantes", "3": "Sin faltantes", "4": "Sin faltantes", "5": "Sin faltantes", "6": "—", "7": "Sin faltantes", "8": "Sin faltantes", "9": "1-Introducción a la Ingeniería Química (regular);", "10": "3-Álgebra y Geometría Analítica (regular); 4-Análisis Matemático I (regular);", "11": "Sin faltantes", "12": "3-Álgebra y Geometría Analítica (regular); 4-Análisis Matemático I (regular);", "13": "4-Análisis Matemático I (regular); 5-Física I (regular);", "14": "Sin faltantes", "15": "1-Introducción a la Ingeniería Química (regular); 2-Ingeniería y Sociedad (regular);", "16": "1-Introducción a la Ingeniería Química (aprobada); 3-Álgebra y Geometría Analítica (aprobada); 4-Análisis Matemático I (aprobada); 7-Sistemas de Representación (regular); 8-Fundamentos de Informática (regular); 9-Introducción a Equipos y Procesos (regular); 13-Física II (regular);", "17": "4-Análisis Matemático I (aprobada); 11-Química Inorgánica (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "18": "3-Álgebra y Geometría Analítica (aprobada); 4-Análisis Matemático I (aprobada); 12-Análisis Matemático II (regular);", "19": "1-Introducción a la Ingeniería Química (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "20": "3-Álgebra y Geometría Analítica (aprobada); 4-Análisis Matemático I (aprobada); 9-Introducción a Equipos y Procesos (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "21": "3-Álgebra y Geometría Analítica (aprobada); 4-Análisis Matemático I (aprobada); 9-Introducción a Equipos y Procesos (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "22": "2-Ingeniería y Sociedad (aprobada); 10-Probabilidad y Estadística (regular); 11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "23": "11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "24": "1-Introducción a la Ingeniería Química (aprobada); 2-Ingeniería y Sociedad (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (regular); 13-Física II (regular); 14-Química Orgánica (regular); 40-Inglés I (aprobada);", "25": "7-Sistemas de Representación (aprobada); 8-Fundamentos de Informática (aprobada); 9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 16-Balances de Masa y Energía (regular); 18-Matemática Superior Aplicada (regular); 41-Inglés II (aprobada);", "26": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 21-Fenómenos de Transporte (regular);", "27": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "28": "2-Ingeniería y Sociedad (aprobada); 3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular);", "29": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 14-Química Orgánica (aprobada); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "30": "11-Química Inorgánica (aprobada); 12-Análisis Matemático II (aprobada); 14-Química Orgánica (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "31": "4-Análisis Matemático I (aprobada); 10-Probabilidad y Estadística (regular);", "32": "2-Ingeniería y Sociedad (aprobada); 9-Introducción a Equipos y Procesos (aprobada); 10-Probabilidad y Estadística (regular); 15-Legislación (aprobada);", "33": "16-Balances de Masa y Energía (aprobada); 18-Matemática Superior Aplicada (aprobada); 22-Química Analítica (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 29-Operaciones Unitarias II (regular);", "34": "5-Física I (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (aprobada); 19-Ciencia de los Materiales (aprobada); 20-Fisicoquímica (regular);", "35": "15-Legislación (aprobada); 16-Balances de Masa y Energía (aprobada); 22-Química Analítica (aprobada); 24-Química Aplicada (regular); 26-Operaciones Unitarias I (regular); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular);", "36": "9-Introducción a Equipos y Procesos (aprobada); 11-Química Inorgánica (aprobada); 14-Química Orgánica (aprobada); 16-Balances de Masa y Energía (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular); 23-Microbiología y Química Biológica (regular);", "37": "9-Introducción a Equipos y Procesos (aprobada); 11-Química Inorgánica (regular); 14-Química Orgánica (regular); 16-Balances de Masa y Energía (regular);", "38": "9-Introducción a Equipos y Procesos (aprobada); 13-Física II (aprobada); 26-Operaciones Unitarias I (regular);", "39": "16-Balances de Masa y Energía (aprobada); 20-Fisicoquímica (aprobada); 21-Fenómenos de Transporte (aprobada); 24-Química Aplicada (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 28-Economía (aprobada); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 32-Organización Industrial (regular);", "40": "Sin faltantes", "41": "40-Inglés I (regular);", "42": "Sin faltantes", "43": "Sin faltantes", "44": "25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 28-Economía (aprobada); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 31-Calidad y Control Estadístico de Procesos (regular); 32-Organización Industrial (aprobada);", "45": "25-Diseño, simulación, optimización y seguridad de procesos (regular); 28-Economía (aprobada); 32-Organización Industrial (aprobada);", "46": "9-Introducción a Equipos y Procesos (regular); 16-Balances de Masa y Energía (aprobada);", "47": "14-Química Orgánica (aprobada); 20-Fisicoquímica (regular); 22-Química Analítica (aprobada);", "48": "29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 31-Calidad y Control Estadístico de Procesos (regular); 32-Organización Industrial (aprobada);", "49": "17-Termodinámica (aprobada); 20-Fisicoquímica (aprobada); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular);", "50": "7-Sistemas de Representación (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 41-Inglés II (aprobada);", "51": "27-Tecnología de la Energía Térmica (aprobada);", "52": "20-Fisicoquímica (aprobada); 27-Tecnología de la Energía Térmica (regular); 29-Operaciones Unitarias II (aprobada);", "53": "24-Química Aplicada (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular);", "54": "15-Legislación (aprobada); 28-Economía (aprobada); 32-Organización Industrial (regular);"}, "t_fis": {"1": "Sin faltantes", "2": "Sin faltantes", "3": "Sin faltantes", "4": "—", "5": "—", "6": "—", "7": "Sin faltantes", "8": "Sin faltantes", "9": "1-Introducción a la Ingeniería Química (regular);", "10": "3-Álgebra y Geometría Analítica (regular);", "11": "Sin faltantes", "12": "3-Álgebra y Geometría Analítica (regular);", "13": "Sin faltantes", "14": "Sin faltantes", "15": "1-Introducción a la Ingeniería Química (regular); 2-Ingeniería y Sociedad (regular);", "16": "1-Introducción a la Ingeniería Química (aprobada); 3-Álgebra y Geometría Analítica (aprobada); 7-Sistemas de Representación (regular); 8-Fundamentos de Informática (regular); 9-Introducción a Equipos y Procesos (regular); 13-Física II (regular);", "17": "11-Química Inorgánica (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "18": "3-Álgebra y Geometría Analítica (aprobada); 12-Análisis Matemático II (regular);", "19": "1-Introducción a la Ingeniería Química (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "20": "3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "21": "3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "22": "2-Ingeniería y Sociedad (aprobada); 10-Probabilidad y Estadística (regular); 11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "23": "11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "24": "1-Introducción a la Ingeniería Química (aprobada); 2-Ingeniería y Sociedad (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (regular); 13-Física II (regular); 14-Química Orgánica (regular); 40-Inglés I (aprobada);", "25": "7-Sistemas de Representación (aprobada); 8-Fundamentos de Informática (aprobada); 9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 16-Balances de Masa y Energía (regular); 18-Matemática Superior Aplicada (regular); 41-Inglés II (aprobada);", "26": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 21-Fenómenos de Transporte (regular);", "27": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "28": "2-Ingeniería y Sociedad (aprobada); 3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular);", "29": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 14-Química Orgánica (aprobada); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "30": "11-Química Inorgánica (aprobada); 12-Análisis Matemático II (aprobada); 14-Química Orgánica (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "31": "10-Probabilidad y Estadística (regular);", "32": "2-Ingeniería y Sociedad (aprobada); 9-Introducción a Equipos y Procesos (aprobada); 10-Probabilidad y Estadística (regular); 15-Legislación (aprobada);", "33": "16-Balances de Masa y Energía (aprobada); 18-Matemática Superior Aplicada (aprobada); 22-Química Analítica (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 29-Operaciones Unitarias II (regular);", "34": "5-Física I (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (aprobada); 19-Ciencia de los Materiales (aprobada); 20-Fisicoquímica (regular);", "35": "15-Legislación (aprobada); 16-Balances de Masa y Energía (aprobada); 22-Química Analítica (aprobada); 24-Química Aplicada (regular); 26-Operaciones Unitarias I (regular); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular);", "36": "9-Introducción a Equipos y Procesos (aprobada); 11-Química Inorgánica (aprobada); 14-Química Orgánica (aprobada); 16-Balances de Masa y Energía (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular); 23-Microbiología y Química Biológica (regular);", "37": "9-Introducción a Equipos y Procesos (aprobada); 11-Química Inorgánica (regular); 14-Química Orgánica (regular); 16-Balances de Masa y Energía (regular);", "38": "9-Introducción a Equipos y Procesos (aprobada); 13-Física II (aprobada); 26-Operaciones Unitarias I (regular);", "39": "16-Balances de Masa y Energía (aprobada); 20-Fisicoquímica (aprobada); 21-Fenómenos de Transporte (aprobada); 24-Química Aplicada (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 28-Economía (aprobada); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 32-Organización Industrial (regular);", "40": "Sin faltantes", "41": "40-Inglés I (regular);", "42": "Sin faltantes", "43": "Sin faltantes", "44": "25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 28-Economía (aprobada); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 31-Calidad y Control Estadístico de Procesos (regular); 32-Organización Industrial (aprobada);", "45": "25-Diseño, simulación, optimización y seguridad de procesos (regular); 28-Economía (aprobada); 32-Organización Industrial (aprobada);", "46": "9-Introducción a Equipos y Procesos (regular); 16-Balances de Masa y Energía (aprobada);", "47": "14-Química Orgánica (aprobada); 20-Fisicoquímica (regular); 22-Química Analítica (aprobada);", "48": "29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 31-Calidad y Control Estadístico de Procesos (regular); 32-Organización Industrial (aprobada);", "49": "17-Termodinámica (aprobada); 20-Fisicoquímica (aprobada); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular);", "50": "7-Sistemas de Representación (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 41-Inglés II (aprobada);", "51": "27-Tecnología de la Energía Térmica (aprobada);", "52": "20-Fisicoquímica (aprobada); 27-Tecnología de la Energía Térmica (regular); 29-Operaciones Unitarias II (aprobada);", "53": "24-Química Aplicada (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular);", "54": "15-Legislación (aprobada); 28-Economía (aprobada); 32-Organización Industrial (regular);"}, "t_aga": {"1": "Sin faltantes", "2": "Sin faltantes", "3": "—", "4": "—", "5": "—", "6": "—", "7": "Sin faltantes", "8": "Sin faltantes", "9": "1-Introducción a la Ingeniería Química (regular);", "10": "Sin faltantes", "11": "Sin faltantes", "12": "Sin faltantes", "13": "Sin faltantes", "14": "Sin faltantes", "15": "1-Introducción a la Ingeniería Química (regular); 2-Ingeniería y Sociedad (regular);", "16": "1-Introducción a la Ingeniería Química (aprobada); 3-Álgebra y Geometría Analítica (aprobada); 7-Sistemas de Representación (regular); 8-Fundamentos de Informática (regular); 9-Introducción a Equipos y Procesos (regular); 13-Física II (regular);", "17": "11-Química Inorgánica (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "18": "3-Álgebra y Geometría Analítica (aprobada); 12-Análisis Matemático II (regular);", "19": "1-Introducción a la Ingeniería Química (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "20": "3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "21": "3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular); 12-Análisis Matemático II (regular); 13-Física II (regular);", "22": "2-Ingeniería y Sociedad (aprobada); 10-Probabilidad y Estadística (regular); 11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "23": "11-Química Inorgánica (regular); 14-Química Orgánica (regular);", "24": "1-Introducción a la Ingeniería Química (aprobada); 2-Ingeniería y Sociedad (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (regular); 13-Física II (regular); 14-Química Orgánica (regular); 40-Inglés I (aprobada);", "25": "7-Sistemas de Representación (aprobada); 8-Fundamentos de Informática (aprobada); 9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 16-Balances de Masa y Energía (regular); 18-Matemática Superior Aplicada (regular); 41-Inglés II (aprobada);", "26": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 21-Fenómenos de Transporte (regular);", "27": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "28": "2-Ingeniería y Sociedad (aprobada); 3-Álgebra y Geometría Analítica (aprobada); 9-Introducción a Equipos y Procesos (regular);", "29": "9-Introducción a Equipos y Procesos (aprobada); 12-Análisis Matemático II (aprobada); 13-Física II (aprobada); 14-Química Orgánica (aprobada); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "30": "11-Química Inorgánica (aprobada); 12-Análisis Matemático II (aprobada); 14-Química Orgánica (aprobada); 16-Balances de Masa y Energía (regular); 17-Termodinámica (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular);", "31": "10-Probabilidad y Estadística (regular);", "32": "2-Ingeniería y Sociedad (aprobada); 9-Introducción a Equipos y Procesos (aprobada); 10-Probabilidad y Estadística (regular); 15-Legislación (aprobada);", "33": "16-Balances de Masa y Energía (aprobada); 18-Matemática Superior Aplicada (aprobada); 22-Química Analítica (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 29-Operaciones Unitarias II (regular);", "34": "5-Física I (aprobada); 9-Introducción a Equipos y Procesos (regular); 11-Química Inorgánica (aprobada); 19-Ciencia de los Materiales (aprobada); 20-Fisicoquímica (regular);", "35": "15-Legislación (aprobada); 16-Balances de Masa y Energía (aprobada); 22-Química Analítica (aprobada); 24-Química Aplicada (regular); 26-Operaciones Unitarias I (regular); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular);", "36": "9-Introducción a Equipos y Procesos (aprobada); 11-Química Inorgánica (aprobada); 14-Química Orgánica (aprobada); 16-Balances de Masa y Energía (regular); 20-Fisicoquímica (regular); 21-Fenómenos de Transporte (regular); 23-Microbiología y Química Biológica (regular);", "37": "9-Introducción a Equipos y Procesos (aprobada); 11-Química Inorgánica (regular); 14-Química Orgánica (regular); 16-Balances de Masa y Energía (regular);", "38": "9-Introducción a Equipos y Procesos (aprobada); 13-Física II (aprobada); 26-Operaciones Unitarias I (regular);", "39": "16-Balances de Masa y Energía (aprobada); 20-Fisicoquímica (aprobada); 21-Fenómenos de Transporte (aprobada); 24-Química Aplicada (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 28-Economía (aprobada); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 32-Organización Industrial (regular);", "40": "Sin faltantes", "41": "40-Inglés I (regular);", "42": "Sin faltantes", "43": "Sin faltantes", "44": "25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 28-Economía (aprobada); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 31-Calidad y Control Estadístico de Procesos (regular); 32-Organización Industrial (aprobada);", "45": "25-Diseño, simulación, optimización y seguridad de procesos (regular); 28-Economía (aprobada); 32-Organización Industrial (aprobada);", "46": "9-Introducción a Equipos y Procesos (regular); 16-Balances de Masa y Energía (aprobada);", "47": "14-Química Orgánica (aprobada); 20-Fisicoquímica (regular); 22-Química Analítica (aprobada);", "48": "29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular); 31-Calidad y Control Estadístico de Procesos (regular); 32-Organización Industrial (aprobada);", "49": "17-Termodinámica (aprobada); 20-Fisicoquímica (aprobada); 26-Operaciones Unitarias I (regular); 27-Tecnología de la Energía Térmica (regular); 29-Operaciones Unitarias II (regular); 30-Ingeniería de las Reacciones Químicas (regular);", "50": "7-Sistemas de Representación (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular); 26-Operaciones Unitarias I (regular); 41-Inglés II (aprobada);", "51": "27-Tecnología de la Energía Térmica (aprobada);", "52": "20-Fisicoquímica (aprobada); 27-Tecnología de la Energía Térmica (regular); 29-Operaciones Unitarias II (aprobada);", "53": "24-Química Aplicada (aprobada); 25-Diseño, simulación, optimización y seguridad de procesos (regular);", "54": "15-Legislación (aprobada); 28-Economía (aprobada); 32-Organización Industrial (regular);"}};
+  const celdaF = (n) => fila(n) && fila(n).querySelector('[data-col="falt"]');
+  const FILAS = [3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 40];
+  const orig = {}; FILAS.forEach((n) => { orig[n] = celdaF(n).innerHTML; });
+  const medir = (paso) => {
+    if (paso) Object.keys(FALT[paso]).forEach((n) => { const c = celdaF(n); if (c) c.innerHTML = FALT[paso][n]; });
+    const r = {}; FILAS.forEach((n) => { r[n] = filaR(n); }); return r;
+  };
+  const LY = { ini: medir(null), t_quimica: medir('t_quimica'), t_fis: medir('t_fis'), t_aga: medir('t_aga') };
+  FILAS.forEach((n) => { celdaF(n).innerHTML = orig[n]; });
+  const anillo = (n, paso) => { const r = LY[paso][n], a = P(tbl.left, r.top, S_TAB); Object.assign(document.getElementById('h-rg' + n).style, { left: (a[0] + 2) + 'px', top: (a[1] + 1) + 'px', width: ((colDisp.right - tbl.left) * ZF - 4) + 'px', height: (r.height * ZF - 2) + 'px' }); };
+  anillo(11, 't_quimica'); anillo(14, 't_quimica'); anillo(13, 't_fis'); anillo(10, 't_aga'); anillo(12, 't_aga');
+  const curva = (a, b, paso) => {
+    const ra = LY[paso][a], rb = LY[paso][b];
+    const ya = P(0, ra.top + ra.height / 2, S_TAB)[1], yb = P(0, rb.top + rb.height / 2, S_TAB)[1], x0 = P(tbl.left, 0, 0)[0] + 2, bx = x0 - 22 - Math.abs(yb - ya) / 40;
+    return 'M ' + x0 + ' ' + ya + ' C ' + bx + ' ' + ya + ', ' + bx + ' ' + yb + ', ' + x0 + ' ' + yb;
+  };
+  [[6, 11, 'ini'], [6, 14, 'ini'], [4, 13, 't_quimica'], [5, 13, 't_quimica'], [3, 10, 't_fis'], [3, 12, 't_fis']].forEach((ab) => {
+    document.getElementById('h-ln' + ab[0] + '-' + ab[1]).setAttribute('d', curva(ab[0], ab[1], ab[2]));
+  });
+  const SELC = {};
+  [3, 4, 5, 6].forEach((n) => { const r = RR(Q('#seg-estado-' + n)); SELC[n] = P(r.left + r.width / 2, r.top + r.height / 2, S_TAB); });
+  const tSeg = Q('.seg-tabs__tab[data-tab="seguimiento"]'), tFin = Q('.seg-tabs__tab[data-tab="finales"]');
+  const tabsR = RR(Q('.seg-tabs'));
+  const S_FIN = Math.max(0, tabsR.top - 30);
+  const TF = (function () { const r = RR(tFin); return P(r.left + r.width / 2, r.top + r.height / 2, S_FIN); })();
+  const TS = (function () { const r = RR(tSeg); return P(r.left + r.width / 2, r.top + r.height / 2, S_FIN); })();
+  panelSeg.style.display = 'none'; panelFin.style.display = 'block';
+  const sc = Q('#seg-tabla-finales .seg-table-scroll');
+  const scR = RR(sc);
+  const finTbl = RR(Q('#seg-tabla-finales'));
+  const filaF = (n) => Q('#seg-tabla-finales tr[data-numero="' + n + '"]');
+  const ins = (n) => Array.from(filaF(n).querySelectorAll('input')).filter((i) => getComputedStyle(i.parentElement).display !== 'none');
+  const INS = {}, SCR = {};
+  [3, 5].forEach((n) => { INS[n] = ins(n).map(RR); SCR[n] = [0, 1, 2].map((k) => Math.max(0, Math.ceil(INS[n][2 * k + 1].right - (scR.left + scR.width) + 12))); });
+  panelSeg.style.display = ''; panelFin.style.display = 'none';
+  // finales: la ventana entra completa en el cuadro y las tarjetas de promedios quedan dentro de
+  // ella, alineadas con los bordes de la tabla
+  const EF = enfoque(finTbl.left, tabsR.top - 6, finTbl.right, finTbl.bottom + 6, S_FIN, 1.0);
+  (function () {
+    const a = P(finTbl.left, finTbl.bottom, S_FIN), b = P(finTbl.right, finTbl.bottom, S_FIN);
+    const x0 = EF.x + EF.scale * a[0], x1 = EF.x + EF.scale * b[0], yb = EF.y + EF.scale * a[1], g = 24, w = (x1 - x0 - g) / 2;
+    [['h-k0', x0], ['h-k1', x0 + w + g]].forEach((k) => Object.assign(document.getElementById(k[0]).style, { left: k[1] + 'px', top: (yb + 44) + 'px', width: w + 'px' }));
+  })();
+  const tapIn = (n, i, s, t) => { const r = INS[n][i]; const a = P(r.left + r.width / 2 - s, r.top + r.height / 2, S_FIN); tap(a[0], a[1], t); };
+  const dash = RR(Q('#seg-dashboard'));
+  const S_DASH = Math.max(0, dash.top - 40);
+  const ED = enfoque(dash.left, dash.top - 6, dash.right, dash.bottom + 6, S_DASH, 1.2);
+  const kpR = QA('#seg-dashboard .seg-kpi').map(RR);
+  [5, 6].forEach((i) => { const r = kpR[i], a = P(r.left, r.top, S_DASH); Object.assign(document.getElementById('h-rk' + i).style, { left: (a[0] - 4) + 'px', top: (a[1] - 4) + 'px', width: (r.width * ZF + 8) + 'px', height: (r.height * ZF + 8) + 'px' }); });
+
+  tl.fromTo('#h-cam', { y: 1500 }, { y: 0, duration: 0.6, ease: 'power3.out' }, 0.12);
+  blurIn('#h-c1', 0.3);
+  cam('#h-cam', 0.75, 0.8, enfoque(hd.left - 10, hd.top - 20, hd.right + 10, hd.bottom + 10, 0, 1.5));
+  // privacidad
+  capSwap('#h-c1', '#h-c2', 1.95); blurIn('#h-c2s', 2.15);
+  cam('#h-cam', 1.95, 0.7, { scale: 1, x: 0, y: 0 });
+  tl.to('#h-scr', { y: -S_PRIV * ZF, duration: 0.7, ease: 'power2.inOut' }, 1.95);
+  tl.fromTo('#h-ringp', { opacity: 0, scale: 1.03 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'expo.out' }, 2.55);
+  tl.to('#h-ringp', { opacity: 0, duration: 0.25 }, 3.4);
+  blurOut('#h-c2s', 3.45);
+  // a la tabla, sin cortes
+  tl.to('#h-scr', { y: -S_TAB * ZF, duration: 1.0, ease: 'power2.inOut' }, 3.5);
+  cam('#h-cam', 3.9, 0.7, ET);
+  capSwap('#h-c2', '#h-c3', 3.7);
+  const marcar = (n, val, t, opt, dur) => {
+    const sel = Q('#seg-estado-' + n), c = SELC[n];
+    tap(c[0], c[1], t);
+    tl.set('#h-drop', { left: c[0] - 95, top: c[1] + 26 }, t);
+    tl.fromTo('#h-drop', { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.16, ease: 'expo.out' }, t + 0.15);
+    tl.set(opt, { backgroundColor: 'rgba(146,47,161,0.12)' }, t + 0.15 + dur);
+    tl.set(opt + ' i', { borderColor: '#922FA1', borderWidth: '6px' }, t + 0.15 + dur);
+    tap(c[0], c[1] + 26 + (opt === '#h-op3' ? 140 : 100), t + 0.08 + dur);
+    tl.to('#h-drop', { opacity: 0, duration: 0.12 }, t + 0.3 + dur);
+    tl.set(opt, { backgroundColor: 'rgba(146,47,161,0)' }, t + 0.42 + dur);
+    tl.set(opt + ' i', { borderColor: '#9AA1AD', borderWidth: '2px' }, t + 0.42 + dur);
+    tl.set(sel, { value: val }, t + 0.32 + dur);
+    const bm = fila(n).querySelector('.seg-badge'), ap = val === 'Aprobada';
+    tl.set(bm, { attr: { class: 'seg-badge seg-badge--' + (ap ? 'aprobada' : 'regular') } }, t + 0.32 + dur);
+    tl.set(bm.querySelector('.seg-badge__icon'), { innerHTML: ap ? '✓' : '◐' }, t + 0.32 + dur);
+    tl.set(bm.querySelector('.seg-badge__text'), { innerHTML: val }, t + 0.32 + dur);
+  };
+  const faltantes = (paso, t) => { Object.keys(FALT[paso]).forEach((n) => { const r = fila(n); if (r) tl.set(r.querySelector('[data-col="falt"]'), { innerHTML: FALT[paso][n] }, t); }); };
+  const habilitar = (n, t) => {
+    const b = fila(n).querySelector('.seg-badge');
+    tl.set(b, { attr: { class: 'seg-badge seg-badge--disponible' } }, t);
+    tl.set(b.querySelector('.seg-badge__icon'), { innerHTML: '✓' }, t);
+    tl.set(b.querySelector('.seg-badge__text'), { innerHTML: 'Disponible' }, t);
+    tl.fromTo(b, { scale: 1.3 }, { scale: 1, duration: 0.32, ease: 'back.out(2.2)', immediateRender: false }, t);
+    tl.fromTo('#h-rg' + n, { opacity: 0 }, { opacity: 1, duration: 0.18 }, t);
+    tl.to('#h-rg' + n, { opacity: 0, duration: 0.3 }, t + 0.9);
+  };
+  const linea = (a, b, t) => {
+    tl.to('#h-ln' + a + '-' + b, { strokeDashoffset: 0, duration: 0.38, ease: 'power2.inOut' }, t);
+    tl.to('#h-ln' + a + '-' + b, { opacity: 0, duration: 0.3 }, t + 1.2);
+  };
+  marcar(6, 'Aprobada', 4.85, '#h-op3', 0.5);
+  capSwap('#h-c3', '#h-c4', 5.8);
+  linea(6, 11, 5.75); linea(6, 14, 5.83);
+  tl.set('#h-ln6-11', { attr: { d: curva(6, 11, 't_quimica') } }, 6.07);
+  tl.set('#h-ln6-14', { attr: { d: curva(6, 14, 't_quimica') } }, 6.07);
+  habilitar(11, 6.07); habilitar(14, 6.19); faltantes('t_quimica', 6.07);
+  marcar(4, 'Aprobada', 7.15, '#h-op3', 0.3);
+  marcar(5, 'Regular', 7.75, '#h-op2', 0.3);
+  linea(4, 13, 8.35); linea(5, 13, 8.4);
+  tl.set('#h-ln4-13', { attr: { d: curva(4, 13, 't_fis') } }, 8.65);
+  tl.set('#h-ln5-13', { attr: { d: curva(5, 13, 't_fis') } }, 8.65); habilitar(13, 8.65); faltantes('t_fis', 8.65);
+  marcar(3, 'Regular', 9.1, '#h-op2', 0.3);
+  linea(3, 10, 9.7); linea(3, 12, 9.75);
+  tl.set('#h-ln3-10', { attr: { d: curva(3, 10, 't_aga') } }, 10.0);
+  tl.set('#h-ln3-12', { attr: { d: curva(3, 12, 't_aga') } }, 10.0); habilitar(10, 10.0); habilitar(12, 10.12); faltantes('t_aga', 10.0);
+  const KAGA = ["2", "4,9 %", "37", "10", "2", "\u2014", "\u2014", "10", "0", "0,0 %"];
+  vals.forEach((v, i) => tl.set(v, { innerHTML: KAGA[i] }, 10.15));
+  // pestaña de exámenes finales
+  capSwap('#h-c4', '#h-c5', 10.75); blurIn('#h-c5s', 10.95);
+  cam('#h-cam', 10.7, 0.6, { scale: 1, x: 0, y: 0 });
+  tl.to('#h-scr', { y: -S_FIN * ZF, duration: 0.9, ease: 'power2.inOut' }, 10.75);
+  tap(TF[0], TF[1], 11.75);
+  tl.set(tSeg, { attr: { 'aria-selected': 'false' } }, 11.88);
+  tl.set(tFin, { attr: { 'aria-selected': 'true' } }, 11.88);
+  tl.set(panelSeg, { display: 'none' }, 11.88);
+  tl.set(panelFin, { display: 'block' }, 11.88);
+  cam('#h-cam', 12.0, 0.6, EF);
+  tl.fromTo('#h-k0, #h-k1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', stagger: 0.08 }, 12.55);
+  const foco = (el, t, t2) => {
+    tl.set(el, { borderColor: '#1344A5', outline: '2px solid #1344A5', outlineOffset: '2px' }, t);
+    tl.set(el, { borderColor: '', outline: '', outlineOffset: '' }, t2);
+  };
+  const tipear = (el, txt, t, dt) => { for (let k = 1; k <= txt.length; k++) tl.set(el, { value: txt.slice(0, k) }, t + (k - 1) * dt); };
+  const prom = (sin, con, t) => {
+    if (sin) { tl.set('#h-k0v', { innerHTML: sin }, t); pop('#h-k0v', t); }
+    tl.set('#h-k1v', { innerHTML: con }, t); pop('#h-k1v', t);
+  };
+
+  tapIn(3, 0, 0, 12.50);
+  foco(ins(3)[0], 12.63, 13.00);
+  tipear(ins(3)[0], '20/02/2024', 12.66, 0.026);
+  tapIn(3, 1, 0, 12.98);
+  foco(ins(3)[1], 13.11, 13.40);
+  tl.set(ins(3)[1], { value: '4' }, 13.18);
+  prom(null, '4,00', 13.30);
+  tapIn(3, 2, 0, 13.46);
+  foco(ins(3)[2], 13.59, 13.96);
+  tipear(ins(3)[2], '05/03/2024', 13.62, 0.026);
+  tapIn(3, 3, 0, 13.94);
+  foco(ins(3)[3], 14.07, 14.36);
+  tl.set(ins(3)[3], { value: '7' }, 14.14);
+  prom("7,00", '5,50', 14.26);
+  tl.set(Q('#seg-tabla-finales tr[data-numero="3"] [data-col="nota"]'), { innerHTML: '7', color: '#165E2E', fontWeight: '600' }, 14.42); pop(Q('#seg-tabla-finales tr[data-numero="3"] [data-col="nota"]'), 14.42);
+  tl.set(Q('#seg-tabla-finales tr[data-numero="3"] [data-col="estado"]'), { innerHTML: 'Aprobada' }, 14.42);
+  tapIn(5, 0, 0, 14.84);
+  foco(ins(5)[0], 14.97, 15.14);
+  tl.set(ins(5)[0], { value: '24/07/2024' }, 14.99);
+  tapIn(5, 1, 0, 15.12);
+  foco(ins(5)[1], 15.25, 15.54);
+  tl.set(ins(5)[1], { value: '2' }, 15.32);
+  prom(null, '4,33', 15.44);
+  tapIn(5, 2, 0, 15.52);
+  foco(ins(5)[2], 15.65, 15.82);
+  tl.set(ins(5)[2], { value: '11/12/2024' }, 15.67);
+  tapIn(5, 3, 0, 15.80);
+  foco(ins(5)[3], 15.93, 16.22);
+  tl.set(ins(5)[3], { value: '5' }, 16.00);
+  prom(null, '4,50', 16.12);
+  tl.to(sc, { scrollLeft: SCR[5][2], duration: 0.3, ease: 'power2.inOut' }, 16.20);
+  tapIn(5, 4, SCR[5][2], 16.54);
+  foco(ins(5)[4], 16.67, 16.84);
+  tl.set(ins(5)[4], { value: '19/02/2025' }, 16.69);
+  tapIn(5, 5, SCR[5][2], 16.82);
+  foco(ins(5)[5], 16.95, 17.24);
+  tl.set(ins(5)[5], { value: '8' }, 17.02);
+  prom("7,50", '5,20', 17.14);
+  tl.to(sc, { scrollLeft: 0, duration: 0.3, ease: 'power2.inOut' }, 17.22);
+  tl.set(Q('#seg-tabla-finales tr[data-numero="5"] [data-col="nota"]'), { innerHTML: '8', color: '#165E2E', fontWeight: '600' }, 17.56); pop(Q('#seg-tabla-finales tr[data-numero="5"] [data-col="nota"]'), 17.56);
+  tl.set(Q('#seg-tabla-finales tr[data-numero="5"] [data-col="estado"]'), { innerHTML: 'Aprobada' }, 17.56);
+  // de vuelta a Seguimiento: el tablero completo
+  capSwap('#h-c5', '#h-c6', 18.18); blurOut('#h-c5s', 18.18);
+  cam('#h-cam', 18.13, 0.5, { scale: 1, x: 0, y: 0 });
+  tap(TS[0], TS[1], 18.63);
+  tl.set(tSeg, { attr: { 'aria-selected': 'true' } }, 18.76);
+  tl.set(tFin, { attr: { 'aria-selected': 'false' } }, 18.76);
+  tl.set(panelFin, { display: 'none' }, 18.76);
+  tl.set(panelSeg, { display: 'block' }, 18.76);
+  [[3, '7'], [5, '8']].forEach((nv) => {
+    const n = nv[0], b = fila(n).querySelector('.seg-badge'), ni = Q('#seg-nota-' + n);
+    tl.set(Q('#seg-estado-' + n), { value: 'Aprobada' }, 18.76);
+    tl.set(b, { attr: { class: 'seg-badge seg-badge--aprobada' } }, 18.76);
+    tl.set(b.querySelector('.seg-badge__icon'), { innerHTML: '✓' }, 18.76);
+    tl.set(b.querySelector('.seg-badge__text'), { innerHTML: 'Aprobada' }, 18.76);
+    if (ni) tl.set(ni, { value: nv[1] }, 18.76);
+  });
+  tl.to('#h-k0, #h-k1', { opacity: 0, y: 30, duration: 0.22 }, 18.10);
+  tl.to('#h-scr', { y: -S_DASH * ZF, duration: 0.7, ease: 'power2.inOut' }, 18.83);
+  cam('#h-cam', 18.88, 0.7, ED);
+
+  tl.set(vals[0], { innerHTML: '4' }, 19.38); pop(vals[0], 19.38);
+  tl.set(vals[1], { innerHTML: '9,8 %' }, 19.44); pop(vals[1], 19.44);
+  tl.set(vals[4], { innerHTML: '0' }, 19.62); pop(vals[4], 19.62);
+  tl.set(vals[5], { innerHTML: '7,50' }, 19.68); pop(vals[5], 19.68);
+  tl.set(vals[6], { innerHTML: '5,20' }, 19.74); pop(vals[6], 19.74);
+  tl.set(vals[7], { innerHTML: '20' }, 19.80); pop(vals[7], 19.80);
+  tl.fromTo('#h-rk5, #h-rk6', { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'expo.out', stagger: 0.1 }, 19.78);
+  tl.to('#h-rk5, #h-rk6', { opacity: 0, duration: 0.3 }, 20.93);
+  // cierre: la planilla se aleja y aparecen sus funciones
+  blurOut('#h-c6', 21.18);
+  cam('#h-cam', 21.18, 0.8, { scale: 0.56, x: 238, y: 300 });
+
+  blurIn('#h-claim', 21.38, 0.3);
+  tl.fromTo('#h-f0', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 21.73);
+  tl.fromTo('#h-f1', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 21.85);
+  tl.fromTo('#h-f2', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 21.97);
+  tl.fromTo('#h-f3', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 22.09);
+  tl.fromTo('#h-f4', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 22.21);
+  tl.fromTo('#h-f5', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 22.33);
+  tl.fromTo('#h-f6', { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'back.out(1.8)' }, 22.45);
+  blurOut('#h-claim', 24.08);
+  tl.to('#h-f0', { x: 320, y: 240, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.03);
+  tl.to('#h-f1', { x: -160, y: 100, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.05);
+  tl.to('#h-f2', { x: 340, y: -60, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.07);
+  tl.to('#h-f3', { x: -180, y: -210, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.09);
+  tl.to('#h-f4', { x: 330, y: -370, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.11);
+  tl.to('#h-f5', { x: -220, y: -520, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.13);
+  tl.to('#h-f6', { x: 260, y: -670, scale: 0.3, opacity: 0, duration: 0.4, ease: 'power3.in' }, 24.15);
+  tl.to('#h-cam', { opacity: 0, scale: 0.12, x: 475, y: 700, duration: 0.45, ease: 'power3.in' }, 24.08);
+
+    window.__timelines['herramienta'] = tl;
+  }
+  function listo() { const D = fr.contentDocument; return D && D.readyState === 'complete' && D.querySelector('main'); }
+  function esperar() {
+    const D = fr.contentDocument;
+    const imgs = Array.from(D.images).map((i) => (i.complete ? Promise.resolve() : (i.decode ? i.decode().catch(() => 0) : Promise.resolve())));
+    return Promise.all([D.fonts.ready, document.fonts.ready].concat(imgs)).then(arrancar);
+  }
+  if (listo()) esperar(); else fr.addEventListener('load', esperar);
+
+  </script>
+</template>

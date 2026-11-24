@@ -1,0 +1,164 @@
+<template>
+  <style>
+@font-face{font-family:'Fraunces';src:url('assets/fonts/fraunces-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-400-600.woff2') format('woff2');font-weight:400 600;font-style:normal}
+@font-face{font-family:'Geist Mono';src:url('assets/fonts/geist-mono-400-500.woff2') format('woff2');font-weight:400 500;font-style:normal}
+#root{position:absolute;inset:0;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;color:#131720}
+.abs{position:absolute}
+.serif{font-family:'Fraunces',serif;font-weight:400;letter-spacing:-0.015em}
+.mono{font-family:'Geist Mono',monospace}
+.cap{position:absolute;left:56px;top:226px;max-width:968px;padding:6px 16px;border-radius:18px;background:#FCF7F0;font-family:'Fraunces',serif;font-size:84px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;color:#131720;opacity:0;z-index:40}
+.cap em{font-style:normal;color:inherit}
+.cap-sub{position:absolute;left:72px;top:338px;font-size:40px;line-height:1.3;color:#4A4F59;white-space:nowrap;opacity:0;z-index:40}
+.cam{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0}
+.win{position:absolute;left:30px;top:430px;width:1020px;height:1100px;border-radius:28px;overflow:hidden;background:#F2F4F8;border:1px solid #E1DACE;box-shadow:0 26px 64px rgba(19,23,32,.16)}
+.wbar{position:absolute;left:0;top:0;width:100%;height:76px;background:#FFFFFF;border-bottom:1px solid #E7DFD3;display:flex;align-items:center;gap:16px;padding:0 24px;z-index:3}
+.wbar i{width:15px;height:15px;border-radius:50%;background:#E2DDD4;flex:0 0 15px}
+.url{flex:1;height:48px;margin-left:12px;border-radius:999px;background:#F1EEE8;display:flex;align-items:center;gap:12px;padding:0 22px;font-size:25px;color:#4A4F59;white-space:nowrap;overflow:hidden}
+.wbody{position:absolute;left:0;top:76px;width:100%;bottom:0;overflow:hidden}
+.scroller{position:absolute;left:0;top:0;width:100%}
+.scroller iframe{display:block;border:0;background:#F2F4F8}
+.tap{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(19,23,32,.22);opacity:0;pointer-events:none;z-index:60}
+.ring{position:absolute;border:3px solid #1344A5;border-radius:10px;box-shadow:0 0 0 6px rgba(19,68,165,.10);opacity:0;pointer-events:none;z-index:55}
+.drop{position:absolute;width:190px;background:#FFFFFF;border-radius:10px;box-shadow:0 14px 34px rgba(11,41,100,.22);overflow:hidden;opacity:0;z-index:58}
+.drop div{position:relative;height:40px;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:19px}
+.drop i{width:16px;height:16px;border-radius:50%;border:2px solid #9AA1AD;flex:0 0 16px}
+.flood{position:absolute;left:0;top:0;width:1080px;height:1920px;background:#FCF7F0;opacity:0}
+/* chat */
+.chat{position:absolute;left:48px;top:470px;width:984px;height:1110px;background:#FFFFFF;border-radius:40px;box-shadow:0 18px 50px rgba(19,23,32,.10);overflow:hidden}
+.chat-h{position:absolute;left:0;top:0;width:100%;height:124px;display:flex;align-items:center;gap:22px;padding:0 34px;border-bottom:2px solid #F0EBE3;background:#FFFFFF;z-index:2}
+.av{width:72px;height:72px;border-radius:50%;background:#1344A5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:30px}
+.msgs{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;gap:18px;padding:0 30px}
+.msg{max-width:720px;align-self:flex-start;opacity:0}
+.msg.me{align-self:flex-end}
+.msg .who{font-size:27px;font-weight:600;margin:0 0 6px 18px}
+.bub{padding:20px 28px;border-radius:30px 30px 30px 8px;background:#F1EEE8;font-size:37px;line-height:1.28}
+.msg.me .bub{background:#1344A5;color:#FFFFFF;border-radius:30px 30px 8px 30px}
+.typing{display:flex;gap:10px;padding:26px 30px;border-radius:30px 30px 30px 8px;background:#F1EEE8;align-self:flex-start;opacity:0}
+.typing span{width:14px;height:14px;border-radius:50%;background:#9AA1AD;display:block}
+.prev{margin-top:14px;border-radius:20px;overflow:hidden;background:#FFFFFF;border:2px solid #E7DFD3}
+.prev img{display:block;width:100%;height:230px;object-fit:cover}
+.prev div{padding:14px 20px 18px}
+.prev b{display:block;font-size:32px;font-weight:600;color:#131720}
+.prev span{font-size:28px;color:#4A4F59}
+/* Drive simulado (vista web) */
+.dv{position:absolute;inset:0;background:#FFFFFF}
+.dcrumb{position:absolute;left:40px;top:30px;font-size:24px;color:#4A4F59;white-space:nowrap}
+.dtitle{position:absolute;left:40px;top:66px;font-size:38px;font-weight:600;white-space:nowrap}
+.dhead{position:absolute;left:40px;top:144px;width:940px;height:46px;display:flex;align-items:center;font-size:22px;color:#4A4F59;border-bottom:1px solid #E7DFD3}
+.drow{position:absolute;left:24px;width:972px;height:78px;display:flex;align-items:center;font-size:27px;border-bottom:1px solid #F0EBE3;padding:0 16px;border-radius:10px}
+.drow .nm{flex:0 0 560px;display:flex;align-items:center;gap:20px;white-space:nowrap}
+.drow .c2,.dhead .c2{flex:0 0 220px;font-size:22px;color:#4A4F59}
+.drow .c3,.dhead .c3{flex:0 0 140px;font-size:22px;color:#4A4F59;text-align:right}
+.dhead .nm{flex:0 0 560px;padding-left:16px}
+.dhl{position:absolute;inset:0;border-radius:10px;background:rgba(146,47,161,.09);opacity:0}
+.dhl + *{position:relative}
+.folder{width:40px;height:33px;flex:0 0 40px}
+.pdf{width:34px;height:42px;border-radius:5px;background:#D93025;color:#fff;font:600 12px 'Hanken Grotesk',sans-serif;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;flex:0 0 34px}
+.dsec{position:absolute;left:40px;font-size:24px;font-weight:600;color:#4A4F59}
+.chipf{position:absolute;left:40px;top:250px;width:440px;height:76px;border:1px solid #E1DACE;border-radius:14px;display:flex;align-items:center;gap:18px;padding:0 22px;font-size:27px;background:#FFFFFF}
+.fcard{position:absolute;top:396px;width:296px;height:330px;border:1px solid #E1DACE;border-radius:16px;overflow:hidden;background:#FFFFFF}
+.fthumb{position:absolute;left:0;top:0;width:100%;height:232px;background:#F1EEE8;display:flex;justify-content:center;align-items:flex-end}
+.fpage{width:180px;height:206px;background:#FFFFFF;box-shadow:0 4px 14px rgba(19,23,32,.10);padding:22px 18px}
+.fl{height:9px;border-radius:3px;background:#E1E4E9;margin-bottom:11px}
+.fname{position:absolute;left:0;top:232px;width:100%;height:98px;display:flex;align-items:center;gap:14px;padding:0 18px;font-size:21px;line-height:1.25;border-top:1px solid #E7DFD3}
+.fhl{position:absolute;inset:0;border:4px solid #922FA1;border-radius:16px;opacity:0}
+.viewer{position:absolute;inset:0;background:#E9E3D9;opacity:0}
+.vbar{position:absolute;left:0;top:0;width:100%;height:84px;background:#FFFFFF;display:flex;align-items:center;gap:20px;padding:0 36px;font-size:27px;border-bottom:1px solid #E7DFD3}
+.page{position:absolute;left:260px;top:112px;width:500px;height:610px;background:#FFFFFF;box-shadow:0 14px 34px rgba(11,41,100,.14);padding:54px 48px}
+.ln{height:14px;border-radius:4px;background:#E1E4E9;margin-bottom:17px}
+.ln.t{height:26px;width:62%;background:#CED2D9;margin-bottom:34px}
+/* muro de materias */
+.tile{position:absolute;width:196px;height:110px;border-radius:12px;overflow:hidden;opacity:0}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+/* cierre */
+.end{position:absolute;left:0;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:200px}
+.end svg{width:660px;height:660px;overflow:visible}
+.end-name{font-size:128px;margin-top:4px;display:flex;line-height:1.05}
+.end-name span{display:inline-block;opacity:0}
+.end-url{font-size:48px;color:#1344A5;margin-top:16px;opacity:0}
+.end-sec{font-size:42px;color:#4A4F59;margin-top:18px;line-height:1.3;opacity:0}
+.end-extra{font-size:36px;color:#4A4F59;margin-top:12px;opacity:0}
+/* seguimiento */
+.qq{position:absolute;left:72px;font-family:'Fraunces',serif;font-size:88px;line-height:1.05;letter-spacing:-0.015em;white-space:nowrap;opacity:0}
+.qh{position:absolute;left:76px;display:flex;align-items:center;gap:12px;font-size:34px;color:#4A4F59;white-space:nowrap;opacity:0}
+.pn{min-width:58px;height:58px;padding:0 14px;border-radius:14px;background:#FFFFFF;border:2px solid #E1DACE;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:36px;color:#131720}
+.seg{width:12px;height:30px;border-radius:3px;background:#E1DACE}
+.kp{position:absolute;width:470px;height:170px;background:#FFFFFF;border:1px solid #CED2D9;border-radius:20px;padding:22px 30px;opacity:0;box-shadow:0 14px 40px rgba(19,23,32,.12);z-index:62}
+.kp .l{font-family:'Geist Mono',monospace;font-size:28px;letter-spacing:.06em;color:#4A4F59;text-transform:uppercase}
+.kp .v{font-family:'Fraunces',serif;font-size:78px;line-height:1.15;display:inline-block;transform-origin:0% 60%}
+.feat{position:absolute;display:flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;background:#FFFFFF;border:2px solid #E7DFD3;box-shadow:0 14px 36px rgba(19,23,32,.12);font-size:38px;font-weight:500;white-space:nowrap;opacity:0;z-index:30}
+.feat i{width:40px;height:40px;border-radius:50%;background:#1344A5;color:#fff;font-style:normal;font-size:26px;display:flex;align-items:center;justify-content:center}
+</style>
+  <div id="root" data-composition-id="gancho" data-width="1080" data-height="1920">
+    <div id="gancho-all" class="clip" data-start="0" data-duration="5.2" data-track-index="1" style="position:absolute;inset:0">
+      <div class="abs" style="inset:0;background:#FCF7F0"></div>
+      <div id="g-q" class="cap" style="white-space:normal;font-size:96px;opacity:1">¿Otra vez buscando<br>apuntes?</div>
+      <div id="g-ok" class="cap" style="font-size:96px">Está todo acá.</div>
+      <div id="g-chat" class="chat" data-layout-allow-overlap data-layout-allow-occlusion>
+        <div class="chat-h" data-layout-allow-overlap><div class="av">IQ</div><div><div style="font-size:38px;font-weight:600">IQ · 4º año</div><div style="font-size:28px;color:#4A4F59">Grupo de la cursada</div></div></div>
+        <div id="g-msgs" class="msgs" data-layout-allow-overlap><div id="g-m0" class="msg me"><div class="bub">¿Alguien tiene la Serie 7 de Reacciones resuelta?</div></div><div id="g-m1" class="msg "><div class="who" style="color:#8E6AC7">Paraguayo</div><div class="bub">creo que estaba en un drive viejo</div></div><div id="g-m2" class="msg "><div class="who" style="color:#039585">Ele P</div><div class="bub">a mí me la pasaron por mail y no la encuentro</div></div><div id="g-m3" class="msg me"><div class="bub">rindo esta semana y no tengo nada</div></div><div id="g-typ" class="typing"><span></span><span></span><span></span></div><div id="g-m4" class="msg"><div class="who" style="color:#AA7323">Vicki G</div><div class="bub">Está todo en la página de AChETIQ<div id="g-prev" class="prev"><img src="assets/img/og-image-achetiq.png" alt=""><div><b>Apuntes Académicos - AChETIQ</b><span>achetiq.github.io</span></div></div></div></div></div>
+      </div>
+      <div id="g-morph" class="abs" style="left:30px;top:430px;width:1020px;height:1100px;background:#F2F4F8;border-radius:28px;opacity:0;z-index:30"></div>
+      <div id="tap1" class="tap"></div><div id="tap2" class="tap"></div>
+    </div>
+  </div>
+  <script>
+  document.fonts.ready.then(() => {
+  const tl = gsap.timeline({ paused: true });
+  const blurIn = (s, t, d) => tl.fromTo(s, { opacity: 0, filter: 'blur(10px)' }, { opacity: 1, filter: 'blur(0px)', duration: d || 0.24, ease: 'power4.out' }, t);
+  const blurOut = (s, t, d) => tl.to(s, { opacity: 0, filter: 'blur(10px)', duration: d || 0.18, ease: 'power2.in' }, t);
+  let tapN = 0;
+  const tap = (x, y, t) => {
+    const s = (tapN++ % 2) ? '#tap2' : '#tap1';
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out', immediateRender: false }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  let tapM = 0;
+  const tapC = (x, y, t) => {
+    const s = (tapM++ % 2) ? '#tap4' : '#tap3';
+    tl.set(s, { left: x, top: y }, t);
+    tl.fromTo(s, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out', immediateRender: false }, t);
+    tl.to(s, { scale: 0.8, duration: 0.08, ease: 'power2.in' }, t + 0.13);
+    tl.to(s, { scale: 1.05, opacity: 0, duration: 0.22, ease: 'power2.out' }, t + 0.22);
+  };
+  const steps = (s, t, vals, dt) => vals.forEach((v, i) => tl.set(s, { innerHTML: v }, t + i * dt));
+  const pop = (s, t) => tl.fromTo(s, { scale: 1.35 }, { scale: 1, duration: 0.3, ease: 'back.out(2.2)', immediateRender: false }, t);
+  const capSwap = (a, b, t) => { if (a) blurOut(a, t, 0.16); blurIn(b, t + 0.12, 0.26); };
+
+  const ids = ['#g-m0', '#g-m1', '#g-m2', '#g-m3', '#g-typ', '#g-m4'];
+  const hs = ids.map((s) => document.querySelector(s).offsetHeight + 18);
+  const AV = 1110 - 150 - 30;
+  const upto = (k) => { let h = 0; for (let j = 0; j <= k; j++) { if (j === 4 && k === 5) continue; h += hs[j]; } return -Math.max(0, h - AV); };
+  tl.set('#g-msgs', { y: 0 }, 0);
+  const reveal = (k, t) => {
+    tl.to('#g-msgs', { y: upto(k), duration: 0.32, ease: 'power3.out' }, t);
+    tl.fromTo(ids[k], { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, t);
+  };
+  reveal(0, 0.2); reveal(1, 0.85); reveal(2, 1.5); reveal(3, 2.15);
+  reveal(4, 2.80);
+  tl.fromTo('#g-typ span', { y: 0 }, { y: -8, duration: 0.14, yoyo: true, repeat: 1, stagger: 0.08, ease: 'sine.inOut' }, 2.90);
+  tl.to('#g-typ', { opacity: 0, duration: 0.1 }, 3.23);
+  tl.to('#g-msgs', { y: upto(5), duration: 0.32, ease: 'power3.out' }, 3.25);
+  tl.set('#g-typ', { display: 'none' }, 3.25);
+  tl.fromTo('#g-m4', { opacity: 0, y: 26, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'back.out(1.6)' }, 3.25);
+  capSwap('#g-q', '#g-ok', 3.55);
+  const pr = document.querySelector('#g-prev').getBoundingClientRect();
+  const rr = document.querySelector('#gancho-all').getBoundingClientRect();
+  const sx = 1080 / rr.width;
+  const px = (pr.left - rr.left) * sx, py = (pr.top - rr.top) * sx, pw = pr.width * sx, ph = pr.height * sx;
+  tap(px + pw * 0.5, py + ph * 0.45, 4.05);
+  tl.fromTo('#g-prev', { scale: 1 }, { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 4.17);
+  // la vista previa del enlace se convierte en la ventana del sitio
+  tl.set('#g-morph', { transformOrigin: '0px 0px', x: px - 30, y: py - 430, scaleX: pw / 1020, scaleY: ph / 1100, opacity: 1 }, 4.33);
+  tl.to('#g-morph', { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.62, ease: 'power3.inOut' }, 4.33);
+  tl.to('#g-chat', { opacity: 0, scale: 0.96, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in' }, 4.35);
+  blurOut('#g-ok', 4.70, 0.2);
+
+  window.__timelines['gancho'] = tl;
+  });
+
+  </script>
+</template>
