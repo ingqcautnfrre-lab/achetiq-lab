@@ -117,15 +117,23 @@
    la misma celda de grilla y sólo varía su opacity, con el mismo
    cross-fade que .hero__slide (hero-carrousel.js las sincroniza).
    Vive sobre el velo (z-index 2) para conservar el blanco pleno, y
-   dentro del padding inferior del hero para no rozar las acciones. */
+   dentro del padding inferior del hero para no rozar las acciones.
+   Sólo en ≥768 px: en móvil las acciones apiladas ocupan el pie del
+   hero y el año no aporta información necesaria, así que se omite. */
 .hero__years {
-  position: absolute;
-  right: var(--page-padding-x);
-  bottom: var(--space-6);
-  z-index: 2;
-  display: grid;
-  justify-items: end;
-  pointer-events: none;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hero__years {
+    position: absolute;
+    right: var(--page-padding-x);
+    bottom: var(--space-6);
+    z-index: 2;
+    display: grid;
+    justify-items: end;
+    pointer-events: none;
+  }
 }
 
 .hero__year {
