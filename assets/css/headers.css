@@ -110,6 +110,61 @@
   opacity: 1;
 }
 
+/* Año de la fotografía activa — esquina inferior derecha.
+   Pie de foto editorial: filete fino + año en la familia display
+   (Fraunces, ya precargada), numerales de ancho fijo para que el
+   bloque no «salte» al cambiar de año. Las etiquetas se apilan en
+   la misma celda de grilla y sólo varía su opacity, con el mismo
+   cross-fade que .hero__slide (hero-carrousel.js las sincroniza).
+   Vive sobre el velo (z-index 2) para conservar el blanco pleno, y
+   dentro del padding inferior del hero para no rozar las acciones.
+   Sólo en ≥768 px: en móvil las acciones apiladas ocupan el pie del
+   hero y el año no aporta información necesaria, así que se omite. */
+.hero__years {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hero__years {
+    position: absolute;
+    right: var(--page-padding-x);
+    bottom: var(--space-6);
+    z-index: 2;
+    display: grid;
+    justify-items: end;
+    pointer-events: none;
+  }
+}
+
+.hero__year {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--type-step-3);
+  line-height: 1;
+  letter-spacing: var(--tracking-wide);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--color-on-media-soft);
+  text-shadow: var(--text-shadow-media);
+  opacity: 0;
+  transition: opacity var(--transition-hero);
+}
+
+.hero__year::before {
+  content: "";
+  width: var(--space-8);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.hero__year--active {
+  opacity: 1;
+}
+
 /* Velo de legibilidad entre las imágenes y el texto. */
 .hero__overlay {
   position: absolute;
