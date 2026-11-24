@@ -73,12 +73,12 @@
    Las tres anchuras espejan EXACTAMENTE el imagesrcset/imagesizes del
    <link rel="preload"> de index.html y el matchMedia de hero-carrousel.js
    (≤768px → 800w, ≤1280px → 1280w, resto → 1920w): el cuadro pintado es
-   el mismo que se precarga, sin doble descarga. El cuadro «2014» (primer
-   fotograma cronológico) ya está fijado en esos dos lugares; este es el
+   el mismo que se precarga, sin doble descarga. El cuadro «2026» (primer
+   fotograma: el más reciente) ya está fijado en esos dos lugares; este es el
    tercer punto que lo referencia. Si cambia el primer fotograma, los TRES
    deben actualizarse juntos. */
 .hero__slideshow {
-  background-image: url('../img/hero/2014-1920.webp');
+  background-image: url('../img/hero/2026-1920.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -86,13 +86,13 @@
 
 @media (max-width: 1280px) {
   .hero__slideshow {
-    background-image: url('../img/hero/2014-1280.webp');
+    background-image: url('../img/hero/2026-1280.webp');
   }
 }
 
 @media (max-width: 768px) {
   .hero__slideshow {
-    background-image: url('../img/hero/2014-800.webp');
+    background-image: url('../img/hero/2026-800.webp');
   }
 }
 
