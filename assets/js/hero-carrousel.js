@@ -12,8 +12,13 @@
    · Respeta prefers-reduced-motion: muestra sólo la primera imagen.
    · Pausa cuando la pestaña no está visible.
 
+   · Año de cada fotografía en la esquina inferior derecha
+     ([data-hero-years]), sincronizado con el cuadro activo.
+
    BEM: contenedor [data-hero-slideshow] (.hero__slideshow);
         cada capa .hero__slide; activa .hero__slide--active.
+        Años: [data-hero-years] (.hero__years); cada etiqueta
+        .hero__year; activa .hero__year--active.
    ============================================================ */
 
 (function () {
@@ -60,6 +65,16 @@
   var stage = document.querySelector('[data-hero-slideshow]');
   if (!stage || HERO_IMAGES.length === 0) return;
 
+  /* Contenedor opcional del año de cada fotografía (esquina inferior
+     derecha del hero, ver headers.css §HERO — año). */
+  var yearStage = document.querySelector('[data-hero-years]');
+
+  /* Año visible de un cuadro: los cuatro primeros caracteres de su
+     base ('2015-2' → '2015'). */
+  function yearOf(base) {
+    return base.slice(0, 4);
+  }
+
   function setBackground(slide, base) {
     slide.style.backgroundImage =
       "url('" + HERO_BASE + base + '-' + HERO_WIDTH + ".webp')";
@@ -82,6 +97,18 @@
     stage.appendChild(slide);
     return slide;
   });
+
+  /* Una etiqueta de año por cuadro, apiladas en el mismo lugar: la
+     activa acompaña al cuadro activo con el mismo cross-fade
+     (--transition-hero), de modo que foto y año cambian juntos. */
+  var years = yearStage ? HERO_IMAGES.map(function (base, i) {
+    var label = document.createElement('span');
+    label.className = 'hero__year';
+    label.textContent = yearOf(base);
+    if (i === 0) label.classList.add('hero__year--active');
+    yearStage.appendChild(label);
+    return label;
+  }) : [];
 
   /* El primer cuadro lo pinta el CSS sobre [data-hero-slideshow] para que
      sea el elemento LCP sin esperar a este script diferido (headers.css
@@ -129,6 +156,10 @@
   function show(next) {
     slides[current].classList.remove('hero__slide--active');
     slides[next].classList.add('hero__slide--active');
+    if (years.length) {
+      years[current].classList.remove('hero__year--active');
+      years[next].classList.add('hero__year--active');
+    }
     current = next;
     prefetchNext();
   }
