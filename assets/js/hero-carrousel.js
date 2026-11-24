@@ -4,10 +4,11 @@
    pantalla completa sobre el bloque .hero de index.html.
 
    · Vanilla JS, sin dependencias — coherente con el stack del sitio.
-   · Orden cronológico EXACTO definido en HERO_IMAGES.
+   · Orden cronológico INVERSO (del presente al pasado) definido en
+     HERO_IMAGES.
    · 5 s visible por imagen; cross-fade de --transition-hero (~1 s,
      definido en CSS sobre .hero__slide).
-   · Loop infinito: tras 2025.JPG vuelve a 2014.JPG.
+   · Loop infinito: tras 2014 vuelve a 2026.
    · Respeta prefers-reduced-motion: muestra sólo la primera imagen.
    · Pausa cuando la pestaña no está visible.
 
@@ -21,7 +22,7 @@
   /* Directorio de imágenes, relativo a index.html. */
   var HERO_BASE = 'assets/img/hero/';
 
-  /* Orden cronológico EXACTO — bases de los derivados WebP generados
+  /* Orden cronológico INVERSO (presente → pasado) — bases de los derivados WebP generados
      a partir de los originales de assets/img/hero/ (S6 — rendimiento:
      los JPG originales, 0,5–3,7 MB c/u, quedan fuera del peso de
      página). Cada base existe en 800 / 1280 / 1920 px de ancho
@@ -30,11 +31,12 @@
      LCP): si se cambia el orden o los anchos aquí, actualizar también
      ese <link rel="preload"> (imagesrcset/imagesizes). */
   var HERO_IMAGES = [
-    '2014',
-    '2015-2',
-    '2018',
+    '2026',   /* CoNEIQ 2026 */
+    '2025',
     '2020',
-    '2025'
+    '2018',
+    '2015-2',
+    '2014'
   ];
 
   var HOLD_MS = 5000;   /* tiempo visible por imagen */
